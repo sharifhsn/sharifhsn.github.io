@@ -20,10 +20,10 @@ compile_sass = true
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
 
-# taxonomies = [
-#     {name = "categories", feed = false},
-#     {name = "tags", feed = false},
-# ]
+taxonomies = [
+    {name = "categories", feed = true},
+    {name = "tags", feed = true},
+]
 
 [markdown]
 # Whether to do syntax highlighting
