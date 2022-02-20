@@ -12,7 +12,7 @@ default_language = "en"
 theme = "after-dark"
 
 # For overriding the default ouput directory `public`, set it to another value (e.g.: "docs")
-output_dir = "docs"
+output_dir = "public"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
