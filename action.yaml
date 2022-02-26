@@ -1,0 +1,9 @@
+name: 'Zola Deploy to Pages'
+description: 'Build and deploy a Zola site to GitHub Pages'
+author: 'Sharif Haason'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+branding:
+  icon: 'zap'  
+  color: 'green'
