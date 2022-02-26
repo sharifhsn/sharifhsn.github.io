@@ -8,8 +8,6 @@ tags = ["cs352"]
 +++
 How do we get the best performance in sending information over the internet? What is packet switching and how can it help?
 <!-- more -->
-## Performance
-
 **Performance is bottlenecked by propagation delay and transmission time.**
 
 Propagation delay is dictated by the physical distance between the client and server. If you were to send a message to server on Mars, there would be 200 million km to travel across, aka 1000s at the speed of light! New York to Los Angeles is about 20ms at this same speed of 5μs/km.
@@ -19,8 +17,6 @@ Transmission time is dictated by bandwidth, which tells you how many bytes per s
 For small messages in the tens or hundreds of bytes like handshake acknowledgements, propagation delay is very significant. For larger messages, propagation delay is ignored and bandwidth is considered more significant.
 
 \\( RTT = 2PD \\): Round-trip time is equal to twice the propagation delay.
-
-### Message Switching vs. Packet Switching
 
 **Packet switching is faster because it is a continuous stream.**
 
