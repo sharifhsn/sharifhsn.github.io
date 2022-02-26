@@ -15,3 +15,6 @@ jobs:
           PAGES_BRANCH: gh-pages
           # Provide personal access token
           TOKEN: ${{secrets.TOKEN}}
+      - name: add_nojekyll
+        run: |-
+          touch .nojekyll
