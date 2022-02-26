@@ -8,12 +8,27 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      - name: build_and_deploy
+      - name: build
         uses: shalzz/zola-deploy-action@v0.14.1
         env:
           # Target branch
           PAGES_BRANCH: gh-pages
           # Provide personal access token
+          TOKEN: ${{secrets.TOKEN}}
+          # Build only
+          BUILD_ONLY: true
+      - name: deploy
+        run: |-
+          cd public
+          touch .nojekyll
+          git init
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions-bot@users.noreply.github.com"
+          git add .
+
+          git commit -m "Deploy ${GITHUB_REPOSITORY} to ${GITHUB_REPOSITORY}:gh-pages"
+          git push --force "https://${GITHUB_ACTOR}:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" master:gh-pages
+        env:
           TOKEN: ${{secrets.TOKEN}}
 #       - name: add_nojekyll
 #         run: |-
