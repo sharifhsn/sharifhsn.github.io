@@ -17,7 +17,22 @@
 
       {% block css %}
           <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}">
+          {% if config.extra.katex_enable %}
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" crossorigin="anonymous">
+          {% endif %}
       {% endblock css %}
+
+      {% block js %}
+          {% if config.extra.katex_enable %}
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" crossorigin="anonymous"></script>
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/mathtex-script-type.min.js" crossorigin="anonymous"></script>
+              {% if config.extra.katex_auto_render %}
+          <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+              onload="renderMathInElement(document.body);"></script>
+          {% endif %}
+      {% endif %}
+
+  {% endblock js %}
 
       {% block extra_head %}
       {% endblock extra_head %}
