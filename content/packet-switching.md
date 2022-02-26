@@ -6,8 +6,8 @@ date = 2022-01-31
 categories = ["Internet Technology"]
 tags = ["cs352"]
 +++
-Propagation de
-
+How do we get the best performance in sending information over the internet? What is packet switching and how can it help?
+<!-- more -->
 ## Performance
 
 **Performance is bottlenecked by propagation delay and transmission time.**
