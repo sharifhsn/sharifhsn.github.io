@@ -9,7 +9,7 @@ description = ""
 default_language = "en"
 
 # The site theme to use.
-# theme = "after-dark"
+theme = "after-dark"
 
 # For overriding the default ouput directory `public`, set it to another value (e.g.: "docs")
 output_dir = "public"
