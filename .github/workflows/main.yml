@@ -17,6 +17,8 @@ jobs:
           TOKEN: ${{secrets.TOKEN}}
       - name: add_nojekyll
         run: |-
+          git config --global user.email "ssh128@scarletmail.rutgers.edu"
+          git config --global user.name "Sharif Haason"
           touch .nojekyll
           git add .
           git commit -m "auto nojekyll"
