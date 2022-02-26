@@ -19,8 +19,9 @@ jobs:
           BUILD_ONLY: true
       - name: deploy
         run: |-
+          su
           cd public
-          sudo touch .nojekyll
+          touch .nojekyll
           git init
           git config user.name "GitHub Actions"
           git config user.email "github-actions-bot@users.noreply.github.com"
