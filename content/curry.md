@@ -1,6 +1,6 @@
 +++
 title = "Currying Arguments in a Function"
-date = 2022-02-27
+date = 2022-02-21
 
 [taxonomies]
 categories = ["Principles of Programming Languages"]
