@@ -4,6 +4,3 @@ author: 'Sharif Haason'
 runs:
   using: 'docker'
   image: 'Dockerfile'
-branding:
-  icon: 'zap'  
-  color: 'green'

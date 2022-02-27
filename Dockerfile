@@ -3,8 +3,6 @@ MAINTAINER Sharif Haason <ssh128@scarletmail.rutgers.edu>
 
 LABEL "com.github.actions.name"="Zola Deploy to Pages"
 LABEL "com.github.actions.description"="Build and deploy a Zola site to GitHub Pages"
-LABEL "com.github.actions.icon"="zap"
-LABEL "com.github.actions.color"="green"
 
 # Set default locale for the environment
 ENV LC_ALL C.UTF-8
