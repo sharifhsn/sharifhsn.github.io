@@ -41,7 +41,3 @@ after_dark_menu = [
 after_dark_title = "Sharif's Page"
 
 author = "Sharif Haason"
-
-katex_enable = true
-
-katex_auto_render = true
