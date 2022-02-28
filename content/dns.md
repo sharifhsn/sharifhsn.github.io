@@ -19,7 +19,7 @@ Messages are different based on what kind of information you are sending. For ex
 
 With cell phones, we use telephone numbers to identify each other and call each other. Sometimes, we can store names in contacts associated with the phone numbers that are easier to remember than unique numbers.
 
-*IP addresses* work the same way. Each IP address uniquely identifies a host then can send and receive information through a network. IPv4 is a 32-bit number that was traditionally used, however due to its limited scope (only \\(2^{32}\\) ≈ 4 billion possible IP addresses). IPv6 is the new type of address that is 128-bit number with \\(2^{128}\\) possible  addresses.
+*IP addresses* work the same way. Each IP address uniquely identifies a host then can send and receive information through a network. IPv4 is a 32-bit number that was traditionally used, however due to its limited scope (only $2^{32}$ ≈ 4 billion possible IP addresses). IPv6 is the new type of address that is 128-bit number with $2^{128}$ possible  addresses.
 
 IPv4: `128.6.24.78`
 
@@ -27,7 +27,7 @@ IPv6: `2001:4000:A000:C000:6000:B001:412A:8000`
 
 There can be more than one application running on a host, however. They can't interfere with each other, so we need a way to distinguish them. This is done via *port numbers*, which are 16-bit numbers that can be bound to applications that communicate over the network. Some port numbers are reserved for special purposes, such as port 25 for email, port 80 for HTTP, port 443 for HTTPS. Port numbers are like different employees that work at a call center.
 
-Both client and server must identify each other's IP address and port numbers: a 4-tuple: \\((S_{IP}, S_{P\\#}, D_{IP}, D_{P\\#})\\) This tuple is a *uniquely defined bidirectional connection*.
+Both client and server must identify each other's IP address and port numbers: a 4-tuple: $(S_{IP}, S_{P\\#}, D_{IP}, D_{P\\#})$ This tuple is a *uniquely defined bidirectional connection*.
 
 The OS manages a simple data structure of port numbers to track which are in use, no complexity involved.
 

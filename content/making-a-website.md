@@ -198,10 +198,10 @@ The deploy action will take care of updating the submodule as necessary. Just ad
 
 Although I like the `after-dark` theme, I might change to a different theme or make my own in the future to accommodate my goals for this website. If that happens, I'll detail that process in another post.
 
-## \\( \KaTeX \\)
+## $\KaTeX$
 
-Most of the lecture notes I write incorporate [\\( \KaTeX \\)](https://katex.org/) in some way. I find it an expressive way to write formulas and math expressions when reviewing for tests. `after-dark` does not provide \\( \KaTeX \\) support by default, which is part of the reason I forked it.
+Most of the lecture notes I write incorporate [$\KaTeX$](https://katex.org/) in some way. I find it an expressive way to write formulas and math expressions when reviewing for tests. `after-dark` does not provide $\KaTeX$ support by default, which is part of the reason I forked it.
 
-My preferred option for \\( \KaTeX \\) rendering would be server-side, as I don't plan on pushing very often (perhaps once per day) and Zola compilation is extremely quick. However, after doing some research into [previous attempts](https://github.com/getzola/zola/pull/1073), I decided it wasn't feasible for now. Perhaps in the future I'll take a stab at implementing it myself, but for now I'll settle for client-side.
+My preferred option for $\KaTeX$ rendering would be server-side, as I don't plan on pushing very often (perhaps once per day) and Zola compilation is extremely quick. However, after doing some research into [previous attempts](https://github.com/getzola/zola/pull/1073), I decided it wasn't feasible for now. Perhaps in the future I'll take a stab at implementing it myself, but for now I'll settle for client-side.
 
-[The \\( \KaTeX \\) docs](https://katex.org/docs/browser.html) give a pretty good description on how to incorporate it into your website. In Tera, all you have to do is enclose those stylesheets/scripts into CSS/JS blocks, respectively. My inspiration came from [this pull request](https://github.com/getzola/after-dark/pull/22).
+[The $\KaTeX$ docs](https://katex.org/docs/browser.html) give a pretty good description on how to incorporate it into your website. In Tera, all you have to do is enclose those stylesheets/scripts into CSS/JS blocks, respectively. My inspiration came from [this pull request](https://github.com/getzola/after-dark/pull/22).

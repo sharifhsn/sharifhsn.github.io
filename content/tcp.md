@@ -26,7 +26,7 @@ Our new protocol has a sequence number for each packet, either 0 or 1. This is k
 
 $$ T_{transmit} = \frac{L_{packetLength}}{R_{transmissionRate}} $$$$ U_{sender} = \frac{\frac{L}{R}}{RTT - \frac{L}{R}} $$
 
-If we can send W packets at aa time, then we can replace \\( \frac{L}{R} \\) with \\(W\\), which will improve our time by a factor of \\(W\\)! However, if we send a stream of packets, then there are more issues. If you send a receiver too much data, then it will throw out the data it cannot receive. If packets get lost somewhere in the router, you will have no idea. Stopping the stream to check for issues wastes a lot of time.
+If we can send W packets at aa time, then we can replace $\frac{L}{R}$ with \\(W\\), which will improve our time by a factor of \\(W\\)! However, if we send a stream of packets, then there are more issues. If you send a receiver too much data, then it will throw out the data it cannot receive. If packets get lost somewhere in the router, you will have no idea. Stopping the stream to check for issues wastes a lot of time.
 
 We can solve this using a window time. We send packets up until the first ACK is received, then we check for any problems with ACK. But what is the window size?
 

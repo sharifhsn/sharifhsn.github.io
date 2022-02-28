@@ -16,7 +16,7 @@ Transmission time is dictated by bandwidth, which tells you how many bytes per s
 
 For small messages in the tens or hundreds of bytes like handshake acknowledgements, propagation delay is very significant. For larger messages, propagation delay is ignored and bandwidth is considered more significant.
 
-\\( RTT = 2PD \\): Round-trip time is equal to twice the propagation delay.
+$RTT = 2PD$: Round-trip time is equal to twice the propagation delay.
 
 **Packet switching is faster because it is a continuous stream.**
 
