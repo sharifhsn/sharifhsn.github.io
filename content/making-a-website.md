@@ -14,7 +14,7 @@ I've always wanted to have a personal website where I can upload what I do on my
 
 A website is no use unless we have somewhere to put it. [Github Pages](https://pages.github.com/) is a service offered by Github since 2008 that allows you to host your own website from a Github repository. You get one free website per Github account, which is called [username].github.io. All we have to do to enable it is create a repository named [username].github.io and enable Github Pages in the settings!
 
-``` bash
+```bash
 # should be above 2.28 to enable default branch name change
 git --version
 
@@ -46,7 +46,7 @@ For now, this won't do anything because we don't have a `gh-pages` branch or any
 
 To start, [install Zola on your system](https://www.getzola.org/documentation/getting-started/installation/). The documentation on the website is pretty stellar so I would recommend reading that to get a quick understanding on how to use Zola. I will explain the parts that I personally found difficult or unclear.
 
-``` bash
+```bash
 zola init
 zola build # unnecessary as serve will also automatically build it
 zola serve
@@ -58,7 +58,7 @@ Now you can see your new website at `127.0.0.1:1111`!
 
 Although we can build your website very simply on our local machine, it would be preferable to automatically build the website when we publish content so we don't have to mess around with all of that. The [Zola-approved way](https://www.getzola.org/documentation/deployment/github-pages/) to do this is by using [zola-deploy-action](https://github.com/shalzz/zola-deploy-action). All of you have to do is click the `New Workflow` button on the `Actions` page from your Github repository and follow the link to `set up a workflow yourself`, then copy-paste this into it:
 
-``` yaml
+```yaml
 # On every push this script is executed
 on: push
 name: Build and deploy GH Pages
@@ -90,7 +90,7 @@ An action of the type we want here consists of three files: `action.yaml`, `Dock
 
 `action.yaml` is simple. It should follow this general format:
 
-``` yaml
+```yaml
 # action.yaml
 name: 'ACTION_NAME'
 description: 'DESC'
@@ -102,7 +102,7 @@ runs:
 
 The Dockerfile is more complex and has many more options. I kept mine simple to what is needed, you may have your own preference for Docker iamges.
 
-``` Dockerfile
+```Dockerfile
 # any Docker image is fine, I prefer debian
 from debian:stable-slim
 MAINTAINER NAME <EMAIL>
@@ -137,7 +137,7 @@ We need one more thing before we can create `entrypoint.sh`; a token. We need to
 
 With that token, this is the basic necessities for `entrypoint.sh`:
 
-``` bash
+```bash
 #!/bin/bash
 set -e
 set -o pipefail
@@ -169,7 +169,7 @@ main "$@"
 
 With all of these settings, this is how your workflow should look:
 
-``` yaml
+```yaml
 # .github/workflows/main.yml
 on: push
 name: Build and deploy GH Pages
@@ -190,7 +190,7 @@ jobs:
 
 Zola requires a [Tera](https://tera.netlify.app/) template to render your site for the base site `index.html` as well as `page.html` for page-specific settings. You can also use [Sass](https://sass-lang.com/) stylesheets if you enable it in your `config.toml`. **Themes** are a convenient way to have those built for you so you can get a website looking nice without excessive fiddling. I decided to use the [after-dark](https://github.com/getzola/after-dark) theme which is based on the Hugo theme of the same name. Since I wanted to make my own modifications to it, [I forked it](https://github.com/sharifhsn/after-dark) and added the changes I wanted. The easiest way to add a theme for Github pages is to use submodules:
 
-``` bash
+```bash
 git submodule add https://github.com/getzola/after-dark.git themes/after-dark
 ```
 
@@ -204,4 +204,4 @@ Most of the lecture notes I write incorporate [$\KaTeX$](https://katex.org/) in 
 
 My preferred option for $\KaTeX$ rendering would be server-side, as I don't plan on pushing very often (perhaps once per day) and Zola compilation is extremely quick. However, after doing some research into [previous attempts](https://github.com/getzola/zola/pull/1073), I decided it wasn't feasible for now. Perhaps in the future I'll take a stab at implementing it myself, but for now I'll settle for client-side.
 
-[The $\KaTeX$ docs](https://katex.org/docs/browser.html) give a pretty good description on how to incorporate it into your website. In Tera, all you have to do is enclose those stylesheets/scripts into CSS/JS blocks, respectively. My inspiration came from [this pull request](https://github.com/getzola/after-dark/pull/22).
+[The $\KaTeX$ docs](https://katex.org/docs/browser.html) give a pretty good description on how to incorporate it into your website. In Tera, all you have to do is enclose those stylesheets/scripts into CSS/JS blocks, respectively. My inspiration came from [this pull request](https://github.com/getzola/after-dark/pull/22). I modified the standard `auto-render.min.js` script to add standard $\KaTeX$ \$ \$ tags.
