@@ -1,5 +1,5 @@
 +++
-title = "TCP Explained"
+title = "HTTP Explained"
 date = 2022-02-20
 
 [taxonomies]
