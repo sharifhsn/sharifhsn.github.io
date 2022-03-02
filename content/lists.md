@@ -1,13 +1,15 @@
 +++
 title = "Lists in OCaml"
-date = 2022-01-28
+date = 2022-01-27
 
 [taxonomies]
 categories = ["Principles of Programming Languages"]
 tags = ["cs314"]
 +++
 Lists are the most basic data structure in OCaml. The most analoguous structure is a vector in C++ or Rust. Lists are *homogenous* and of *arbitrary length*.
+
 <!-- more -->
+
 The most basic list is **nil**, the empty list: `[]`. We can prepend elements to a list through the **cons** operator: `::`. Every display of a list is actually just syntactic sugar for every element being cons with the empty list:
 
 ```ocaml
