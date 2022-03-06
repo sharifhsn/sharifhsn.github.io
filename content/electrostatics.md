@@ -47,4 +47,74 @@ $$ F = k\frac{|q_1||q_2|}{r^2} $$
 
 **where \\(k\\) is a proportionality constant: \\(k = 8.99 × 10^9 N \cdot m^2/C^2\\) in SI units.**
 
-So what does this law mean? 
+So what does this law mean? Crucially, this law gives no mention of direction. The magnitude of the force is the same regardless of whether the charges attract or repel, so we don't need to worry about that.
+
+> The constant \\(k\\) is sometimes written as \\(k = 1/(4πε_0)\\) where \\(ε_0\\) is the *permittivity of free space* with the value \\(8.85 × 10^{-12} C^2/N \cdot m^2\\).
+
+A Coulomb is an absolutely massive amount of charge that is typically only found in situations like lightning. It is far more common to encounter microcoulombs expressed as \\(μC\\) which are \\(10^{-6} C\\). 
+
+This is a situation that is expressed between only two point charges. What happens when we have multiple point charges? We have to calculate the *vector sum* of all these forces.
+
+This is easiest when all the charges are in a line, as this is simply a matter of adding and subtracting the forces depending on whether they are attractive or negative. We must calculate Coulomb's law for each pair and then combine those as appropriate.
+
+When we have points on a plane, things get a little more complicated. The easiest way to handle this is by separating each force into its \\(x\\) and \\(y\\) components. Pick one point to be set at the angle 0° degrees with respect to the point we are calculating for, then set the \\(θ\\) for each other point with respect to that line. Then, get \\(F_x\\) and \\(F_y\\) through \\(\cos{θ}\\) and \\(\sin{θ}\\), respectively. The point with 0° will only have an \\(x\\) component.
+
+Then, once you have the \\(F_x\\) and \\(F_y\\) all parcelled out according to positives and negatives, get the total \\(F\\) by applying the Pythagorean theorem to them. The answer \\(θ\\) is given by \\(\tan^{-1}{\frac{F_y}{F_x}}\\).
+
+## The Electric Field
+
+We have so far been talking about how individual point charges affect other point charges. When we talk about an entire system of charges, we need a broader, high-level understanding of charge. For that purpose, **the electric field** is essential. Fundamentally, the electric field is defined as the electric force per coulomb \\(\vec{E} = \vec{F}/q_0\\). This calculation pretends that we have a small positive *test charge* \\(q_0\\) placed in the middle of this electric field, which is affected by the various charges to have a force pointing a direction. This test charge typically has a small magnitude so as not to disturb the surrounding field.
+
+The electric field is independent of whatever point charge it's affecting. We could imagine a field with a magnitude \\(2.0 N/C\\) and direction upwards that causes a positive charge to go in the same direction as it, but a negative charge to go in the opposite direction. We can calculate the magnitude for each point charge with \\(F = |q_0|E\\).
+
+Electric fields, just like forces, are vectors. When we add fields together, we must equally be mindful of \\(E_x\\) and \\(E_y\\).
+
+An electric field is composed of multiple point charges. The amount of electric field that an individual point charge \\(q\\) produces is expressed by the equation
+
+$$E = \frac{k|q|}{r^2}$$
+
+Notice how \\(q_0\\) the test charge is not included in this equation. Since this new equation only expresses magnitude, we must individually determine direction by the sign of the charge. If \\(q\\) is positive, \\(\vec{E}\\) is directed in the opposite direction of \\(q\\), and vice versa for negative.
+
+An additionally useful equation relates to **parallel plate capacitors**. These are two parallel plates of opposite charge that have an electric field directed from the positive plate to the negative plate. The equation for this electric field is
+
+$$E = \frac{q}{ε_0A} = \frac{σ}{ε_0}$$
+
+As you can see in this equation, the symbol \\(σ\\) denotes \\(q/A\\) and is sometimes called *charge density*. Importantly, the distance between the plates is actually totally irrelevant to the electric field, unlike with point charges.
+
+## Electric Field Lines
+
+It is often useful to draw fields as a set of lines directed out of or towards a point charge. ***In general, electric field lines are always directed away from positive charges and toward negative charges.***
+
+For convenience, we usually only draw them in two dimensions, though technically charges act in three dimensions. The number of lines is expressed as proportional the magnitude of the charge, so five times as many lines for five times the magnitude. In general, the electric field is stronger when lines are closer together, which is why parallel plate capacitors have the same electric field in the middle but bulge out at the ends.
+
+The lines are not always straight, as in the case of an **electric dipole**. An electric dipole has two separated point charges of opposite signs and equal magnitude. The field lines in this case come from the positive charges and curve towards the negative charge, getting faster as they get closer. The electric field vector in this case is *tangent* to the electric field at any point. Between two charges of the same sign, there is practically no electric field because the lines curve away from each other.
+
+## Shielding
+
+Electric fields can exist anywhere where electrons can move freely, which includes the inside of a conductor. It's a logical conclusion: electrons hate being near each other, so they try to get away in the conductor. That leaves them all at the surface of the conductor. The same principle applies for positive charges; conductors generally have all their excess charge at their surface.
+
+However, since all the excess charge is at the surface, that means that in the interior of the conductor, there is no movement of free electrons because they're not there. This means that there is *zero* electric field inside a conductor.
+
+If we imagine a conductor within a parallel plate capacitor, there is a lot of electric field going on. However, all of the charges are directed outside of it. Inside the conductor, any charge is completely shielded from the intense electric field outside the conductor.
+
+## Gauss' Law
+
+We have so far discussed electric fields created by point charges. In fact, an electric field is often composed by multiple charges that are spread out, also known as a *charge distribution*. Understanding an electric field created by a charge distribution is significantly more complex and requires understanding **electric flux**.
+
+We can think of flux on a high level as similar to a vector, with a direction and magnitude, but with the additional dimension of area. This concept will be important when discussing magnets.
+
+We can consider the formula for a point charge as a special form of **Gauss' Law** which describes electric fields in general. Remember how we can substitute \\(1/(4πε_0)\\) for \\(k\\)? This means that our new equation is \\(E = q/4(πε_0r^2)\\). If we multiply both sides by \\(A\\) which is \\(4πr^2\\) for a sphere, then we get
+
+$$EA = \frac{q}{ε_0}$$
+
+where \\(EA\\) is electric flux, also known as \\(Φ_E\\).
+
+However, we don't always have a nice, neat distribution of charge like in a sphere. A Gaussian surface can be arbitrarily shaped. We have to think of this similarly to how we think about integrals in calculus. If we take an arbitrarily small area \\(ΔA\\), it has an electric field that is essentially constant in magnitude and direction. The surface has a *normal* which is a line perpendicular to the surface. The angle \\(ϕ\\) is between the electric field vector and the normal. With all these variables, Gauss' Law is expressed as so:
+
+**The electric flux \\(Φ_E\\) through a Gaussian surface is equal to the net charge \\(Q\\) enclosed by the surface divided by \\(ε_0\\), the permittivity of free space:**
+
+$$Σ(E \cos{ϕ})ΔA = \frac{Q}{ε_0}$$
+
+**with the left side being \\(Φ_E\\) in \\(N \cdot m^2/C\\).**
+
+The flux has the same sign as \\(Q\\).
