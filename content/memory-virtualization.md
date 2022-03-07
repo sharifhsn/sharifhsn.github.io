@@ -59,8 +59,40 @@ We want the power of static relocation, but we need a way to manually protect ea
 
 There are two general operating modes, as discussed previously: kernel space, and user space. Privileged kernel operations have full power over all of memory and the MMU, and users have to ask the OS for memory through virtual translation.
 
-## MMU
+## Address Translation
 
-The MMU contains a base register that stores the virtual address. It does the translation in steps:
+To start out with, we will make some assumptions about how address spaces are laid out. They are all contigous spaces in memory of the same size that are smaller than physical memory. As we will see later with segmentation, this assumption will not hold up, but it useful for now.
 
-1. is the memory in user mode? if so, you can use it.
+In order to translate a *virtual address* to a *physical address* in memory, we need some kind of reference space in memory. This is given by the **base** and **bounds** registers, which give the physical memory locations of where the virtual address space starts and ends, respectively. These registers are not part of the regular ISA and are instead part of the previously mentioned MMU, and operating on them requires privilege. The MMU can also throw an exception upon illegal memory access which is handled by our OS.
+
+Our OS can manage memory in this simple way through the mechanism of a *free list*, which is a linked list which indicates free spaces, which is also used for `malloc`.
+
+As discussed before, the address space has a structure where the stack grows downward and the heap grows upward. However, if you look at a diagram of this for more than five seconds, you might notice a giant chasm between the stack and heap. Relying on our assumption of a contiguous space of memory, this is a lot of wasted memory. Some address spaces fix this problem through **segmentation**.
+
+## Segmentation
+
+As the name implies, a segmented address space is split into multiple segments with its own base/bounds pair to indicate its logical beginning and end. We can split every piece of the address space into its own segment, so stack goes in one segment, heap goes in another, etc. This way, although the virtual address space has this nice alignment, we are not wasting physical memory with our *sparse* address space.
+
+In order to translate a virtual address, we treat the address as an offset with a segment. For example, if we were trying to access a virtual address in the heap, this would be the formula:
+
+$$physicalAddress = physicalBase + (virtualAddress - virtualBase)$$
+
+Before we allow this translation to take place, however, we must check that the value does not exceed the physical bound. If this is the case, then we have caused the infamous **segmentation fault**.
+
+A faster way to do with this masks is through bitwise operations. The top two bits of the address refer to the segment, either the code, stack, or heap. The rest of the address is the offset within the segment. This way, we can perform the bounds check before accessing the physical address by checking if the expression in the parentheses exceeds the virtual bounds.
+
+However, one issue with this means that each segment gets the same maximum size, which is \\(2^{offset}\\). If we want a bigger heap, we're out of luck. We can solve this by tracking instructions instead of bits. For example, an instruction fetch for `%rip` will come from the code segment, so we don't need to put that in the address that it is in the code segment.
+
+Another issue is that the stack segment grows downwards instead of forwards, which means that its segment works differently. We need an extra bit for segments that indicates whether they grow forwards or backwards, which will be set to 0 for the stack and 1 for everything else.
+
+If that bit is false, then we subtract the offset from the base instead of adding it as above.
+
+## Sharing :)
+
+Sometimes, processes share the same code. It seems wasteful to copy the same code segment every time we have a new process, so modern operating systems implement **sharing** for code segments. Sharing can be implemented for any segment, but it is most common for code since it's read-only. This is important for dynamically linked libraries since many processes will access the same library, like `libc`.
+
+Hardware adds extra *protection bits* to each segment indicating its `rwx` value similar to a file. If a segment is indicated to be `r--`, then the OS can secretly share the segment between multiple processes, assured that they will only read it. This concept of a read guard allowing for multiple shared references as opposed to a write guard which only allows for one mutable reference will become *very* important when we discuss concurrency.
+
+We have only been working on a few segments so far, but segmentation could theoretically be extended to as many segments as you want. In order to have *fine-grained* segments, a segment table is needed to quickly access thousands of segments.
+
+There are a few more things that the OS needs to do in order to support segmentation. One is that it must preserve all base-bounds pairs upon a context switch, since the location of the address space is now more complicated. Another is that the growing and shrinking of segments must be managed through `sbrk`-like system calls that shift the bounds of the heap/stack. The final and most important issues that allocating variable size address spaces runs into the same problems of `malloc` where external fragmentation is difficult to avoid. Like with `malloc`, there is no perfect solution, ranging from algorithmic free lists to compact memory which rearranges segments every time a new one is created.
