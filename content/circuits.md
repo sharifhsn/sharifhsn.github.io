@@ -79,7 +79,7 @@ We often want to understand average current and average voltage in relation to p
 
 ## Series Wiring
 
-All the circuits we've discussed have one device with a straight wire. Often we want to have multiple devices on the same circuit. 
+All the circuits we've discussed have one device with a straight wire. Often we want to have multiple devices on the same circuit.
 
 When we have multiple resistors in series, their resistances added up to get the total resistance of a circuit. A very useful method to solve these kinds of problems is to "combine" resistors by adding up their resistances. This becomes helpful when we start working with parallel wiring.
 

@@ -36,7 +36,7 @@ Charges experience electric force in a field, and they experience **magnetic for
 To visualize the second rule, imagine the magnetic force like a buffeting wind around the charge. The wind only has any force if it has something to push on. If you hold a piece of paper parallel to the direction to the wind, it'll barely move because there's nothing to push.
 
 > This is such an important point it's in its own section. **Right Hand Rule No. 1 (RHR1)** will tell us the direction of a magnetic force based on the magnetic field and velocity of charge. Your right thumb points in the direction of the charge, and the fingers point in the direction of the magnetic field. The palm faces in the direction of the magnetic force.
-> 
+>
 > This is only applies to *positive charges*. Negative charges will have the direction of the force as opposite.
 
 The magnitude \\(B\\) of a magnetic field is defined in teslas \\(T\\) by

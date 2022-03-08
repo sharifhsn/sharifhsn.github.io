@@ -50,7 +50,7 @@ DHCP typically applies within a subnet. Relay agents on routers, like with BOOTP
 
 There are two kinds of IP addresses: *public* and *private*. Private addresses are reserved for `10.0.0.0` to `10.255.255.255`. If you send a request to private address, your router will not send it out to the Internet. Private addresses are also free; you can hand out as many as you want without it costing anything.
 
-However, requests sent from a private IP address cannot access the Internet. In order to access the Internet, we use a **Network Address Translation** box. This NAT box is assigned a single public IP address and it is the public-facing IP for all of the machines with private addresses on it. 
+However, requests sent from a private IP address cannot access the Internet. In order to access the Internet, we use a **Network Address Translation** box. This NAT box is assigned a single public IP address and it is the public-facing IP for all of the machines with private addresses on it.
 
 This is likely how your home router works. Each device in your home only has a private address and every time it sends a request to the Internet, that request is sent to the NAT box in your router and translated to one single public IP for all of the machines in your house.
 
@@ -70,6 +70,4 @@ IPv6 does not protect against some problems that still exists, such as bit flips
 | -------------- | -------------- | -------------- | -------------- | ----------- | ----------- | ---------- | ---------- |
 | Payload Length | Payload Length | Payload Length | Payload Length | Next Header | Next Header | Hop Limit  | Hop Limit  |
 
-*followed by the source address and destination address, along 4-bit boundaries*
-
-
+followed by the source address and destination address, along 4-bit boundaries

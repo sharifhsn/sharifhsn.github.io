@@ -51,7 +51,7 @@ So what does this law mean? Crucially, this law gives no mention of direction. T
 
 > The constant \\(k\\) is sometimes written as \\(k = 1/(4πε_0)\\) where \\(ε_0\\) is the *permittivity of free space* with the value \\(8.85 × 10^{-12} C^2/N \cdot m^2\\).
 
-A Coulomb is an absolutely massive amount of charge that is typically only found in situations like lightning. It is far more common to encounter microcoulombs expressed as \\(μC\\) which are \\(10^{-6} C\\). 
+A Coulomb is an absolutely massive amount of charge that is typically only found in situations like lightning. It is far more common to encounter microcoulombs expressed as \\(μC\\) which are \\(10^{-6} C\\).
 
 This is a situation that is expressed between only two point charges. What happens when we have multiple point charges? We have to calculate the *vector sum* of all these forces.
 

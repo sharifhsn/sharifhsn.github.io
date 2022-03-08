@@ -100,7 +100,7 @@ runs:
   image: 'Dockerfile'
 ```
 
-The Dockerfile is more complex and has many more options. I kept mine simple to what is needed, you may have your own preference for Docker iamges.
+The Dockerfile is more complex and has many more options. I kept mine simple to what is needed, you may have your own preference for Docker images.
 
 ```Dockerfile
 # any Docker image is fine, I prefer debian
