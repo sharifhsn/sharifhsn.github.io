@@ -35,7 +35,7 @@ The obvious choice here is to use [Dijkstra's algorithm](https://en.wikipedia.or
 
 This algorithm works best in a centralized graph like at a university. Instead of sending a link state broadcast every time a connection is made, each node in a graph will send its own **link state** to a centralized location, and that location will be checked for recomputation of shortest path.
 
-The centralized node is the one that does all the calculations for shortest path. This is known as a **distance vector**. Each router must calculate its own distance on top of the other links to the node that it must pass by. Think of a table that is passed from link to link which is updated according to Dijkstra's algorithm. Degenerate longer paths are thrown out when tables "merge" at a router.
+The centralized node is the one that does all the calculations for shortest path. This is known as a **distance vector**. Each router must calculate its own distance on top of the other links to the node that it must pass by. Think of a table that is passed from link to link which is updated according to Dijkstra's algorithm. The initial distance vector table for a router only contains the link speeds for its adjacent routers, and all others are marked as infinity. Degenerate longer paths are thrown out when tables "merge" at a router.
 
 If a link breaks, then the routers that have broken links get reset in the final table. When the broken router sends a new distance vector table, it updates the central table in the same process as the table generation.
 
@@ -60,7 +60,7 @@ BGP works through persistent sessions between BGP routers over semi-permanent TC
 3. Send four kinds of messages.
 - *Open* - establish session by exchanging AS numbers and the BGP identifier (arbitrary router IP address). There is a timer for how long to wait before just assuming the session is down i.e. in an outage.
 
-- *Notification*- report unusual conditions, usually an error. If there are header errors, or a timer has expired, etc. then the TCP session must be terminated.
+- *Notification* - report unusual conditions, usually an error. If there are header errors, or a timer has expired, etc. then the TCP session must be terminated.
 
 - *Update* - inform if there are new active or old inactive routers. The message includes the withdrawn routes, which are inactive routers, the length of that field as it can be variable, etc.
 
@@ -70,11 +70,11 @@ When we say that a router is advertising a prefix, there are some necessary assu
 
 The BGP protocol additionally has many attributes that indicate the characteristics of a prefix:
 
-1. ORIGIN: advertises the origiin of an announcement and prefix injection. This is manually configured by intra-routing protocols.
+1. ORIGIN: advertises the origin of an announcement and prefix injection. This is manually configured by intra-routing protocols.
 
 2. AS_PATH: a link of ASes which is the path of ASes that the prefix has traveled to. This is useful for detecting loops and selecting shorter routes of ASes.
 
-3. NEXT_HOP: the hop field is when you cross the AS boundary. After you cross, the next hop value is the next AS you need to get to in order to get to the destination router. The reason this is important is because the IP packets within an AS can travel in any order irrespective of BGP, so the intra-routing algorithm can decide where to go based on this value.
+3. NEXT_HOP: the hop field is when you cross the AS boundary. After you cross, the next hop value is the next AS you need to get to in order to get to the destination router. The reason this is important is because the IP packets within an AS can travel in any order irrespective of BGP, so the intra-routing algorithm can decide where to go based on this value. This becomes significant when a network experiences *transit traffic* and different networks are using that network as an intermediary. In order to get the packet to exit the network as quickly as possible, BGP can make the decision to send the packet through non-BGP routers if it's a faster way to make the packet leave the network.
 
 4. MED: stands for Multi-Exit Discriminator. If ASes are connected via multiple links, the AS that receives a prefix uses this value to discriminate between exits, with a lower value being better.
 

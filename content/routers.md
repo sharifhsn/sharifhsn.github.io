@@ -1,5 +1,4 @@
 +++
-
 title = "Routers"
 
 date = 2022-03-10
@@ -57,5 +56,3 @@ One way is through **memory**. This is the cheapest way of going about it. The I
 Another way is through **bus**. The packet is transferred between input and output through a I/O bus, with a memory buffer to hold the packet on each end. There's no CPU movement here, it's all I/O instructions. But we still need some kind of command for the destination port number. The CPU will periodically calculate and *cache* the forwarding table on the input device (also known as **line card**). If there is a cache miss, then I/O will ask the CPU to update the cache from main memory, which is slow but doesn't happen often. However, since there's only one bus, there is only one communication possible between one port and another at a time. This speed is in the high Mbps.
 
 The third way, which is the most high-end way, is the **crossbar**. It works like a bus, except that there exists a bus between every single port, which means that for \\(n\\) ports, we can have \\(\frac{n}{2}\\) simultanenous transfers. This is in the best-case scenario where each input goes to a different output. However, if two ports are trying to connect to the same port, then one of them will be bottlenecked because it's still one bus. However, this complicated switching fabric is extremely expensive, which scales with the number of ports. The price can be worth it for a company like Google; their speeds can be in the Tbps!
-
-

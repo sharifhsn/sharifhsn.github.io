@@ -1,5 +1,4 @@
 +++
-
 title = "Threads"
 
 date = 2022-03-23
@@ -68,8 +67,14 @@ We want these three instructions to be executed uninterrupted. This is known as 
 
 There are many high-level **synchronization primitives** in the OS that exist to ensure the correct order of instructions. Each kind of lock is designed to solve a specific problem; no single lock can solve all of them.
 
+We want to have correctness in our concurrency. This means that we must have mutual exclusion where only one thread can access the critical section at a time. If multiple threads are waiting for something, they cannot be stuck forever, they must make progress. Similarly, threads cannot be forced to wait an unreasonably large amount of time. Concurrency must also be fair and not favor any thread over any thread. And obviously, we do not want to overly tax the CPU with the overhead of synchronization.
+
+We need underlying hardware atomic operations in order to implement synchronization. When these hardware instructions execute, *no instruction or interrupt* can execute. Example instructions are `Test&Set` and `Compare&Swap`.
+
+The reason we need this is because if we don't make these instructions atomic, we can encounter race conditions. Imagine an unset lock with a while loop and two threads. The first thread successfully enters the loop because the lock is unacquired. However, before it can acquire the lock, the thread switches and the second thread executes and acquires the lock. Now the first thread has not acquired the lock but it is still in the loop, so when it runs again it will acquire the lock even though it has already been acquired, allowing two threads in the same critical section! In order to combat this, testing and setting are the same atomic operation so there isn't a gap that can allow a switch in between those two operations.
+
+Making our implementation fair is not as easy. If we imagine the most basic spinlock which
+
 ### Mutex
 
 Mutex stands for **mutual exclusion**. Mutexes are initialized, then acquired in order to enter the critical section. If the lock cannot be acquired, then the thread must wait. This waiting can either take the form of **spin** or **block**. Spinning simply keeps the thread in a while loop until the mutex is released, whereas blocking sets the thread to a block state which will be checked by the scheduler. After the mutex is released by the acquiring thread, other threads can acquire the thread and lock it in the same way until the mutex is destroyed.
-
-
