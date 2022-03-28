@@ -1,10 +1,7 @@
 +++
-
 title = "Lets, Tuples, and Records in OCaml"
 
 date = 2022-02-03
-
-
 
 [taxonomies]
 
@@ -100,6 +97,6 @@ Now, we can construct records by using the same brace notation but giving each n
 let today = { day=3; year=2022; month="f"^"eb" };;
 ```
 
-You might notice
+You might notice that this has a similar syntax to C-style structs. The fields can be accessed through `.` syntax as in `today.day`, and the order of the struct assignment doesn't matter.
 
-
+Records can also be conveniently destructured, like all other data structures. 
