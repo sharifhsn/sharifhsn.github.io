@@ -73,8 +73,106 @@ We need underlying hardware atomic operations in order to implement synchronizat
 
 The reason we need this is because if we don't make these instructions atomic, we can encounter race conditions. Imagine an unset lock with a while loop and two threads. The first thread successfully enters the loop because the lock is unacquired. However, before it can acquire the lock, the thread switches and the second thread executes and acquires the lock. Now the first thread has not acquired the lock but it is still in the loop, so when it runs again it will acquire the lock even though it has already been acquired, allowing two threads in the same critical section! In order to combat this, testing and setting are the same atomic operation so there isn't a gap that can allow a switch in between those two operations.
 
-Making our implementation fair is not as easy. If we imagine the most basic spinlock which
+## Spinlocks
 
-### Mutex
+Making our implementation fair is not as easy. If we imagine the most basic spinlock which switches back and forth, a program that knows how long a context switch will take will acquire the lock right before every context switch so no other program will be obtain it.
 
-Mutex stands for **mutual exclusion**. Mutexes are initialized, then acquired in order to enter the critical section. If the lock cannot be acquired, then the thread must wait. This waiting can either take the form of **spin** or **block**. Spinning simply keeps the thread in a while loop until the mutex is released, whereas blocking sets the thread to a block state which will be checked by the scheduler. After the mutex is released by the acquiring thread, other threads can acquire the thread and lock it in the same way until the mutex is destroyed.
+In order to introduce fairness, the ticket system for schedulers can be used here. Every thread is assigned a ticket for every turn it gets, with the first thread getting ticket 1, second ticket 2, etc. Now when a thread releases a lock, the ticket increments to the next thread. Even if it wants to maliciously acquire the lock before a context switch occurs, it can't because it has lost its turn.
+
+We need a special atomic function to make this work like `Test&Set` with basic mutex. We should be able to get a ticket number and increment it atomically. The function used for this is `Fetch&Add`.
+
+```c
+int FetchAndAdd(int *ptr) {
+    int old = *ptr; // these two lines are
+    *ptr = old + 1; // executed atomically!
+    return old;
+}
+```
+
+Spinlocks are fast when we have a short critical section because we're not context switching very often, so when we switch between locks constantly we want to avoid that overhead as much as possible as that dominates execution time. However, in a situation where there is only one CPU, letting the threads spin on a lock is extremely wasteful. The CPU scheduler has no idea that a thread is waiting for a lock so it will ignorantly run it even though all it does is spin.
+
+One alternative is to yield the thread instead of letting it spin, telling the CPU scheduler that the thread doesn't need to run right now. *In general*, a shorter critical section is okay to spin, but a longer critical section is not okay to spin.
+
+## Condition Variables
+
+Mutex locks are just a way of restricting access to a critical section. It's synchronous, but there's no order to the way that the threads have to run. That is up to the caprices of the scheduler. However, let's say that ordering is significant to the execution of our threads. How can we ensure that threads are executed in a certain order?
+
+We need some functions and concepts to implement this. There are two system call functions `wait(cond_t, mutex_t)` and `signal(cond_t)` that are used with **condition variables** `cond_t`.
+
+Let's assume that a thread has acquired the lock, but it has not satisfied the condition to run yet because another thread must run first to preserve ordering. In that case, the condition variable will indicate that the thread cannot run and it will call `wait` to sleep the thread until the condition variable changes, releasing the lock so that the other thread can run. The caller of `signal` wants to wake up that sleeping thread, unless there are no sleeping threads, in which case it does nothing.
+
+The best time to use condition variables is in a producer/consumer system, like in a pipe. Producers write to a pipe, and consumers read from the pipe. The pipe buffer has a limited size, so the producer can only add data to it if the buffer is empty, and the consumer can only read from it if the buffer has contents. For simplicity, assume a buffer of single unit size for now.
+
+```c
+void *producer(void *arg) {
+    for (Int i = 0; i < loops; i++) {
+        Mutex_lock(&m); // lock the mutex
+        while (numfull == max) { // while the buffer is full,
+            Cond_wait(&cond, &m;) // wait
+        }
+        do_fill(i); // put data in buffer
+        Cond_signal(&cond); // signal conditional variable
+        Mutex_unlock(&m); // unlock the mutex
+    }
+}
+
+void *consumer(void *arg) {
+    while(1) { // consume on and on forever
+        Mutex_lock(&m); // lock the mutex
+        while (numfull == 0) { // while buffer is empty,
+            Cond_wait(&cond, &m); // wait
+        }
+        int tmp = do_get(); // get the data
+        Cond_signal(&cond); // signal conditional variable
+        Mutex_unlock(&m); // unlock the mutex
+        printf("%d\n", tmp); // do something with data
+    }
+}
+```
+
+Let's consider an example with a producer and two consumers, as well as a FIFO scheduler. The first consumer thread runs and waits immediately because the buffer is empty. The second consumer thread does the same. The producer thread runs through its entire loop, filling the buffer, then when it loops again it will wait (since our buffer is size 1). The first consumer thread will return to the while loop, and now that the buffer is no longer empty it will fetch the data, signal the thread, and finish.
+
+However, there is a problem here. The `Cond_signal` function signal is extremely generic and does not signal a specific thread. Instead, it will signal a random thread, which may be the producer or other consumer thread. But the whole point of using conditional variables is so that we have ordering!
+
+We need to have *multiple* conditional variables:
+
+```c,hl_lines=5
+void *producer(void *arg) {
+    for (Int i = 0; i < loops; i++) {
+        Mutex_lock(&m); // lock the mutex
+        while (numfull == max) { // while the buffer is full,
+            Cond_wait(&empty, &m;) // wait until buffer is empty
+        }
+        do_fill(i); // put data in buffer
+        Cond_signal(&fill); // signal to show buffer is somewhat filled
+        Mutex_unlock(&m); // unlock the mutex
+    }
+}
+
+void *consumer(void *arg) {
+    while(1) { // consume on and on forever
+        Mutex_lock(&m); // lock the mutex
+        while (numfull == 0) { // while buffer is empty,
+            Cond_wait(&fill, &m); // wait until buffer is somewhat filled
+        }
+        int tmp = do_get(); // get the data
+        Cond_signal(&empty); // signal to show that buffer is empty
+        Mutex_unlock(&m); // unlock the mutex
+        printf("%d\n", tmp); // do something with data
+    }
+}
+```
+
+In this example, the consumer thread will only run when the producer has signaled that there is content in the buffer.
+
+## Semaphore
+
+Conditional variables do not have any state. They only signal the condition to wake or sleep a thread. This can be useful if you have lots of threads that do the exact same thing, like in a producer-consumer model. However, if you want a more complex way to represent state, you need a **semaphore**.
+
+Semaphores are essentially conditional variables that contain an integer value which can be changed by threads. This allows threads to have multiple options based on a single variable shared across multiple threads just by changing the value in the semaphore. The semaphore is incremented every time a thread is woken, and decremented every time a thread sleeps.
+
+The atomic operations for semaphores are `Allocate&Initialize`, `Wait`, and `Post`. We must first create the semaphore by allocating/initializing it. The `Wait` operation decrements the semaphore if it is greater than 0, and `Post` will increment the semaphore and wake a sleeping thread.
+
+In this context, joining and exiting threads have no complication with mutexes; all you need to do is wait and post the semaphore, respectively.
+
+We can actually construct locks using semaphores. Acquiring and releasing locks work the same way as waiting and posting, so you can just use those same atomic operations instead of `Test&Set`. In reverse, you can build a semaphore using locks and conditional variables, though in practice that's a little more complicated.
