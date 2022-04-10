@@ -9,7 +9,7 @@ description = "Sharif Haason's personal website for various notes and ideas"
 default_language = "en"
 
 # The site theme to use.
-theme = "after-dark"
+theme = "anpu"
 
 # For overriding the default ouput directory `public`, set it to another value (e.g.: "docs")
 output_dir = "public"
