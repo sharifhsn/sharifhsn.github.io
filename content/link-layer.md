@@ -106,8 +106,24 @@ We have previously assumed that all hosts are fighting for the use of one channe
 
 **CDMA (Code Division Multiple Access)** will send signals in a coded format. Imagine a large group of people that are speaking all at the same time. If everyone is speaking in English, the message will quickly get garbled. However, if every conversation has its own language, then the message will be clear. Even if I hear a conversation next to me in Chinese, I will tune it out because I don't know Chinese and be able to speak and hear in English. There must be some amount of power control so that one person does not speak too loud, but otherwise the communication will work.
 
-## Wi-Fi
+## LAN
 
 Computers can be connected through a sort of wireless LAN. If connecting a computer that does not have a screen or an otherwise easily accessible user interface, it is often convenient to connect with it using ad-hoc mode to a device with a screen so it can be configured, like Amazon Echo.
 
-Each local set of computers that can connect in these ways is known as a **BSS (Basic Set Size)**
+Each local set of computers that can connect in these ways is known as a **BSS (Basic Service Set)**. This is known commonly as a **LAN**. The sender will wait for the sense channel to be idle than transmit the entire frame, else do a random timeout multiplying by 2 as with Ethernet, and the access point will return an ACK.
+
+Access control in this sense is mediated by the time waited to check if the channel is busy or not. However, this can still cause collisions if a router does not hear from another, which is the **hidden terminal problem**. An **exposed terminal problem** may occur when a terminal is not properly signaled to not send because it is busy.
+
+In order to mediate these issues, senders send a small packet called **RTS (request to send)** and a receiver will send a small packet called **CTS (clear to send)**. If senders hear an RTS from somewhere else, they'll wait until the receiver is clear to send to. If there isn't a CTS, they can transmit because the receiver is open in that time. In this context, the HTP and ETP are caused when neither RTS nor CTS are heard, or when RTS is heard but not CTS.
+
+To avoid these issues, we can reserve channels in the same way that channels are reserved in CSMA. The small reservation packets are unlikely to collide compared to the large frame packets.
+
+## Bluetooth
+
+**Bluetooth** is a short-range kind of Wi-Fi technology that operates in the ISM band of 2.4GHz to 2.8 GHz. It was initially created for use by wireless mice and keyboards. The data rate goes up to 721 Kbps, which is fine because it's not intended for data transfer, just communicating with nearby wireless devices.
+
+In order to code this message, **frequency hopping will be used**. A frequency sequence will be sent via CDMA about which frequencies will be used to transmit data in sequence. Then, the sender will send the sequence in parts at each frequency in order. The receiver which knows the frequency sequence will be able to tune into the right frequencies at the right time and receive the correct bitstream. Anyone else listening to the bitstream that doesn't know the frequency sequence won't understand it.
+
+Personal area networks under Bluetooth are either **Piconet** or **Scatternet**. Piconet has master/slave nodes, where the master is the one that allocates the Bluetooth channels among the slaves. Scatternet allows devices to be either master or slave in different networks so that a device can act differently in Bluetooth in different settings.
+
+Connection is established by beginning with an inquiry broadcast by the Bluetooth device. A potential slave will respond and the master will send back a page for the hopping sequence. The other device will establish itself as a slave through a slave response and the master device will do likewise, at which time the connection is established through ACK-DAC.
