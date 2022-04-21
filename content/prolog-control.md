@@ -65,4 +65,58 @@ This is the basic pseudocode for the unify function. It's recursive, and side-ef
 
 The resolvent will maintain a list to satisfy our query. When we try to resolve a compound term, any goals within will be queued onto the resolvent to be resolved. This is *non-deterministic*, there is no order that will necessarily be followed other than that sub-goals within a single term will be inorder.
 
+## Missionaries and Cannibals
 
+Let's imagine a problem where we have three missionaries and three cannibals that need to cross a river in one boat. If the cannibals outnumber the missionaries, they will get eaten. How can we get every person across the river?
+
+The concept of a *safe state* will be important here. A state is safe when no missionaries are eaten. By labelling certain states as unsafe, we can cut those paths out of our search algorithm. We should also define *transitions* between states, where a predicate moves a state from A to B. 
+
+Our states are essentially a pair representing position.
+
+```pro
+start(3-3-0-0-l).
+finish(0-0-3-3-_).
+```
+
+The elements in order are missionaries on the original side, cannibals on the original side, missionaries on the target side, cannibals on the other side, and the location of the boat.
+
+The safety of the state is based on whether there are more cannibals than missionaries.
+
+```pro
+safe(0-_-M2-C2-_) :- M2 >= C2.
+safe(M1-C1-0-_-_) :- M1 >= C1.
+safe(M1-C1-M2-C2-_) :- M1 >= C1, M2 >= C2.
+```
+
+Every state here represents a point at which there are at least as many missionaries as cannibals on each side of the river.
+
+The change in state can be caused by a `carry/2` predicate which details how many missionaries and cannibals are being moved, respectively. In our case, the boat can only move up to 2 people so we need to represent every possible case of that.
+
+```pro
+carry(2, 0).
+carry(1, 1).
+carry(0, 2).
+carry(1, 0).
+carry(0, 1).
+```
+
+However, we need a way to represent moving on both sides of the river, so we will have two transitions.
+
+```prolog
+step(M1-C1-M2-C2-l, M3-C3-M4-C4-r) :-
+    carry(X, Y),
+    M1 >= X, M3 is M1 - X, M4 is M2 + X,
+    C1 >= Y, C3 is C1 - Y, C4 is C2 + Y.
+
+step(M1-C1-M2-C2-r, M3-C3-M4-C4-l) :-
+    carry(X, Y),
+    M2 >= X, M4 is M2 - X, M3 is M1 + X,
+    C2 >= Y, C4 is C2 - Y, C3 is C1 + Y.
+```
+
+This `step` predicate checks every valid `carry`, then will execute that transition from the current state.
+
+```pro
+travel(A, A, _, []).
+travel(A, C, Visited, [B | Steps]) :-
+```

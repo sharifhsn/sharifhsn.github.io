@@ -73,10 +73,18 @@ Most people stream video over their browsers nowadays, which uses HTTP. You migh
 
 **Dynamic Adaptive Streaming** allows for good bandwidth over HTTP. The client is the one that adjusts the request rate from multiple content formats/encoding. For example, the client can request data at a lower bit rate or quality like 480p if it feels that 720p is too slow.
 
-The MPD or Media Presentation Descriptor is sent over HTTP and gives information about the different format segments. The client can then request each segment, and the segments can come from different ASes, which works well for CDNs. This is how ads are served over YouTube; the client is the one that decides whether to get an ad or not.
+The MPD or Media Presentation Descriptor is sent over HTTP and gives information about the different format segments. The client can then request each segment, and the segments can come from different ASes, which works well for CDNs. This is how ads are served over YouTube; the client is the one that decides whether to get an ad or not. This is also why blocking ads on YouTube can be done by an extension to your browser.
 
 ## DNS
 
-The ID for every YouTube video is a BASE64 11 character string, giving a space of \\(64^{11}\\) possible videos. The ID is mapped to 192 DNS host names so that multiple servers can be accessed for videos.
+The ID for every YouTube video is a BASE64 11 character string, giving a space of \\(64^{11}\\) possible videos. The ID is mapped to 192 DNS host names so that multiple servers can be accessed for videos. This ID is a special hash of the video ID.
 
+Multiple ASes can broadcast the fact that they are all reachable to a BGP router, and a BGP router can then choose the shortest path. This is called **anycast**. This means that for accessing video servers, you can pick the country where the video is hosted quite easily. Let's say you want to access a Japanese video in Japan. It's obviously best to access the Japan server, so that's the closest. However, all 192 servers that host the video will broadcast, so that if the Japan server goes down in an earthquake or something, the other servers are still available for the BGP router to pick from, so they can access, for example, the South Korean server.
 
+## VoIP
+
+Traditional telephones work over PSTN (Public Switched Telephone Network), which is autonomous and only designed for telephones. However, as the Internet has gradually taken over the world, a demand was created to include telephony in the Internet. Thus, the **VoIP** (Voice IP) protocol was born.
+
+The voice sound waves are converted into packets and transported as audio through lossy RTP, similar to other forms of multimedia.
+
+In order to establish the connection to begin with, **SIP** or Session Initiation Protocol sets up the VoIP session between two hosts. SIP URLS are similar to email addresses that identify users on a network. Most of the work is lent to the caller in order to type in some identifying information as they typically have a display/keyboard. The URL is mapped to an IP address similar to DNS and email.
