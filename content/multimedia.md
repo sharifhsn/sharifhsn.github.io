@@ -7,7 +7,7 @@ date = 2022-04-07
 
 [taxonomies]
 
-categories = ["internet Technology"]
+categories = ["Internet Technology"]
 
 tags = ["cs352"]
 
