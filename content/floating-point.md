@@ -95,6 +95,4 @@ $$
 
 In this way, a multiplication of two double precision numbers can be represented as the sum of multiplications of single precision numbers. Because the numbers are exactly rounded, the number is completely recoverable. This means that double precision multiplication can be possible on a computer which only supports single precision multiplication.
 
-
-
 *All this information comes from the landmark paper [What Every Computer Scientist Should Know About Floating-Point Arithmetic](https://docs.oracle.com/cd/E19957-01/800-7895/800-7895.pdf)*
