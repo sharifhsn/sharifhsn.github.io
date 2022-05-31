@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>Sharif&#x27;s Page - Meta</title>
+	<subtitle>Sharif Haason&#x27;s personal website for various notes and ideas</subtitle>
+	<link href="https://sharifhsn.github.io/categories/meta/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://sharifhsn.github.io/"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2022-02-26T00:00:00+00:00</updated>
+	<id>https://sharifhsn.github.io/categories/meta/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Making a Website with Zola, Github Pages, and Github Actions</title>
+		<published>2022-02-26T00:00:00+00:00</published>
+		<updated>2022-02-26T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/making-a-website/" type="text/html"/>
+		<id>https://sharifhsn.github.io/making-a-website/</id>
+		<content type="html">&lt;p&gt;Making a website in the modern era is not easy to do for free. I did it using Zola, Github Pages, and Github Actions.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;
+&lt;p&gt;I&#x27;ve always wanted to have a personal website where I can upload what I do on my local computer to access remotely and have the world see. But it always seemed like too much of a hassle to set up and I didn&#x27;t have the capital to invest in a website that I didn&#x27;t need. However, when I started going back to university in-person this year, I found it much easier to take notes by typing them instead of using OneNote as I was accustomed, as the amount of code I had to write was drastically increased. Needing a way to access them remotely with a nice view, I thought a blog would be a good way to do that in addition to all the other things I had always wanted a website for. So, I embarked on a journey to create a website.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;github-pages&quot;&gt;Github Pages&lt;&#x2F;h2&gt;
+&lt;p&gt;A website is no use unless we have somewhere to put it. &lt;a href=&quot;https:&#x2F;&#x2F;pages.github.com&#x2F;&quot;&gt;Github Pages&lt;&#x2F;a&gt; is a service offered by Github since 2008 that allows you to host your own website from a Github repository. You get one free website per Github account, which is called [username].github.io. All we have to do to enable it is create a repository named [username].github.io and enable Github Pages in the settings!&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# should be above 2.28 to enable default branch name change
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git --version
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mkdir &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;username&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt;.github.io
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;cd &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;username&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt;.github.io
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# personal git config
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; config&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --global&lt;&#x2F;span&gt;&lt;span&gt; user.name &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;NAME&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; config&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --global&lt;&#x2F;span&gt;&lt;span&gt; user.email &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;EMAIL&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; config&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --global&lt;&#x2F;span&gt;&lt;span&gt; init.defaultBranch &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; init
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;gh&lt;&#x2F;span&gt;&lt;span&gt; repo create &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span&gt;username&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span&gt;.github.io&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --public --source&lt;&#x2F;span&gt;&lt;span&gt;=.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --remote-upstream
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If you&#x27;re using &lt;a href=&quot;https:&#x2F;&#x2F;code.visualstudio.com&#x2F;&quot;&gt;Visual Studio Code&lt;&#x2F;a&gt; as your editor, there&#x27;s a nicer way to do this than through the command line. After installing &lt;a href=&quot;https:&#x2F;&#x2F;marketplace.visualstudio.com&#x2F;items?itemName=GitHub.vscode-pull-request-github&quot;&gt;the Github extension&lt;&#x2F;a&gt;, go to the Source Control button on the sidebar. There should be a button labeled &amp;quot;Publish to Github&amp;quot; which allows you to interactively initialize a Git repository in the current folder and publish it to Github.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;github-actions&quot;&gt;Github Actions&lt;&#x2F;h2&gt;
+&lt;p&gt;We might have created our Github page, but we need a way to get all of the code from our repository to the website. This is called &lt;strong&gt;deployment&lt;&#x2F;strong&gt;. Luckily, we have a way to automatically deploy our website through &lt;strong&gt;Github Actions&lt;&#x2F;strong&gt;. &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;features&#x2F;actions&quot;&gt;Github Actions&lt;&#x2F;a&gt; is another service offered by Github since 2019 that gives you free CI in public repositories. Although the free tier is &lt;a href=&quot;https:&#x2F;&#x2F;docs.github.com&#x2F;en&#x2F;billing&#x2F;managing-billing-for-github-actions&#x2F;about-billing-for-github-actions#included-storage-and-minutes&quot;&gt;fairly limited&lt;&#x2F;a&gt; at 500 MB and 2000 minutes per month, it should be more than enough for a static blog that is not deployed very often.&lt;&#x2F;p&gt;
+&lt;p&gt;There is an action automatically created for our Github page called &lt;code&gt;pages-build-deployment&lt;&#x2F;code&gt; which, as the name implies, builds and deploys the page you&#x27;ve created on push. The way that I organized my code, which is probably the simplest option, is that I hosted my code at the &lt;code&gt;main&lt;&#x2F;code&gt; branch and had a &lt;code&gt;gh-pages&lt;&#x2F;code&gt; branch that hosted the actual website which was built from the &lt;code&gt;main&lt;&#x2F;code&gt; branch. If you want to do the same, go to &lt;code&gt;Settings&lt;&#x2F;code&gt; -&amp;gt; &lt;code&gt;Pages&lt;&#x2F;code&gt; and make sure that the build target is the &lt;code&gt;gh-pages&lt;&#x2F;code&gt; branch at the root.&lt;&#x2F;p&gt;
+&lt;p&gt;For now, this won&#x27;t do anything because we don&#x27;t have a &lt;code&gt;gh-pages&lt;&#x2F;code&gt; branch or anything in our &lt;code&gt;main&lt;&#x2F;code&gt; branch. So how do we &lt;em&gt;actually&lt;&#x2F;em&gt; make our website?&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;zola&quot;&gt;Zola&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;&quot;&gt;Zola&lt;&#x2F;a&gt; is a static site generator written in &lt;a href=&quot;https:&#x2F;&#x2F;www.rust-lang.org&#x2F;&quot;&gt;Rust&lt;&#x2F;a&gt;, and is one of the fastest out there. I decided to choose it for my website. If you&#x27;d prefer a different generator, this is where this guide diverges for you. There are plenty of tutorials for Hugo websites or others, but I have found a lack of Zola guides so I decided to create this.&lt;&#x2F;p&gt;
+&lt;p&gt;To start, &lt;a href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;documentation&#x2F;getting-started&#x2F;installation&#x2F;&quot;&gt;install Zola on your system&lt;&#x2F;a&gt;. The documentation on the website is pretty stellar so I would recommend reading that to get a quick understanding on how to use Zola. I will explain the parts that I personally found difficult or unclear.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zola&lt;&#x2F;span&gt;&lt;span&gt; init
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zola&lt;&#x2F;span&gt;&lt;span&gt; build &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# unnecessary as serve will also automatically build it
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zola&lt;&#x2F;span&gt;&lt;span&gt; serve
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now you can see your new website at &lt;code&gt;127.0.0.1:1111&lt;&#x2F;code&gt;!&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;zola-deployment&quot;&gt;Zola Deployment&lt;&#x2F;h2&gt;
+&lt;p&gt;Although we can build your website very simply on our local machine, it would be preferable to automatically build the website when we publish content so we don&#x27;t have to mess around with all of that. The &lt;a href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;documentation&#x2F;deployment&#x2F;github-pages&#x2F;&quot;&gt;Zola-approved way&lt;&#x2F;a&gt; to do this is by using &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;shalzz&#x2F;zola-deploy-action&quot;&gt;zola-deploy-action&lt;&#x2F;a&gt;. All of you have to do is click the &lt;code&gt;New Workflow&lt;&#x2F;code&gt; button on the &lt;code&gt;Actions&lt;&#x2F;code&gt; page from your Github repository and follow the link to &lt;code&gt;set up a workflow yourself&lt;&#x2F;code&gt;, then copy-paste this into it:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# On every push this script is executed
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;push
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Build and deploy GH Pages
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;jobs&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;build&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;runs-on&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;ubuntu-latest
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;github.ref == &amp;#39;refs&#x2F;heads&#x2F;main&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;steps&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;checkout
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;uses&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;actions&#x2F;checkout@v2
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;build_and_deploy
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;uses&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;shalzz&#x2F;zola-deploy-action@v0.14.1
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;env&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Target branch
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;PAGES_BRANCH&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;gh-pages
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Provide personal access token
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TOKEN&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;${{ secrets.TOKEN }}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;However, I wanted more configuration and control over my action. Github Actions operates using Jekyll by default, so unless you add a &lt;code&gt;.nojekyll&lt;&#x2F;code&gt; file to the build branch it will run unnecessary steps to build a Jekyll theme. In order to reduce complexity, I decided to make a similar action that adds that command. If you&#x27;re comfortable with the workflow as provided, then skip the next section.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;creating-a-github-action&quot;&gt;Creating a Github Action&lt;&#x2F;h2&gt;
+&lt;p&gt;An action of the type we want here consists of three files: &lt;code&gt;action.yaml&lt;&#x2F;code&gt;, &lt;code&gt;Dockerfile&lt;&#x2F;code&gt;, and &lt;code&gt;entrypoint.sh&lt;&#x2F;code&gt;. Let&#x27;s break these down.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;action.yaml&lt;&#x2F;code&gt;: the configuration file that tells Github Actions what to do&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;Dockerfile&lt;&#x2F;code&gt;: the configuration file for the Docker container that Github Actions will set up&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;entrypoint.sh&lt;&#x2F;code&gt;: the shell script that will execute the commands we want&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;code&gt;action.yaml&lt;&#x2F;code&gt; is simple. It should follow this general format:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# action.yaml
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;ACTION_NAME&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;description&lt;&#x2F;span&gt;&lt;span&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;DESC&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;author&lt;&#x2F;span&gt;&lt;span&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;NAME&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;runs&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;using&lt;&#x2F;span&gt;&lt;span&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;docker&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;image&lt;&#x2F;span&gt;&lt;span&gt;: &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Dockerfile&lt;&#x2F;span&gt;&lt;span&gt;&amp;#39;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The Dockerfile is more complex and has many more options. I kept mine simple to what is needed, you may have your own preference for Docker images.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;Dockerfile&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-Dockerfile &quot;&gt;&lt;code class=&quot;language-Dockerfile&quot; data-lang=&quot;Dockerfile&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# any Docker image is fine, I prefer debian
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;from&lt;&#x2F;span&gt;&lt;span&gt; debian:stable-slim
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;MAINTAINER &lt;&#x2F;span&gt;&lt;span&gt;NAME &amp;lt;EMAIL&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# for github actions
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;LABEL &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;com.github.actions.name&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;ACTION_NAME&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;LABEL &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;com.github.actions.description&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;DESC&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# locale, I am in the U.S. so I use en_US
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;ENV &lt;&#x2F;span&gt;&lt;span&gt;LC_ALL C.UTF-8
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;ENV &lt;&#x2F;span&gt;&lt;span&gt;LANG en_US.UTF-8
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;ENV &lt;&#x2F;span&gt;&lt;span&gt;LANGUAGE en_US.UTF-8
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# standard apt-get + wget and git for getting and building
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;RUN &lt;&#x2F;span&gt;&lt;span&gt;apt-get update &amp;amp;&amp;amp; apt-get install -y wget git
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# get zola on the docker image
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;RUN &lt;&#x2F;span&gt;&lt;span&gt;wget -q -O - \
+&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;getzola&#x2F;zola&#x2F;releases&#x2F;download&#x2F;v0.15.3&#x2F;zola-v0.15.3-x86_64-unknown-linux-gnu.tar.gz&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; \
+&lt;&#x2F;span&gt;&lt;span&gt;| tar xzf - -C &#x2F;usr&#x2F;local&#x2F;bin
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;COPY&lt;&#x2F;span&gt;&lt;span&gt; entrypoint.sh &#x2F;entrypoint.sh
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# give the entrypoint executable permissions
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;RUN &lt;&#x2F;span&gt;&lt;span&gt;chmod +x entrypoint.sh
+&lt;&#x2F;span&gt;&lt;span&gt;ENTRYPOINT [&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;entrypoint.sh&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;entrypoint.sh&lt;&#x2F;code&gt; is where all the magic happens. Fundamentally, all that it does is call &lt;code&gt;zola build&lt;&#x2F;code&gt; on the &lt;code&gt;main&lt;&#x2F;code&gt; branch, which builds your website inside the &lt;code&gt;public&lt;&#x2F;code&gt; directory (you can configure this if you so wish). It then commits those website files to the &lt;code&gt;gh-pages&lt;&#x2F;code&gt; branch.&lt;&#x2F;p&gt;
+&lt;p&gt;We need one more thing before we can create &lt;code&gt;entrypoint.sh&lt;&#x2F;code&gt;; a token. We need to authorize our action to be able to push to &lt;code&gt;gh-pages&lt;&#x2F;code&gt;. You can create a token by going to &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;settings&#x2F;tokens&quot;&gt;this page&lt;&#x2F;a&gt; and creating a new token with at least &lt;code&gt;repo&lt;&#x2F;code&gt; rights. You can add the token to your repository by going to &lt;code&gt;Settings&lt;&#x2F;code&gt; -&amp;gt; &lt;code&gt;Secrets&lt;&#x2F;code&gt; -&amp;gt; &lt;code&gt;Actions&lt;&#x2F;code&gt; and creating a new repository secret called &lt;code&gt;TOKEN&lt;&#x2F;code&gt; (or any other name you like).&lt;&#x2F;p&gt;
+&lt;p&gt;With that token, this is the basic necessities for &lt;code&gt;entrypoint.sh&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;#!&#x2F;bin&#x2F;bash
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;set &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;-e
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;set &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;-o&lt;&#x2F;span&gt;&lt;span&gt; pipefail
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; config&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --global&lt;&#x2F;span&gt;&lt;span&gt; url.&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;https:&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;.insteadOf git:&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; config&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --global&lt;&#x2F;span&gt;&lt;span&gt; url.&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;GITHUB_SERVER_URL&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;.insteadOf &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;git@github.com&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;:
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# update git submodules (important if you have themes)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; submodule update&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --init --recursive
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zola&lt;&#x2F;span&gt;&lt;span&gt; build
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;cd&lt;&#x2F;span&gt;&lt;span&gt; public
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# if you want to add any commands do it here e.g. `touch .nojekyll`
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; init
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; config user.name &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;GitHub Actions&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; config user.email &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;github-actions-bot@users.noreply.github.com&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; add .
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; commit&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -m &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Deploy &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;GITHUB_REPOSITORY&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;} to &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;GITHUB_REPOSITORY&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;}:gh-pages&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; push&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --force &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;https:&#x2F;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;GITHUB_ACTOR&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;}:&lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TOKEN&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;}@github.com&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;GITHUB_REPOSITORY&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;}.git&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot; master:gh-pages
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;main &lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;@&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;With all of these settings, this is how your workflow should look:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# .github&#x2F;workflows&#x2F;main.yml
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;push
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Build and deploy GH Pages
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;jobs&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;build&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;runs-on&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;ubuntu-latest
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;github.ref == &amp;#39;refs&#x2F;heads&#x2F;main&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;steps&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;checkout
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;uses&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;actions&#x2F;checkout@v2
+&lt;&#x2F;span&gt;&lt;span&gt;      - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;build-and-deploy
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;uses&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;.&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# wherever your action is in relation to the root of the repo
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;env&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TOKEN&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;${{secrets.TOKEN}}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;themes&quot;&gt;Themes&lt;&#x2F;h2&gt;
+&lt;p&gt;Zola requires a &lt;a href=&quot;https:&#x2F;&#x2F;tera.netlify.app&#x2F;&quot;&gt;Tera&lt;&#x2F;a&gt; template to render your site for the base site &lt;code&gt;index.html&lt;&#x2F;code&gt; as well as &lt;code&gt;page.html&lt;&#x2F;code&gt; for page-specific settings. You can also use &lt;a href=&quot;https:&#x2F;&#x2F;sass-lang.com&#x2F;&quot;&gt;Sass&lt;&#x2F;a&gt; stylesheets if you enable it in your &lt;code&gt;config.toml&lt;&#x2F;code&gt;. &lt;strong&gt;Themes&lt;&#x2F;strong&gt; are a convenient way to have those built for you so you can get a website looking nice without excessive fiddling. I decided to use the &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;getzola&#x2F;after-dark&quot;&gt;after-dark&lt;&#x2F;a&gt; theme which is based on the Hugo theme of the same name. Since I wanted to make my own modifications to it, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;sharifhsn&#x2F;after-dark&quot;&gt;I forked it&lt;&#x2F;a&gt; and added the changes I wanted. The easiest way to add a theme for Github pages is to use submodules:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span&gt; submodule add https:&#x2F;&#x2F;github.com&#x2F;getzola&#x2F;after-dark.git themes&#x2F;after-dark
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The deploy action will take care of updating the submodule as necessary. Just add the theme to your &lt;code&gt;config.toml&lt;&#x2F;code&gt; file and voila!&lt;&#x2F;p&gt;
+&lt;p&gt;Although I like the &lt;code&gt;after-dark&lt;&#x2F;code&gt; theme, I might change to a different theme or make my own in the future to accommodate my goals for this website. If that happens, I&#x27;ll detail that process in another post.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;katex&quot;&gt;$\KaTeX$&lt;&#x2F;h2&gt;
+&lt;p&gt;Most of the lecture notes I write incorporate &lt;a href=&quot;https:&#x2F;&#x2F;katex.org&#x2F;&quot;&gt;$\KaTeX$&lt;&#x2F;a&gt; in some way. I find it an expressive way to write formulas and math expressions when reviewing for tests. &lt;code&gt;after-dark&lt;&#x2F;code&gt; does not provide $\KaTeX$ support by default, which is part of the reason I forked it.&lt;&#x2F;p&gt;
+&lt;p&gt;My preferred option for $\KaTeX$ rendering would be server-side, as I don&#x27;t plan on pushing very often (perhaps once per day) and Zola compilation is extremely quick. However, after doing some research into &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;getzola&#x2F;zola&#x2F;pull&#x2F;1073&quot;&gt;previous attempts&lt;&#x2F;a&gt;, I decided it wasn&#x27;t feasible for now. Perhaps in the future I&#x27;ll take a stab at implementing it myself, but for now I&#x27;ll settle for client-side.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;katex.org&#x2F;docs&#x2F;browser.html&quot;&gt;The $\KaTeX$ docs&lt;&#x2F;a&gt; give a pretty good description on how to incorporate it into your website. In Tera, all you have to do is enclose those stylesheets&#x2F;scripts into CSS&#x2F;JS blocks, respectively. My inspiration came from &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;getzola&#x2F;after-dark&#x2F;pull&#x2F;22&quot;&gt;this pull request&lt;&#x2F;a&gt;. I modified the standard &lt;code&gt;auto-render.min.js&lt;&#x2F;code&gt; script to add standard $\KaTeX$ $ $ tags.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>
