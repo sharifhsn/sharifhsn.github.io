@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>Sharif&#x27;s Page - cs416</title>
+	<subtitle>Sharif Haason&#x27;s personal website for various notes and ideas</subtitle>
+	<link href="https://sharifhsn.github.io/tags/cs416/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://sharifhsn.github.io/"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2022-04-14T00:00:00+00:00</updated>
+	<id>https://sharifhsn.github.io/tags/cs416/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Disks</title>
+		<published>2022-04-14T00:00:00+00:00</published>
+		<updated>2022-04-14T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/disks/" type="text/html"/>
+		<id>https://sharifhsn.github.io/disks/</id>
+		<content type="html">&lt;p&gt;Persistent storage is essential to every system that we can think of, and we can hardly think of a computer without it. However, managing &lt;strong&gt;disks&lt;&#x2F;strong&gt; is not as simple as it might appear on a surface level.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;i-o&quot;&gt;I&#x2F;O&lt;&#x2F;h2&gt;
+&lt;p&gt;Before we dive deep into disks, we must first consider the general concept of &lt;strong&gt;input&#x2F;output&lt;&#x2F;strong&gt;, or &lt;strong&gt;I&#x2F;O&lt;&#x2F;strong&gt;. This is a general class of devices which externally connect to the computer and provide input and output. They include keyboards, mice, displays, speakers, etc. and are essential to any typical use of a computer.&lt;&#x2F;p&gt;
+&lt;p&gt;All of these devices are very different, so how does the operating system communicate with each of them? In order to talk to external devices, the OS treats every device as a &lt;strong&gt;canonical device&lt;&#x2F;strong&gt; with three components: a status register, a command buffer, and a data buffer.&lt;&#x2F;p&gt;
+&lt;p&gt;The status register tells the OS what the current status of the device is. There might be many types of status for a device, but the basic one we will consider is &lt;code&gt;BUSY&lt;&#x2F;code&gt;. If a device is busy, the OS will not command it to do anything and will wait until it is free. Once it&#x27;s free, the OS will put a command in the command buffer, and optionally some relevant data in the data buffer. The device will become busy again performing the command that the OS has given it.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that the device here is agnostic to the actual use of the device. The OS uses the same general procedure for every device.&lt;&#x2F;p&gt;
+&lt;p&gt;One nice thing about I&#x2F;O theoretically is that because its duties are separate from the computer, it can perform operations while the CPU is busy doing something else, increasing performance. However, this might not necessarily be the case. In order to initiate I&#x2F;O, the CPU must, as previously stated, modify the command and data buffers. This can use up valuable CPU time.&lt;&#x2F;p&gt;
+&lt;p&gt;In order to mitigate this, most computers have a separate &lt;strong&gt;DMA engine&lt;&#x2F;strong&gt; for direct memory access. This engine will communicate with I&#x2F;O while the CPU is busy doing something else.&lt;&#x2F;p&gt;
+&lt;p&gt;Although we do have this canonical device, the computer still needs to know what the different commands are and the type of data to put into the hardware. In order to communicate with the hardware effectively, all modern operating systems use &lt;strong&gt;device drivers&lt;&#x2F;strong&gt;. These are essentially low-level wrappers to the device which provide a convenient API for operating systems to use. In fact, almost all code in an operating system is devoted to these device drivers!&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;hard-disks&quot;&gt;Hard Disks&lt;&#x2F;h2&gt;
+&lt;p&gt;For most of computing history, &lt;strong&gt;HDDs&lt;&#x2F;strong&gt; or hard disk drives have been the hardware for persistent storage, and their internal structure is important to making sure they are performant. Recently, &lt;strong&gt;SSDs&lt;&#x2F;strong&gt; or solid state drives have increased in popularity for faster storage access. However, they are still expensive for large amounts of data and HDDs are still used commonly, so let&#x27;s discuss them.&lt;&#x2F;p&gt;
+&lt;p&gt;The basic hardware for a hard disk is a platter with several rotating wheels and an arm which moves between each wheel. Most hard disks are composed of thousands of such platters. Each wheel is sectioned into blocks of data. In order  to access the data, the arm must &lt;strong&gt;seek&lt;&#x2F;strong&gt; the correct wheel and the wheel must &lt;strong&gt;rotate&lt;&#x2F;strong&gt; to bring the correct data block for the arm to read, which will &lt;strong&gt;transfer&lt;&#x2F;strong&gt; the data to the computer. These three steps form the basis of reading and writing from a hard disk. Seeking and rotating are slow and tend to be the bottleneck of access, while transferring is typically fast. The time taken for I&#x2F;O is defined as&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+T_{I&#x2F;O} = T_{seek} + T_{rotation} + T_{transfer}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;and the rate of I&#x2F;O is&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+R_{I&#x2F;O} = \frac{Size_{Transfer}}{T_{I&#x2F;O}}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;These facts mean that when composing data, we want to reduce the amount of seeks and rotations as much as possible. This makes &lt;strong&gt;sequential&lt;&#x2F;strong&gt; data very important. When data is accessed sequentially, it tends to be on the same wheel and next to each other, so no seeks and very little rotation needs to be done.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;scheduling&quot;&gt;Scheduling&lt;&#x2F;h2&gt;
+&lt;p&gt;Like with CPU cycles, disk requests can also be scheduled and reordered. This becomes important when trying to optimize for sequential data instead of random access.&lt;&#x2F;p&gt;
+&lt;p&gt;The most obvious way to schedule a disk is to schedule requests that have the shortest seek time from the current wheel, so either on the same wheel or a close-by one. This increases performance, but it will starve requests that happen to be far away. We want to have some amount of fairness in our scheduling.&lt;&#x2F;p&gt;
+&lt;p&gt;The currently accepted way to do this is &lt;strong&gt;SCAN&lt;&#x2F;strong&gt; or &lt;strong&gt;C-SCAN&lt;&#x2F;strong&gt;, also known as &lt;em&gt;the elevator method&lt;&#x2F;em&gt;. Essentially, the disk will be swept from beginning to end to check for any requests. If there is a request, then it will be performed. This preserves sequential data as the sweep goes in order, but makes sure that far away requests are also done. C-SCAN is an improvement over SCAN. Where SCAN simply goes back and forth like a real elevator, C-SCAN will treat the disk like a circle and sweep in the same direction. This prevents the sectors at the ends from being starved.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Threads</title>
+		<published>2022-03-23T00:00:00+00:00</published>
+		<updated>2022-03-23T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/threads/" type="text/html"/>
+		<id>https://sharifhsn.github.io/threads/</id>
+		<content type="html">&lt;p&gt;Concurrency is a powerful tool to increase performance in applications. This is usually accomplished using threads.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h2&gt;
+&lt;p&gt;Clock frequency in CPUs has massively increased over the past few decades, growing at an exponential rate from the tens of MHz to GHz. However, circa 2005, clock frequency began to stagnate, and for the past decade the clock frequency of consumer CPUs have not increased past around 4 GHz. Why is that?&lt;&#x2F;p&gt;
+&lt;p&gt;Clock frequency is typically increased by increasing the number of transistors in a single CPU. This can be done either by increasing the size of the CPU, or decreasing the size of the transistors. Because we don&#x27;t want huge CPUs in our computers emitting tons of heat, we have opted to decrease the size of transistors. However, there is a limit to how small they can go. When a transistor starts getting smaller than 30 nm, power leakage will begin to affect the CPU, causing the same heat problems that a big CPU does.&lt;&#x2F;p&gt;
+&lt;p&gt;In order to keep up with computing trends, new CPUs have multiple CPU cores with the same transistor density. However, utilizing multiple CPU cores requires parallelism in the CPU. An ideal CPU might run one process on each core, with each process getting full control over the CPU.&lt;&#x2F;p&gt;
+&lt;p&gt;You can visualize this idea like a highway. Having multiple lanes allows cars to travel much faster than if there is only one lane. However, there can be issues when the lanes must combine, like in merging. This causes traffic like if there was only one lane, and can actually increase overhead as cars attempt to merge. Decreasing the amount of merging (or &lt;strong&gt;synchronization&lt;&#x2F;strong&gt;) is key to fast concurrency.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;threads&quot;&gt;Threads&lt;&#x2F;h2&gt;
+&lt;p&gt;We have discussed processes before; &lt;strong&gt;threads&lt;&#x2F;strong&gt; are not much different. They contain information about an execution such as the register values, open file streams, etc., but are more lightweight than processes. &lt;&#x2F;p&gt;
+&lt;p&gt;There are multiple frameworks for threading that are useful for different workflows. The &lt;strong&gt;producer&#x2F;consumer&lt;&#x2F;strong&gt; model is typically used for data analysis. Multiple threads create some data which is handled by a synchronizing consumer thread. The &lt;strong&gt;pipeline&lt;&#x2F;strong&gt; model works like a real pipeline, where multiple threads are consumed in steps and pipeline flows. This is common in GPU programming. The &lt;strong&gt;background&lt;&#x2F;strong&gt; model will work similarly to the interactive&#x2F;batch model in MLFQ. Background threads do behind-the-scenes dirty work when the CPU is idle, and foreground threads will run the actual important parts of a process.&lt;&#x2F;p&gt;
+&lt;p&gt;Since threads exist within a single process, they share the same address space, including the stack and the heap. This can cause many, many bugs when it comes to accessing and modifying memory. We will discuss methods to solve these bugs later.&lt;&#x2F;p&gt;
+&lt;p&gt;Threads do not share the same instruction pointer, however. Each thread can execute from different parts of the program. All register values are unique to each thread, as they can execute on any CPU.&lt;&#x2F;p&gt;
+&lt;p&gt;Threads can technically share the same stack on the address space. However, this is pretty obviously a bad idea. Typically, threads will create their own stack so that each thread does not interfere with each other&#x27;s local variables and execution, with their own stack pointer &lt;code&gt;%esp&lt;&#x2F;code&gt; to point to their stack.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;os-support&quot;&gt;OS Support&lt;&#x2F;h2&gt;
+&lt;p&gt;It&#x27;s all well and good to have threads, but we need a way for the OS to know how we&#x27;re switching between threads. There are multiple ways to do this.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Userspace threads&lt;&#x2F;strong&gt; are a way to have concurrency regardless of what the OS thinks. A run-time will execute along with your program and swap between threads itself without the OS knowing. This is how &lt;code&gt;pthread&lt;&#x2F;code&gt; works, and also how Project 2 does. However, the power that concurrency grants for multicore CPUs is still dependent on the number of kernel threads generated, because those are the only ones that run on each CPU.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Kernel threads&lt;&#x2F;strong&gt; can be associated one-to-one with user-level threads. This way, threads can take advantage of multiprocessing because the kernel will parallelize operations across CPUs. However, this incurs an overhead for the syscalls needed to parallelize threads, and there will never be enough kernel threads for the user threads.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;scheduling&quot;&gt;Scheduling&lt;&#x2F;h2&gt;
+&lt;p&gt;Small operations like incrementing a variable can be difficult when we have threads accessing the same data. The simple instruction &lt;code&gt;balance++&lt;&#x2F;code&gt; where &lt;code&gt;balance&lt;&#x2F;code&gt; is stored at memory location &lt;code&gt;0x9cd4&lt;&#x2F;code&gt; would have this assembly output:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;nasm&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-nasm &quot;&gt;&lt;code class=&quot;language-nasm&quot; data-lang=&quot;nasm&quot;&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x195    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;mov &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x9cd4&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;eax
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x19a    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;add &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x1&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;eax
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x19d    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;mov &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;eax&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x9cd4
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If we have a context switch when &lt;code&gt;%eip&lt;&#x2F;code&gt; is at &lt;code&gt;0x19a&lt;&#x2F;code&gt;, the first thread will &lt;code&gt;add&lt;&#x2F;code&gt; but not store the new value back in memory. That means that the variable &lt;code&gt;balance&lt;&#x2F;code&gt; would be less than expected because the &lt;code&gt;add&lt;&#x2F;code&gt; by the first thread would not be stored into memory.&lt;&#x2F;p&gt;
+&lt;p&gt;This can lead to &lt;em&gt;non-determinism&lt;&#x2F;em&gt;, where the same input will cause different outputs, as well as &lt;em&gt;race conditions&lt;&#x2F;em&gt;, where the result of a program will depend on the CPU timing of different operations.&lt;&#x2F;p&gt;
+&lt;p&gt;We want these three instructions to be executed uninterrupted. This is known as &lt;strong&gt;atomicity&lt;&#x2F;strong&gt;. In this &lt;strong&gt;critical section&lt;&#x2F;strong&gt;, no process or thread can interrupt the currently executing thread. However, if we allow programs to do this, then they can take advantage of this property and essentially disable the timer for context switches by declaring the entirety of execution atomic. We can&#x27;t have full blocking on interrupts for threads, so we only lock other threads from executing at the critical section. When the timer interrupt hits, the scheduler will still take control, but no other thread will be able to execute at the critical section.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;synchronization-primitives&quot;&gt;Synchronization Primitives&lt;&#x2F;h2&gt;
+&lt;p&gt;There are many high-level &lt;strong&gt;synchronization primitives&lt;&#x2F;strong&gt; in the OS that exist to ensure the correct order of instructions. Each kind of lock is designed to solve a specific problem; no single lock can solve all of them.&lt;&#x2F;p&gt;
+&lt;p&gt;We want to have correctness in our concurrency. This means that we must have mutual exclusion where only one thread can access the critical section at a time. If multiple threads are waiting for something, they cannot be stuck forever, they must make progress. Similarly, threads cannot be forced to wait an unreasonably large amount of time. Concurrency must also be fair and not favor any thread over any thread. And obviously, we do not want to overly tax the CPU with the overhead of synchronization.&lt;&#x2F;p&gt;
+&lt;p&gt;We need underlying hardware atomic operations in order to implement synchronization. When these hardware instructions execute, &lt;em&gt;no instruction or interrupt&lt;&#x2F;em&gt; can execute. Example instructions are &lt;code&gt;Test&amp;amp;Set&lt;&#x2F;code&gt; and &lt;code&gt;Compare&amp;amp;Swap&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;The reason we need this is because if we don&#x27;t make these instructions atomic, we can encounter race conditions. Imagine an unset lock with a while loop and two threads. The first thread successfully enters the loop because the lock is unacquired. However, before it can acquire the lock, the thread switches and the second thread executes and acquires the lock. Now the first thread has not acquired the lock but it is still in the loop, so when it runs again it will acquire the lock even though it has already been acquired, allowing two threads in the same critical section! In order to combat this, testing and setting are the same atomic operation so there isn&#x27;t a gap that can allow a switch in between those two operations.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;spinlocks&quot;&gt;Spinlocks&lt;&#x2F;h2&gt;
+&lt;p&gt;Making our implementation fair is not as easy. If we imagine the most basic spinlock which switches back and forth, a program that knows how long a context switch will take will acquire the lock right before every context switch so no other program will be obtain it.&lt;&#x2F;p&gt;
+&lt;p&gt;In order to introduce fairness, the ticket system for schedulers can be used here. Every thread is assigned a ticket for every turn it gets, with the first thread getting ticket 1, second ticket 2, etc. Now when a thread releases a lock, the ticket increments to the next thread. Even if it wants to maliciously acquire the lock before a context switch occurs, it can&#x27;t because it has lost its turn.&lt;&#x2F;p&gt;
+&lt;p&gt;We need a special atomic function to make this work like &lt;code&gt;Test&amp;amp;Set&lt;&#x2F;code&gt; with basic mutex. We should be able to get a ticket number and increment it atomically. The function used for this is &lt;code&gt;Fetch&amp;amp;Add&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;FetchAndAdd&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ptr&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; old = *ptr; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; these two lines are
+&lt;&#x2F;span&gt;&lt;span&gt;    *ptr = old + &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; executed atomically!
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span&gt; old;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Spinlocks are fast when we have a short critical section because we&#x27;re not context switching very often, so when we switch between locks constantly we want to avoid that overhead as much as possible as that dominates execution time. However, in a situation where there is only one CPU, letting the threads spin on a lock is extremely wasteful. The CPU scheduler has no idea that a thread is waiting for a lock so it will ignorantly run it even though all it does is spin.&lt;&#x2F;p&gt;
+&lt;p&gt;One alternative is to yield the thread instead of letting it spin, telling the CPU scheduler that the thread doesn&#x27;t need to run right now. &lt;em&gt;In general&lt;&#x2F;em&gt;, a shorter critical section is okay to spin, but a longer critical section is not okay to spin.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;condition-variables&quot;&gt;Condition Variables&lt;&#x2F;h2&gt;
+&lt;p&gt;Mutex locks are just a way of restricting access to a critical section. It&#x27;s synchronous, but there&#x27;s no order to the way that the threads have to run. That is up to the caprices of the scheduler. However, let&#x27;s say that ordering is significant to the execution of our threads. How can we ensure that threads are executed in a certain order?&lt;&#x2F;p&gt;
+&lt;p&gt;We need some functions and concepts to implement this. There are two system call functions &lt;code&gt;wait(cond_t, mutex_t)&lt;&#x2F;code&gt; and &lt;code&gt;signal(cond_t)&lt;&#x2F;code&gt; that are used with &lt;strong&gt;condition variables&lt;&#x2F;strong&gt; &lt;code&gt;cond_t&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s assume that a thread has acquired the lock, but it has not satisfied the condition to run yet because another thread must run first to preserve ordering. In that case, the condition variable will indicate that the thread cannot run and it will call &lt;code&gt;wait&lt;&#x2F;code&gt; to sleep the thread until the condition variable changes, releasing the lock so that the other thread can run. The caller of &lt;code&gt;signal&lt;&#x2F;code&gt; wants to wake up that sleeping thread, unless there are no sleeping threads, in which case it does nothing.&lt;&#x2F;p&gt;
+&lt;p&gt;The best time to use condition variables is in a producer&#x2F;consumer system, like in a pipe. Producers write to a pipe, and consumers read from the pipe. The pipe buffer has a limited size, so the producer can only add data to it if the buffer is empty, and the consumer can only read from it if the buffer has contents. For simplicity, assume a buffer of single unit size for now.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;producer&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;arg&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;(Int i = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;; i &amp;lt; loops; i++) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Mutex_lock&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;m); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; lock the mutex
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;while &lt;&#x2F;span&gt;&lt;span&gt;(numfull == max) { &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; while the buffer is full,
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Cond_wait&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;cond, &amp;amp;m;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; wait
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;do_fill&lt;&#x2F;span&gt;&lt;span&gt;(i); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; put data in buffer
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Cond_signal&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;cond); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; signal conditional variable
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Mutex_unlock&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;m); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; unlock the mutex
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;consumer&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;arg&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;while&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;) { &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; consume on and on forever
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Mutex_lock&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;m); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; lock the mutex
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;while &lt;&#x2F;span&gt;&lt;span&gt;(numfull == &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;) { &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; while buffer is empty,
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Cond_wait&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;cond, &amp;amp;m); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; wait
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tmp = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;do_get&lt;&#x2F;span&gt;&lt;span&gt;(); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; get the data
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Cond_signal&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;cond); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; signal conditional variable
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Mutex_unlock&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;m); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; unlock the mutex
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, tmp); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; do something with data
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Let&#x27;s consider an example with a producer and two consumers, as well as a FIFO scheduler. The first consumer thread runs and waits immediately because the buffer is empty. The second consumer thread does the same. The producer thread runs through its entire loop, filling the buffer, then when it loops again it will wait (since our buffer is size 1). The first consumer thread will return to the while loop, and now that the buffer is no longer empty it will fetch the data, signal the thread, and finish.&lt;&#x2F;p&gt;
+&lt;p&gt;However, there is a problem here. The &lt;code&gt;Cond_signal&lt;&#x2F;code&gt; function signal is extremely generic and does not signal a specific thread. Instead, it will signal a random thread, which may be the producer or other consumer thread. But the whole point of using conditional variables is so that we have ordering!&lt;&#x2F;p&gt;
+&lt;p&gt;We need to have &lt;em&gt;multiple&lt;&#x2F;em&gt; conditional variables:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;producer&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;arg&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;(Int i = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;; i &amp;lt; loops; i++) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Mutex_lock&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;m); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; lock the mutex
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;while &lt;&#x2F;span&gt;&lt;span&gt;(numfull == max) { &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; while the buffer is full,
+&lt;&#x2F;span&gt;&lt;mark style=&quot;background-color:#65737e30;&quot;&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Cond_wait&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;empty, &amp;amp;m;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; wait until buffer is empty
+&lt;&#x2F;span&gt;&lt;&#x2F;mark&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;do_fill&lt;&#x2F;span&gt;&lt;span&gt;(i); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; put data in buffer
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Cond_signal&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;fill); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; signal to show buffer is somewhat filled
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Mutex_unlock&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;m); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; unlock the mutex
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;consumer&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;arg&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;while&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;) { &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; consume on and on forever
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Mutex_lock&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;m); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; lock the mutex
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;while &lt;&#x2F;span&gt;&lt;span&gt;(numfull == &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;) { &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; while buffer is empty,
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Cond_wait&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;fill, &amp;amp;m); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; wait until buffer is somewhat filled
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tmp = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;do_get&lt;&#x2F;span&gt;&lt;span&gt;(); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; get the data
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Cond_signal&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;empty); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; signal to show that buffer is empty
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Mutex_unlock&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;m); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; unlock the mutex
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, tmp); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; do something with data
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In this example, the consumer thread will only run when the producer has signaled that there is content in the buffer.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;semaphore&quot;&gt;Semaphore&lt;&#x2F;h2&gt;
+&lt;p&gt;Conditional variables do not have any state. They only signal the condition to wake or sleep a thread. This can be useful if you have lots of threads that do the exact same thing, like in a producer-consumer model. However, if you want a more complex way to represent state, you need a &lt;strong&gt;semaphore&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Semaphores are essentially conditional variables that contain an integer value which can be changed by threads. This allows threads to have multiple options based on a single variable shared across multiple threads just by changing the value in the semaphore. The semaphore is incremented every time a thread is woken, and decremented every time a thread sleeps.&lt;&#x2F;p&gt;
+&lt;p&gt;The atomic operations for semaphores are &lt;code&gt;Allocate&amp;amp;Initialize&lt;&#x2F;code&gt;, &lt;code&gt;Wait&lt;&#x2F;code&gt;, and &lt;code&gt;Post&lt;&#x2F;code&gt;. We must first create the semaphore by allocating&#x2F;initializing it. The &lt;code&gt;Wait&lt;&#x2F;code&gt; operation decrements the semaphore if it is greater than 0, and &lt;code&gt;Post&lt;&#x2F;code&gt; will increment the semaphore and wake a sleeping thread.&lt;&#x2F;p&gt;
+&lt;p&gt;In this context, joining and exiting threads have no complication with mutexes; all you need to do is wait and post the semaphore, respectively.&lt;&#x2F;p&gt;
+&lt;p&gt;We can actually construct locks using semaphores. Acquiring and releasing locks work the same way as waiting and posting, so you can just use those same atomic operations instead of &lt;code&gt;Test&amp;amp;Set&lt;&#x2F;code&gt;. In reverse, you can build a semaphore using locks and conditional variables, though in practice that&#x27;s a little more complicated.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Swapping</title>
+		<published>2022-03-21T00:00:00+00:00</published>
+		<updated>2022-03-21T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/swapping/" type="text/html"/>
+		<id>https://sharifhsn.github.io/swapping/</id>
+		<content type="html">&lt;p&gt;Sometimes we don&#x27;t have a lot of memory to access. In those cases, we need a place to put our data. The natural solution is to put data in the disk, which has very high storage. This is known as &lt;strong&gt;swapping&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;mechanism&quot;&gt;Mechanism&lt;&#x2F;h2&gt;
+&lt;p&gt;The actual process of copying memory to disks is not complicated, it is simply file I&#x2F;O and is supported by hardware. We swap memory out to disk, and swap in data from disk to memory. The complicated part comes when we introduce paging to this idea.&lt;&#x2F;p&gt;
+&lt;p&gt;In order to accommodate this, we add a &lt;em&gt;present bit&lt;&#x2F;em&gt; to our page table entry. If the bit is 0, then the page has been swapped out to disk and the physical frame is no longer valid. When there is an attempted translation of a page table entry with an unset present bit, a trap will occur and the hardware will swap in memory from the disk, setting the present bit with a new translation for the new physical frame number.&lt;&#x2F;p&gt;
+&lt;p&gt;An important note is that a process will &lt;em&gt;never&lt;&#x2F;em&gt; directly access the disk! Instead, a trap will swap disk and memory and the process will access the memory as dictated by hardware and the OS.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;amat&quot;&gt;AMAT&lt;&#x2F;h2&gt;
+&lt;p&gt;Swapping can be slow. We want to improve our &lt;strong&gt;Average Memory Access Time (AMAT)&lt;&#x2F;strong&gt;. A hit in this context is an access that goes directly to RAM, and a miss is a trap that will get the memory from disk into RAM.&lt;&#x2F;p&gt;
+&lt;p&gt;$$AMAT = (Hit \% \cdot T_m) + (Miss \% \cdot T_d)$$&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;policies&quot;&gt;Policies&lt;&#x2F;h2&gt;
+&lt;p&gt;When we swap in and out of memory, we need a way to find the most frequently accessed pages to reduce AMAT. There are several policies to accomplish this.&lt;&#x2F;p&gt;
+&lt;p&gt;The optimal policy which has oracular knowledge of future page accesses can keep pages that will be accessed sooner and replace pages that will be accessed later. If we know that a page will be required soon, we&#x27;re definitely not going to swap it out. Alternatively, if we know that it&#x27;s going to be a while before the page is going to be accessed, we can swap it out, improving our AMAT. This is obviously infeasible when page access is random, which is almost all the time.&lt;&#x2F;p&gt;
+&lt;p&gt;The simplest possible policy is, as with schedulers, &lt;strong&gt;FIFO&lt;&#x2F;strong&gt;. However, this does not work well. A better, also simple policy is &lt;strong&gt;LRU&lt;&#x2F;strong&gt;, or &lt;strong&gt;Least Recently Used&lt;&#x2F;strong&gt;. Most caches of this kind use LRU because of how effective it is despite its simplicity. The idea can be expressed in one line: swap out the page which has been least recently accessed. By keeping the pages of physical memory in a queue when they are created, it&#x27;s simple to dequeue and swap out the page for a new, freshly enqueued page. The counter is reset every time that a page is swapped out.&lt;&#x2F;p&gt;
+&lt;p&gt;LRU adds more memory usage in order to maintain the queue&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You would think that having more pages reduces the number of page misses. However, due to &lt;strong&gt;Belady&#x27;s Anomaly&lt;&#x2F;strong&gt;, this is not always the case for FIFO. LRU does not suffer from this phenomenon&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;However, LRU does not take into consideration how many times a page has been accessed. A large I&#x2F;O scan that is only used once might flush memory because it is recent without regard to how often it is used. When you stream a movie, you are sequentially accessing that data. This is a common access pattern in computer science.&lt;&#x2F;p&gt;
+&lt;p&gt;We can use &lt;strong&gt;pure LFU&lt;&#x2F;strong&gt;, or &lt;strong&gt;Least Frequently Used&lt;&#x2F;strong&gt; to combat this. However, this runs into the opposite problem: what if a page was very frequently accessed in the past? The policy will not forget that so it won&#x27;t be evicted despite it being very old.&lt;&#x2F;p&gt;
+&lt;p&gt;A better approach is to combine both of the ideas of recency and frequency, through algorithms such as &lt;strong&gt;LRU-K&lt;&#x2F;strong&gt; or &lt;strong&gt;2Q&lt;&#x2F;strong&gt;. However, these algorithms can be expensive due to their increased complexity compared to these other simpler algorithms.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;implementing-lru&quot;&gt;Implementing LRU&lt;&#x2F;h2&gt;
+&lt;p&gt;There are two approaches: software and hardware, as always.&lt;&#x2F;p&gt;
+&lt;p&gt;A software based LRU will be a sorted linked list. Accessing a linked list is slow, which means \(O(n)\) complexity for a memory reference, although replacing pages is very fast at \(O(1)\).&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Paging</title>
+		<published>2022-02-20T00:00:00+00:00</published>
+		<updated>2022-02-20T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/paging/" type="text/html"/>
+		<id>https://sharifhsn.github.io/paging/</id>
+		<content type="html">&lt;p&gt;The main problem that segments have introduced to managing memory space is that their variable size wastes memory through fragmentation. Fixed-size pieces that are easier to handle are much more popular: these are known as &lt;strong&gt;pages&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;pages&quot;&gt;Pages&lt;&#x2F;h2&gt;
+&lt;p&gt;Address spaces are split up into multiple pages, typically a power of 2. For example, let&#x27;s picture a tiny 6-bit address space that can only address 64 bytes. We could split it up into four 16-byte pages, that we&#x27;ll refer to in sequence.&lt;&#x2F;p&gt;
+&lt;p&gt;The physical representation of these pages is through &lt;strong&gt;page frames&lt;&#x2F;strong&gt;, which are sequenced directly in memory and are ordered. The pages in the virtual address space map directly to page frames in physical memory, with no respect for order.&lt;&#x2F;p&gt;
+&lt;p&gt;Memory management of the free space here can be done with a simple free list. All it needs to look for is four free page frames &lt;em&gt;somewhere&lt;&#x2F;em&gt; in memory and map each page to a page frame. This mapping is stored in a &lt;strong&gt;page table&lt;&#x2F;strong&gt; which is kept &lt;em&gt;per process&lt;&#x2F;em&gt;, since every process has its own address space.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;page-translation-important&quot;&gt;Page Translation (IMPORTANT)&lt;&#x2F;h2&gt;
+&lt;p&gt;In our example from earlier, we worked with a 6-bit address space. The highest order bits are reserved for the virtual page number, and the lower bits are reserved for the offset within the page. For example, the virtual address 21 would be &lt;code&gt;010101&lt;&#x2F;code&gt; in binary. The top two bits &lt;code&gt;01&lt;&#x2F;code&gt; tell us that we are looking for virtual page 1. The OS checks the page table and sees that VP2 maps to physical frame 7, which is &lt;code&gt;111&lt;&#x2F;code&gt; in binary. The OS then translates the physical address by replacing the VP bits with the PF bits. In this example, the new address would be &lt;code&gt;1110101&lt;&#x2F;code&gt;, or the 117th byte in memory.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;page-tables&quot;&gt;Page Tables&lt;&#x2F;h2&gt;
+&lt;p&gt;We&#x27;ve talked about page tables a bit, but let&#x27;s go into details. They are a data structure like any other, but they can get very large. Each mapping in the table, which is called a &lt;strong&gt;page table entry (PTE)&lt;&#x2F;strong&gt;, is typically \(2^2\) bytes in size. It&#x27;s often simpler to think of these calculations in terms of the bits involved, since they will always be a power of two. With that in mind, this is the formula for page table size:&lt;&#x2F;p&gt;
+&lt;p&gt;$$ pageTableSize = VPN + PTE $$&lt;&#x2F;p&gt;
+&lt;p&gt;That&#x27;s 22 bits for a typical 32-bit system, which is pretty massive at 4MB per page table, which is again per process. We obviously can&#x27;t keep this in the MMU, so we need to actually store it in memory.&lt;&#x2F;p&gt;
+&lt;p&gt;How do we organize the page table as a data structure? The most obvious way is as a linear table, aka an array. The VPN is an index in the array, and the value at the index is the PTE which gets the PFN. The PTE itself contains the PFN plus some helpful bits for us. There is a valid bit checks if the mapping even exists, protection bits for privileged memory, and others.&lt;&#x2F;p&gt;
+&lt;p&gt;This access is still extremely slow for load store operations. We need a better solution!&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;tlb&quot;&gt;TLB&lt;&#x2F;h2&gt;
+&lt;p&gt;The hardware comes to the rescue here. MMUs provide a &lt;strong&gt;translation-lookaside buffer&lt;&#x2F;strong&gt; to cache commonly used translation. When a load-store instruction is executed, the CPU will first check the TLB if there exists a translation for the specified address if it exists. If it does, then it can quickly perform the operation without performance overhead of going back and forth on memory so often. If it doesn&#x27;t, the CPU hands the reins over to the OS to do its own page and offset translation and it will cache the translation after the OS gives it. Here&#x27;s the basic steps:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;extract VPN from virtual address&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;check if VPN is in TLB&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;if hit, then perform the PFN concatenation and access the memory&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;if miss, hardware will check the page table to find the translation&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;update the TLB with the translation&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;retry TLB, now a guaranteed hit&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;All of this assumes that memory is valid, accessible, and unprivileged; these can cause exceptions that the OS will handle.&lt;&#x2F;p&gt;
+&lt;p&gt;Step 4 is expensive and it is therefore the step that we want to avoid as much as possible. Luckily, many memory accesses reside on the same page. For example, arrays are almost guaranteed to have the same TLB hit because they are organized contiguously. &lt;strong&gt;Spatial locality&lt;&#x2F;strong&gt; helps us increase our hit rate.&lt;&#x2F;p&gt;
+&lt;p&gt;Page size is also significant here. By having big pages, typically 4KB, we are unlikely to have TLB misses since the same page is accessed for this memory. Temporal locality will also help here, as the TLB will evict based on recency.&lt;&#x2F;p&gt;
+&lt;p&gt;The TLB miss can be managed by either the CPU or the OS. Older &lt;strong&gt;CISC&lt;&#x2F;strong&gt; or complex-instruction set computers managed the TLB themselves, while modern &lt;strong&gt;RISC&lt;&#x2F;strong&gt; reduced computers raise an exception to be handled by the OS. In these computers, steps 4 and 5 are handled by the OS and step 6 only executes after the exception is handled.&lt;&#x2F;p&gt;
+&lt;p&gt;The exception raised here is a little different from other exceptions. Typically, instructions that raise exceptions are skipped. Here, we want to retry the operation, so we need to get a different program counter.&lt;&#x2F;p&gt;
+&lt;p&gt;The TLB cache is &lt;strong&gt;fully associative&lt;&#x2F;strong&gt; which means that any translation can be anywhere. This means that the VPN is encoded with the PFN and other bits.&lt;&#x2F;p&gt;
+&lt;p&gt;One small note is that the TLB entries have valid bits just like the PTE, but they serve different purposes. In the TLB, it refers to a valid translation. If a context switch has occurred, for example, then all of the cache becomes invalidated. PTE valid bits refer to unallocated memory which results in a process kill.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s examine that cache invalidation. Flushing the cache on every context switch seems to miss the point of a TLB since it happens so often. What are other ways we can manage this? Hardware will typically add an &lt;strong&gt;ASID&lt;&#x2F;strong&gt; (address space identifier), which is similar to a PID but contains less information. This way, a TLB can contain information for multiple processes without accidental contamination.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;smaller-tables&quot;&gt;Smaller Tables&lt;&#x2F;h2&gt;
+&lt;p&gt;As discussed earlier, page tables can get real honking big, which is not good for memory consumption. TLBs can mitigate the performance problems of page table &lt;em&gt;access&lt;&#x2F;em&gt;, but we need better ways to mitigate memory usage of our page tables.&lt;&#x2F;p&gt;
+&lt;p&gt;The obvious solution, also mentioned earlier, is to just increase the size of each page. The size of a page in \(2^{bits}\) is given by:&lt;&#x2F;p&gt;
+&lt;p&gt;$$ addressSpace = numberOfPages + pageSize $$&lt;&#x2F;p&gt;
+&lt;p&gt;so if we have a 32-bit address space, we can have 18 bits for our number of pages and 14 bits for our 4 KB page. 1 MB per page table is better because it&#x27;s smaller, but there&#x27;s a limit to this kind of strategy. If we make our pages too big, we will get &lt;strong&gt;internal fragmentation&lt;&#x2F;strong&gt; within each page, where an entire page is allocated but not that much memory within it is used, leading to waste. 4 KB is a good middle ground, which is why that&#x27;s what x86 uses.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;segmentation-paging&quot;&gt;Segmentation-Paging&lt;&#x2F;h2&gt;
+&lt;p&gt;We looked at segmentation earlier, but initially dismissed it due to its issues of variable size. What if we combined the two approaches into a hybrid? Instead of having one giant page table for the address space, what if we split it up into segments?&lt;&#x2F;p&gt;
+&lt;p&gt;We can twist around the base&#x2F;bounds registers to use them for a different purpose. The base register can hold the physical address of the actual page table for a particular segment, and the bounds will tell us where the physical end of the page table is. We can use these values to calculate the number of valid pages.&lt;&#x2F;p&gt;
+&lt;p&gt;Again, let&#x27;s use the top two bits to refer to segment. We&#x27;ll figure out our base&#x2F;bounds pair from the those bits, then get to our PTE by adding \(VPN \cdot sizeof(PTE) \) to it. The bounds register can be used to track our number of valid pages so they don&#x27;t take up space in the page table if they are not used. However, this comes with the same issues of segmentation earlier: external fragmentation.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;multi-level-page-tables&quot;&gt;Multi-level Page Tables&lt;&#x2F;h2&gt;
+&lt;p&gt;As is common for many problems, the solution for page tables is to put them inside another page table. &lt;strong&gt;Multi-level page tables&lt;&#x2F;strong&gt; are the de facto solution for page tables that are used in x86. However, this introduces a significant amount of complexity in our page table search, so we will need to examine that.&lt;&#x2F;p&gt;
+&lt;p&gt;We will chop up our page table into its own kind of pages, each of which only contain PTEs. If an entire page of PTEs is all invalid, which means that none of them have valid translations, don&#x27;t allocate that page. In order to manage this apparatus, we will introduce a new data structure: the &lt;strong&gt;page directory&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;You can think of the page directory as a simple page table if the only memory being tracked was the sub-page table. Each entry has a valid bit which is true if &lt;em&gt;any&lt;&#x2F;em&gt; PTE in its mapped page is valid, as well as the PFN where the page of PTEs is stored. That PFN is only allocated if the valid bit is set.&lt;&#x2F;p&gt;
+&lt;p&gt;If we organize this structure correctly, each chunk of the page table that we refer to as &amp;quot;pages&amp;quot; are actually page-sized and can fit into memory pages in kernel space. This greatly simplifies page table management.&lt;&#x2F;p&gt;
+&lt;p&gt;However, there is a cost, as always. TLB misses require two memory loads in order to get the correct page because of the level of indirection that page directories introduce. Since TLB misses are rare, we take that tradeoff in return for significantly reduced memory consumption. This is a trade for space that sacrifices time.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s get some numbers for a multi-level page table. Assume a 14-bit virtual address space split into 8 bits for VPN and 6 bits for offset. Remember that this translates to 256 entries per table and a page size of 64 bytes.&lt;&#x2F;p&gt;
+&lt;p&gt;We have to do some special bit magic to manage these page levels as well. In this example, our page table size is 10 bits; remember, it&#x27;s VPN + PTE. We need to subtract our offset bits from that size to get 4 bits for number of pages, then subtract our PTE bits from that to get number of PTEs per page. In total, here is the formula:&lt;&#x2F;p&gt;
+&lt;p&gt;$$ pageTableSize = numberOfPages + \underbrace{pageSize}_{PTESize + PTEPerPage} $$&lt;&#x2F;p&gt;
+&lt;p&gt;\(10 = 4 + (2 + 4)\) in this example.&lt;&#x2F;p&gt;
+&lt;p&gt;The page directory size is the same as the number of pages, so it is also 4 bits. When doing our translation, the highest order bits of the VPN are reserved for the page directory index. After indexing using these higher bits, the rest of the bits of the VPN are the &amp;quot;offset&amp;quot; within the page that the higher bits point to. You can think of this is as a mini address with the VPN being the PDI and the offset being the page table index (PTI).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;infinity-and-beyond&quot;&gt;Infinity and Beyond&lt;&#x2F;h2&gt;
+&lt;p&gt;This example presented has only two levels, the page directory and the page table. But we can go deeper. Let&#x27;s reset our numbers to 30 bit address space and 9 bit page size. The VPN is therefore 21 bits.&lt;&#x2F;p&gt;
+&lt;p&gt;If we apply the same formula as before here, we end up with 7 bits for PTEPerPage. The lowest bits of the VPN will be reserved here. Our page directory will now have 16 bits (14 + 2 for each entry), but this is WAY too much. We need every piece of our structure to fit into a page, so we need to get the PDI to 7 bits or less.&lt;&#x2F;p&gt;
+&lt;p&gt;The solution here is to further split the PDI into another VPN&#x2F;offset split. The offset here will be 7 bits, as this is what fits into the page.&lt;&#x2F;p&gt;
+&lt;p&gt;The zeroeth index is the VPN part, which is 7 bits. It can address 128 pages of the second-level directory. The second-level directory will address 128 pages of PTEs. This way, both the first and second level directory are 9 bits (index + entry size) so they fit into a page!&lt;&#x2F;p&gt;
+&lt;p&gt;This is &lt;em&gt;really hard to understand!&lt;&#x2F;em&gt; Try to think of it where every level is a split between index and offset. The first offset must always be the size of a page, and every inner offset must be the size of page minus the PTE size. In this case, the first offset was 9 bits, and every directory offset was 7 bits. To get the maximum level \(n\), the formula is:&lt;&#x2F;p&gt;
+&lt;p&gt;$$ addressSpace &amp;gt; (pageSize - PTESize) \cdot (n - 1) + pageSize $$&lt;&#x2F;p&gt;
+&lt;p&gt;Our maximum level in this example is 3, because a level of 4 would result in \((9 - 2) \cdot (4 - 1) + 9\) which is 30, the same as the address space, which must be greater.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;inverted-page-tables&quot;&gt;Inverted Page Tables&lt;&#x2F;h2&gt;
+&lt;p&gt;A small coda to this discussion of paging is the &lt;strong&gt;inverted page table&lt;&#x2F;strong&gt;. Unlike other kinds of page tables, this is a page table that is shared between processes that maps &lt;em&gt;every physical page&lt;&#x2F;em&gt;. This massive table has information per entry about what process is using it, the virtual page number that the process using is referring to, and the physical page. PowerPC uses this model, with a hash table instead of an array to speed up lookups.&lt;&#x2F;p&gt;
+&lt;p&gt;However, lookups are still slow, although they take up less memory. It is also difficult to implement sharing as specified earlier. You need to somehow chain multiple virtual addresses to one entry, which introduces serious complexity.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Memory Virtualization</title>
+		<published>2022-02-07T00:00:00+00:00</published>
+		<updated>2022-02-07T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/memory-virtualization/" type="text/html"/>
+		<id>https://sharifhsn.github.io/memory-virtualization/</id>
+		<content type="html">&lt;p&gt;Accessing physical memory can cause big issues if we do it directly. How can we virtualize the memory like the CPU so we can use it efficiently and safely?&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;
+&lt;p&gt;Let&#x27;s think of a super simple one process system. Our OS is located in the lowest part of memory, and everything after that is reserved for the user. Within an address space, we have the stack-heap structure discussed before. There&#x27;s a big problem, that processes can access the memory that the OS is stored in and modify it. That&#x27;s not good!&lt;&#x2F;p&gt;
+&lt;p&gt;If we want multiple processes as well, we want to give processes memory that is managed by the operating system so they do not interfere with each other. Every process should have a self-contained &lt;em&gt;address space&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;We need dynamic allocation from memory as well so that our programs can become very powerful. The stack is not always sufficient for the programs we want to write. The dynamic heap is where all this memory management magic (say that five times fast) happens.&lt;&#x2F;p&gt;
+&lt;p&gt;Memory accesses are built into &lt;code&gt;movl&lt;&#x2F;code&gt; instructions in the ISA. There are special operations to dereference the location stored in a register and access memory. These are known as &lt;em&gt;load&#x2F;store&lt;&#x2F;em&gt; operations.&lt;&#x2F;p&gt;
+&lt;p&gt;Memory accesses also happen from the code area by the instruction pointer, though that&#x27;s typically not shown. If we want to count memory accesses, there is one fetch for every instruction, and another if the instruction is a load&#x2F;store.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;nasm&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-nasm &quot;&gt;&lt;code class=&quot;language-nasm&quot; data-lang=&quot;nasm&quot;&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x10&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;: movl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x8&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;(%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rbp&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;edi
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x13&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;: addl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x3&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;edi
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x19&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;: movl %&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;edi&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0x8&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;(%&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rbp&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In this example, there are 5 total memory accesses. There is one for every instruction, and each &lt;code&gt;movl&lt;&#x2F;code&gt; is a load&#x2F;store because one of the operands dereferences a memory pointer.&lt;&#x2F;p&gt;
+&lt;p&gt;Typically, we want to reduce this as much as possible because memory access is really slow, and we can&#x27;t always rely on the cache.&lt;&#x2F;p&gt;
+&lt;p&gt;So, what are some strategies to virtualize memory?&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;time-sharing&quot;&gt;Time Sharing&lt;&#x2F;h2&gt;
+&lt;p&gt;When we virtualized the CPU, we gave each process the illusion that it had its own CPU that were all running at the same time. The way this was done was through context switches that preserved CPU state in memory. We could do something similar by saving memory to disk when the process isn&#x27;t running.&lt;&#x2F;p&gt;
+&lt;p&gt;However, there is an immediate problem with this: it would be incredibly slow. Disk I&#x2F;O even with SSDs is several orders of magnitude slower than DRAM, which is itself orders of magnitude slower than cache&#x2F;register access. Considering how much processes play around with memory, this would be totally infeasible.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;static-relocation&quot;&gt;Static Relocation&lt;&#x2F;h2&gt;
+&lt;p&gt;This is an interesting solution. The instructions stored as static data refer to specific memory locations that are hard coded in the application. However, what we could do is change those pointers and memory to memory that is currently available every time we load the process into memory.&lt;&#x2F;p&gt;
+&lt;p&gt;For example, imagine the previous example which has instructions at &lt;code&gt;0x10&lt;&#x2F;code&gt;, &lt;code&gt;0x13&lt;&#x2F;code&gt;, etc. We could imagine that those memory locations are no longer available, so the OS changes the static code portion to &lt;code&gt;0x1010&lt;&#x2F;code&gt;, &lt;code&gt;0x1013&lt;&#x2F;code&gt;, etc. This means that all &lt;code&gt;jmp&lt;&#x2F;code&gt; and load&#x2F;store instructions would also have to be rewritten as well since they directly refer to memory locations.&lt;&#x2F;p&gt;
+&lt;p&gt;However, this translation is pretty expensive, although it is simple to implement. There are also security concerns, as always. There is no reason that the new memory couldn&#x27;t be located somewhere that it can&#x27;t go.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;dynamic-relocation&quot;&gt;Dynamic Relocation&lt;&#x2F;h2&gt;
+&lt;p&gt;We want the power of static relocation, but we need a way to manually protect each process from each other. This is such an important issue that it is usually provided as a hardware component: the &lt;strong&gt;Memory Management Unit&lt;&#x2F;strong&gt; (MMU). Whenever a process generates a virtual address in its address space, the MMU takes on the job for translating that address into a real address and giving it back to the process. This is a good example of modularization; we don&#x27;t want to have the process to worry about memory, so we offload that job onto a specialized unit designed for that purpose. The MMU is managed only by the OS, so the user can never access it.&lt;&#x2F;p&gt;
+&lt;p&gt;There are two general operating modes, as discussed previously: kernel space, and user space. Privileged kernel operations have full power over all of memory and the MMU, and users have to ask the OS for memory through virtual translation.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;address-translation&quot;&gt;Address Translation&lt;&#x2F;h2&gt;
+&lt;p&gt;To start out with, we will make some assumptions about how address spaces are laid out. They are all contigous spaces in memory of the same size that are smaller than physical memory. As we will see later with segmentation, this assumption will not hold up, but it useful for now.&lt;&#x2F;p&gt;
+&lt;p&gt;In order to translate a &lt;em&gt;virtual address&lt;&#x2F;em&gt; to a &lt;em&gt;physical address&lt;&#x2F;em&gt; in memory, we need some kind of reference space in memory. This is given by the &lt;strong&gt;base&lt;&#x2F;strong&gt; and &lt;strong&gt;bounds&lt;&#x2F;strong&gt; registers, which give the physical memory locations of where the virtual address space starts and ends, respectively. These registers are not part of the regular ISA and are instead part of the previously mentioned MMU, and operating on them requires privilege. The MMU can also throw an exception upon illegal memory access which is handled by our OS.&lt;&#x2F;p&gt;
+&lt;p&gt;Our OS can manage memory in this simple way through the mechanism of a &lt;em&gt;free list&lt;&#x2F;em&gt;, which is a linked list which indicates free spaces, which is also used for &lt;code&gt;malloc&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;As discussed before, the address space has a structure where the stack grows downward and the heap grows upward. However, if you look at a diagram of this for more than five seconds, you might notice a giant chasm between the stack and heap. Relying on our assumption of a contiguous space of memory, this is a lot of wasted memory. Some address spaces fix this problem through &lt;strong&gt;segmentation&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;segmentation&quot;&gt;Segmentation&lt;&#x2F;h2&gt;
+&lt;p&gt;As the name implies, a segmented address space is split into multiple segments with its own base&#x2F;bounds pair to indicate its logical beginning and end. We can split every piece of the address space into its own segment, so stack goes in one segment, heap goes in another, etc. This way, although the virtual address space has this nice alignment, we are not wasting physical memory with our &lt;em&gt;sparse&lt;&#x2F;em&gt; address space.&lt;&#x2F;p&gt;
+&lt;p&gt;In order to translate a virtual address, we treat the address as an offset with a segment. For example, if we were trying to access a virtual address in the heap, this would be the formula:&lt;&#x2F;p&gt;
+&lt;p&gt;$$physicalAddress = physicalBase + (virtualAddress - virtualBase)$$&lt;&#x2F;p&gt;
+&lt;p&gt;Before we allow this translation to take place, however, we must check that the value does not exceed the physical bound. If this is the case, then we have caused the infamous &lt;strong&gt;segmentation fault&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;A faster way to do with this masks is through bitwise operations. The top two bits of the address refer to the segment, either the code, stack, or heap. The rest of the address is the offset within the segment. This way, we can perform the bounds check before accessing the physical address by checking if the expression in the parentheses exceeds the virtual bounds.&lt;&#x2F;p&gt;
+&lt;p&gt;However, one issue with this means that each segment gets the same maximum size, which is \(2^{offset}\). If we want a bigger heap, we&#x27;re out of luck. We can solve this by tracking instructions instead of bits. For example, an instruction fetch for &lt;code&gt;%rip&lt;&#x2F;code&gt; will come from the code segment, so we don&#x27;t need to put that in the address that it is in the code segment.&lt;&#x2F;p&gt;
+&lt;p&gt;Another issue is that the stack segment grows downwards instead of forwards, which means that its segment works differently. We need an extra bit for segments that indicates whether they grow forwards or backwards, which will be set to 0 for the stack and 1 for everything else.&lt;&#x2F;p&gt;
+&lt;p&gt;If that bit is false, then we subtract the offset from the base instead of adding it as above.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;sharing&quot;&gt;Sharing :)&lt;&#x2F;h2&gt;
+&lt;p&gt;Sometimes, processes share the same code. It seems wasteful to copy the same code segment every time we have a new process, so modern operating systems implement &lt;strong&gt;sharing&lt;&#x2F;strong&gt; for code segments. Sharing can be implemented for any segment, but it is most common for code since it&#x27;s read-only. This is important for dynamically linked libraries since many processes will access the same library, like &lt;code&gt;libc&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Hardware adds extra &lt;em&gt;protection bits&lt;&#x2F;em&gt; to each segment indicating its &lt;code&gt;rwx&lt;&#x2F;code&gt; value similar to a file. If a segment is indicated to be &lt;code&gt;r--&lt;&#x2F;code&gt;, then the OS can secretly share the segment between multiple processes, assured that they will only read it. This concept of a read guard allowing for multiple shared references as opposed to a write guard which only allows for one mutable reference will become &lt;em&gt;very&lt;&#x2F;em&gt; important when we discuss concurrency.&lt;&#x2F;p&gt;
+&lt;p&gt;We have only been working on a few segments so far, but segmentation could theoretically be extended to as many segments as you want. In order to have &lt;em&gt;fine-grained&lt;&#x2F;em&gt; segments, a segment table is needed to quickly access thousands of segments.&lt;&#x2F;p&gt;
+&lt;p&gt;There are a few more things that the OS needs to do in order to support segmentation. One is that it must preserve all base-bounds pairs upon a context switch, since the location of the address space is now more complicated. Another is that the growing and shrinking of segments must be managed through &lt;code&gt;sbrk&lt;&#x2F;code&gt;-like system calls that shift the bounds of the heap&#x2F;stack. The final and most important issues that allocating variable size address spaces runs into the same problems of &lt;code&gt;malloc&lt;&#x2F;code&gt; where external fragmentation is difficult to avoid. Like with &lt;code&gt;malloc&lt;&#x2F;code&gt;, there is no perfect solution, ranging from algorithmic free lists to compact memory which rearranges segments every time a new one is created.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Scheduling</title>
+		<published>2022-01-31T00:00:00+00:00</published>
+		<updated>2022-01-31T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/schedulers/" type="text/html"/>
+		<id>https://sharifhsn.github.io/schedulers/</id>
+		<content type="html">&lt;p&gt;The way that the operating system decides which processes to run and when is a complicated process known as &lt;strong&gt;scheduling&lt;&#x2F;strong&gt;. This is how it works.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;
+&lt;p&gt;We should understand a few vocabulary words before we discuss schedulers in detail.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;job: an execution stream for a certain amount of time (not the same as process!)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;workload: the jobs that must be executed&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;latency: time taken for one operation&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;throughput: number of total operations&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;metrics&quot;&gt;Metrics&lt;&#x2F;h2&gt;
+&lt;p&gt;We can design schedulers that are designed to minimize certain metrics. No scheduler is perfect at everything, so we need to prioritize what metrics matter.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;turnaround time: how long does the job take to complete?&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;\( completionTime - arrivalTime \)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;response time: how long does the job take to start? e.g. game keystrokes&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;\( scheduleTime - arrivalTime \)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;waiting time: how long does the job wait in the ready queue?&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;same as response except when killing procs&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;throughput: jobs completed per unit time&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;resource utilization: manage small resources well e.g. battery&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;overhead: how strenuous is the scheduler itself?&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;fairness: how well is CPU time shared between jobs?&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;fifo&quot;&gt;FIFO&lt;&#x2F;h2&gt;
+&lt;p&gt;FIFO stands for &lt;strong&gt;First In, First Out&lt;&#x2F;strong&gt;, which is a fairly self-explanatory title. A FIFO scheduler does jobs in the order that they arrive. This kind of scheduler is trivial to implement. However, we can run into issues if say, the first job takes a long time to complete. The other jobs that would complete much quicker are waiting even though it would be better if we could just get those out of the way first.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;sjf&quot;&gt;SJF&lt;&#x2F;h2&gt;
+&lt;p&gt;SJF stands for &lt;strong&gt;Shortest Job First&lt;&#x2F;strong&gt;, which again is self-explanatory. This is better than FIFO, but relies on the OS having oracle-like knowledge of all the jobs that will come, since a shorter job could come later that the scheduler can&#x27;t factor into its calculations.&lt;&#x2F;p&gt;
+&lt;p&gt;These schedulers only work when you have access to all the jobs at once, which is almost never the case in real-world workloads. We need to use some kind of &lt;em&gt;preemptive scheduling&lt;&#x2F;em&gt; which will switch and split jobs as necessary.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;stcf&quot;&gt;STCF&lt;&#x2F;h2&gt;
+&lt;p&gt;STCF stands for &lt;strong&gt;Shortest To Completion First&lt;&#x2F;strong&gt;. It is similar to SJF, but it recalculates the job closest to completion every time a new job arrives. This way, if a super short job arrives while a long job is executing, STCF can switch to it and complete it quickly before finishing the long job, which improves completion time. This expands the machinery needed in the scheduler but has much better outcomes.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;rr&quot;&gt;RR&lt;&#x2F;h2&gt;
+&lt;p&gt;RR stands for &lt;strong&gt;Round Robin&lt;&#x2F;strong&gt;. This approach is fairly different than the the previous two schedulers because it does not make any attempt to optimize for the shortest time. Instead, RR optimizes for fairness by executing every single job on the same exact time intervals. So it will run 10 ms of Job A, then 10 ms of Job B, then 10 ms of Job C, etc. in the fairest way possible regardless of the actual length of those jobs.&lt;&#x2F;p&gt;
+&lt;p&gt;Preemptive scheduling is pretty cool, but we&#x27;re still treating all our jobs like they&#x27;re the same. If we introduce the notion of &lt;strong&gt;priority&lt;&#x2F;strong&gt; in jobs then we can use it for real-time jobs.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;mlfq&quot;&gt;MLFQ&lt;&#x2F;h2&gt;
+&lt;p&gt;MLFQ stands for &lt;strong&gt;Multi-Level Feedback Queue&lt;&#x2F;strong&gt;. The implementation is similar to RR but it works on multiple priority levels. There are two job types: &lt;em&gt;interactive&lt;&#x2F;em&gt; and &lt;em&gt;batch&lt;&#x2F;em&gt;. Interactive processes are those like games and text editors that need immediate response and therefore low response time. Batch processes are those like daemons that are lower priority and care more about general turnaround time than response time.&lt;&#x2F;p&gt;
+&lt;p&gt;For our implementation, we have multiple priority queues:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;java&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-java &quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; a.priority &amp;gt; b.priority {
+&lt;&#x2F;span&gt;&lt;span&gt;    a.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;run&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;else if&lt;&#x2F;span&gt;&lt;span&gt; a.priority == b.priority {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rr&lt;&#x2F;span&gt;&lt;span&gt;(a, b);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;MLFQ prioritizes &lt;em&gt;nice&lt;&#x2F;em&gt; processes. This is a technical term that means that a process is satistfied with getting a response and is willing to turn over the CPU as needed without the OS needing to force it to.&lt;&#x2F;p&gt;
+&lt;p&gt;All jobs begin by having top priority, but if a job takes too long on the RR, then you demote it to a lower priority level. This way, smaller jobs that are contained within RR are executed quickly at top priority.&lt;&#x2F;p&gt;
+&lt;p&gt;However, this system is incredibly easy to game. Processes control the jobs that they send to the CPU so you can split up jobs exactly aligned to RR to execute all the jobs at top priority even though you don&#x27;t actually need it.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;lottery&quot;&gt;Lottery&lt;&#x2F;h2&gt;
+&lt;p&gt;The lottery system is fairer, just like a real lottery. Every process gets a certain amount of lottery tickets associated with it, scaling with priority. Whichever process wins the lottery gets to run its job. This way, higher priority jobs have a higher probability of running than lower priority jobs, but it&#x27;s protected against gaming the system. The number of tickets that a process gets represents its CPU usage.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; counter = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; winner = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;getrandom&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;, total_tickets);
+&lt;&#x2F;span&gt;&lt;span&gt;node_t *curr = head;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;while&lt;&#x2F;span&gt;&lt;span&gt; curr {
+&lt;&#x2F;span&gt;&lt;span&gt;    counter += curr-&amp;gt;tickets;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(counter &amp;gt; winner) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;break&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;    curr = curr-&amp;gt;next;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;multiprocessing&quot;&gt;Multiprocessing&lt;&#x2F;h2&gt;
+&lt;p&gt;Every scheduler we&#x27;ve discussed so far assumes only a single CPU can execute jobs, which was true for a long time. Now, however, multicore CPUs are becoming increasingly common in consumer electronics. How do we schedule jobs among different CPUs?&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;Cache affinity&lt;&#x2F;em&gt; and &lt;em&gt;coherence&lt;&#x2F;em&gt; can become issues. CPUs have a cache located next to them different from main memory where commonly used memory is stored in order to speed up operations. Every core has its own caches, so what happens when multiple cores execute the same stream? They have to have cache coherence so that we don&#x27;t end up with bugs. The way to fix this is to copy caches between cores.&lt;&#x2F;p&gt;
+&lt;p&gt;Obviously, this is pretty inefficient. We want to avoid this as much as possible by having each process run on its own CPU thread as much as possible; this is cache affinity. Basic FIFO scheduling is simple but is not good at preserving affinity. Having a scheduler that preserves affinity at the cost of some other inefficiencies can actually cause massive speedups because of the importance of cache affinity. However, this machinery can be complex.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;cfs&quot;&gt;CFS&lt;&#x2F;h2&gt;
+&lt;p&gt;The &lt;strong&gt;Completely Fair Scheduler&lt;&#x2F;strong&gt; is the scheduler that Linux actually uses. Instead of using time-slices to manage job usage, the scheduler assigns processes a proportion of the CPU. The fairness is absolute because each thread gets an absolute amount of CPU running. This also fixes multiprocessing issues because the scheduler is based around CPU cores instead of time. However, the switching rate might change a lot because we are no longer looking at time, and as we discussed context switching has its own costs that we might want to minimize. This is a tradeoff made for fairness.&lt;&#x2F;p&gt;
+&lt;p&gt;I mentioned niceness earlier. CFS uses a more complex version of niceness which ranges from -20 to 19, with the default of 0, and higher values being worse. There is also a separate priority called &lt;em&gt;real-time priority&lt;&#x2F;em&gt; ranging from 0 - 99 which always execute before nice processes, regardless of how nice they are.&lt;&#x2F;p&gt;
+&lt;p&gt;In order to calculate RR, we take the target latency e.g. 20 ms and split the time across the tasks equally among process of the same priority. However, because this is based around CPU and not constant time, this can be extremely fast. A tree data structure is used for priority in order to quickly get the highest priority and least time jobs.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Target Latency&lt;&#x2F;strong&gt; is the minimum amount of time required to get a task at least one turn on the processor. Within this window, every process gets some CPU. &lt;strong&gt;Minimum Granularity&lt;&#x2F;strong&gt; imposes small unfairness in CFS. There is a floor on the timeslice of 1 ms regardless of how much CPU we have. This means that for a large amount of jobs, smaller jobs get unfairly good treatment.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>CPU Virtualization</title>
+		<published>2022-01-04T00:00:00+00:00</published>
+		<updated>2022-01-04T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/cpu-virtualization/" type="text/html"/>
+		<id>https://sharifhsn.github.io/cpu-virtualization/</id>
+		<content type="html">&lt;p&gt;We need a way to map on to the physical CPU through our operating system. We do this through virtualization.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;processes&quot;&gt;Processes&lt;&#x2F;h2&gt;
+&lt;p&gt;A &lt;strong&gt;process&lt;&#x2F;strong&gt; is an &lt;em&gt;execution stream&lt;&#x2F;em&gt; in the context of a process state. It is a self-contained stream of executing instructions on the CPU. Each process has a state which is composed by everything that the code can affect or be affected by, for example &lt;em&gt;registers&lt;&#x2F;em&gt;, address space, open files, etc. We need this state so that we can pause and resume processes without resetting the whole thing, just by picking up where the state left off.&lt;&#x2F;p&gt;
+&lt;p&gt;You can think of address space as the region of memory in which the CPU operates, though this is a simplification due to memory virtualization.&lt;&#x2F;p&gt;
+&lt;p&gt;A process is technically different than a program. When we talk about a program, it&#x27;s usually a collection of files on our computer. The process refers to the actually executing code which is dynamic with respect to its code. We can have multiple processes executed that are the same program.&lt;&#x2F;p&gt;
+&lt;p&gt;Processes do not share information with other processes. This is distinct from the idea of threads. If a process examines the &amp;quot;same&amp;quot; memory address with respect to its address space as another process, they will see different values. Even though both process are looking at &lt;code&gt;0xFFE84264&lt;&#x2F;code&gt; the memory virtualization means that they are looking at different physical memory. Threads share data so they have the same address space; they are in a way a lightweight process.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;address-space&quot;&gt;Address Space&lt;&#x2F;h2&gt;
+&lt;p&gt;As mentioned, every process has its own address space. The OS assigns a chunk of memory towards it (again, this memory is virtual). At the high address, there is a stack of local variables that grows downwards. This stack contains the execution of the program, such as functions being called. The code segment which is the actual program is read from the absolute bottom. There are a few segments like &lt;code&gt;.data&lt;&#x2F;code&gt; and &lt;code&gt;.bss&lt;&#x2F;code&gt; which refer to global initialized&#x2F;uninitialized variables, respectively. Then there is the heap, which is dynamic and grows upward. Usually, the heap is much larger than the stack because it contains allocated memory for the process.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The stack and the heap grow towards each other, so you might think they would collide at some point. In reality, there is a wide enough chasm between them that if they collide, you have bigger problems to worry about.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;cpu-virtualization&quot;&gt;CPU Virtualization&lt;&#x2F;h2&gt;
+&lt;p&gt;Our problem is that a CPU can only execute one execution stream at one time. We want processes to be running at the same time, so how do we achieve the illusion that the process has full control of the CPU?&lt;&#x2F;p&gt;
+&lt;p&gt;One solution is &lt;em&gt;direct execution&lt;&#x2F;em&gt;. We will run the process as simply as possible and execute all of its instructions in sequence. This is extremely simple to implement, but it means we can only run one process at once. If the process runs forever, then the CPU is stuck. Processes might write to other data that it&#x27;s not supposed to, or do some slow I&#x2F;O operation, or execute privileged instructions it&#x27;s not allowed to accesss. In general, we don&#x27;t want to trust processes to behave. Operating systems use &lt;em&gt;limited direct execution&lt;&#x2F;em&gt;, which maintains some control over the execution of the process instead of giving it unfettered access to the CPU.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;system-calls&quot;&gt;System Calls&lt;&#x2F;h2&gt;
+&lt;p&gt;We want to make sure user process can&#x27;t harm other processes. CPU hardware supports privilege levels for security reasons. These instructions should only be run in kernel space by the operating system, and user processes in user space can not access them. Privileges can have multiple levels. In order for processes to access privileges, we use &lt;strong&gt;system calls&lt;&#x2F;strong&gt; that can either pass the function off to the OS or give the process privilege, also known as a &lt;em&gt;trap&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span&gt;ID1 = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;syscall&lt;&#x2F;span&gt;&lt;span&gt;(SYS_getpid); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; syscall
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;ID2 = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;getpid&lt;&#x2F;span&gt;&lt;span&gt;(); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; call to libc
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Let&#x27;s say a process wants to execute &lt;code&gt;read()&lt;&#x2F;code&gt;, which is a syscall. It will move the syscall ID for read &lt;code&gt;0x6&lt;&#x2F;code&gt; into the &lt;code&gt;%eax&lt;&#x2F;code&gt; register for execution, then run the instruction &lt;code&gt;syscall&lt;&#x2F;code&gt;.  The operating system will then read the trap table to figure out what to do. The trap table is located in the hardware, which typically has an entry for system calls. Other traps could be &lt;code&gt;illegal access&lt;&#x2F;code&gt; for memory region that it doesn&#x27;t have access to. A trap just refers to a hardware operation that triggers on some software interaction. This is why Javascript can&#x27;t just randomly hack your computer from the internet; it is executing within a user process e.g. Chrome and is limited by the hardware traps in what it can do.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;multiprogramming&quot;&gt;Multiprogramming&lt;&#x2F;h2&gt;
+&lt;p&gt;We want to make sure that multiple processes can run at once. This means we must switch between processes. There are two components to this; how to switch, and when to switch.&lt;&#x2F;p&gt;
+&lt;p&gt;The dispatch loop has a simple structure, but the devil is in the details.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;while &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; run process A for some time-slice
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; stop process A and save its context
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; CONTEXT SWITCH
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; load context of another process B
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We have multiple ways to context switch. One way is &lt;em&gt;cooperative multi-tasking&lt;&#x2F;em&gt;. We trust the process to give up the CPU when it has judged some amount of work has been done or time has passed. We will provide &lt;code&gt;yield()&lt;&#x2F;code&gt; syscall for magnanimously donating CPU time to another process. However, this is annoying to program in, so most programs do not do this.&lt;&#x2F;p&gt;
+&lt;p&gt;Modern programs use &lt;em&gt;true multi-tasking&lt;&#x2F;em&gt;, which gives OS control over which processes are running. The hardware will generate a timer interrupt every 10 ms, for example (Linux) that the OS will decide when to switch or not.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;pcb&quot;&gt;PCB&lt;&#x2F;h2&gt;
+&lt;p&gt;The &lt;strong&gt;process control block&lt;&#x2F;strong&gt; is a descriptor of a process that saves its context into a &lt;code&gt;struct&lt;&#x2F;code&gt;. There is a &lt;code&gt;struct&lt;&#x2F;code&gt; for every process that is running in the CPU. A PCB stores the following information:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;PID -  unique identification for a process&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Process state (&lt;code&gt;enum&lt;&#x2F;code&gt; running, ready, or blocked)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Execution state (registers at time of pause)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Scheduling priority&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Accounting information (parent&#x2F;child procs)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Credentials (resource access&#x2F;owner)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;File pointers&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;When we save the context of the process in the dispatch loop, the PCB is where it is saved. It is typically less than a few kilobytes depending on the complexity of the process. The PCB is stored on the &lt;em&gt;kernel stack&lt;&#x2F;em&gt; which is a stack data structure located in kernel space. Switching a context means moving the stack pointer to the process that is going to resume and then retrieving that PCB from the stack. Then, we exit kernel space and resume executing B in user space by restoring the PCB information to the CPU.&lt;&#x2F;p&gt;
+&lt;p&gt;When a process is doing I&#x2F;O, it&#x27;s not using the CPU. This is an excellent point where the OS can block the process and run some other processes that actually need the CPU. Once the I&#x2F;O is done, it is moved from the blocked state to the ready state. The convention is that only ready state programs can go to the running state.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;process-creation&quot;&gt;Process Creation&lt;&#x2F;h2&gt;
+&lt;p&gt;One way to create a process is just creating one from scratch. We will load the code we&#x27;re running into memory at the bottom of the stack and create the stack. We also create a PCB with a kernel stack and everything, then put the process in the ready state. However, there are lots of complicated parts of processes that are difficult to initialize from scratch e.g. permissions, I&#x2F;O, environment vars so this is generally not preferred.&lt;&#x2F;p&gt;
+&lt;p&gt;A better way is to clone an existing process and change it to the appropriate information. &lt;code&gt;fork()&lt;&#x2F;code&gt; clones the calling process and &lt;code&gt;exec(char *file)&lt;&#x2F;code&gt; replaces the current process with the new process.&lt;&#x2F;p&gt;
+&lt;p&gt;When we fork, we save the current state of the program as a new PCB that is added to the kernel stack, which is very optimized to use copy-on-write semantics.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The basic idea of copy-on-write is that it uses a pointer&#x2F;reference for memory until we need to modify memory. This is an incremental process that trades off some overhead for a pay-as-you-go memory saving system.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+</content>
+	</entry>
+</feed>

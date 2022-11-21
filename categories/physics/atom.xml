@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title>Sharif&#x27;s Page - Physics</title>
+	<subtitle>Sharif Haason&#x27;s personal website for various notes and ideas</subtitle>
+	<link href="https://sharifhsn.github.io/categories/physics/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://sharifhsn.github.io/"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2022-04-12T00:00:00+00:00</updated>
+	<id>https://sharifhsn.github.io/categories/physics/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Particles</title>
+		<published>2022-04-12T00:00:00+00:00</published>
+		<updated>2022-04-12T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/particles/" type="text/html"/>
+		<id>https://sharifhsn.github.io/particles/</id>
+		<content type="html">&lt;p&gt;Tiny particles are affected in different ways than we are by waves. There are several different effects that must be discussed.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;the-photoelectric-effect&quot;&gt;The Photoelectric Effect&lt;&#x2F;h2&gt;
+&lt;p&gt;Many people believe that Albert Einstein won the Nobel Prize for his discovery of special relativity, as that is what he is most well-known for. However, his actual claim to fame in that respect had to with the &lt;strong&gt;photoelectric effect&lt;&#x2F;strong&gt;. He found that when light of a certain wavelength is incident on certain metals, electrons are ejected from the surface of the metal.&lt;&#x2F;p&gt;
+&lt;p&gt;The number of photoelectrons emitted, the photocurrent, increases with intensity, though the kinetic energy does not. The kinetic energy only increases with an increase in energy of the light i.e. a decrease in the wavelength. Above a certain wavelength, no electrons are ejected.&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+\frac{hc}{λ_0} = W_0 + KE_{max}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(W_0\) is the work function for the metal in question. You can think of it as an intrinsic quality of the metal. \(λ_0\) is the cutoff wavelength after which no more electrons will be ejected.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;pair-production-annihilation&quot;&gt;Pair Production&#x2F;Annihilation&lt;&#x2F;h2&gt;
+&lt;p&gt;When a high energy photon collides with a nucleus, it may &amp;quot;split&amp;quot; into an electron and a positron. When this split happens, the charge, momentum, and the mass-energy of all parties must be conserved:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+E_{photon} = KE_{positron} + KE_{electron} + 2E_0
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(E_0\) is the rest mass-energy for each particle given by \(E = mc^2\), doubled since the electron and positron are identical.&lt;&#x2F;p&gt;
+&lt;p&gt;The opposite operation can occur when an electron and a positron combining will annihilate the pair and create two identical photons with opposite momentum. The reason that there must be two photons and not just one is that the momentum must equal 0, so there has to be opposite momentum.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;de-broglie-wavelength&quot;&gt;de Broglie Wavelength&lt;&#x2F;h2&gt;
+&lt;p&gt;All particles exhibit wave-like characteristics, which can be demonstrated by the double-slit experiment. The wavelength of a particle in this instance can be determined from the following equation:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+λ = \frac{h}{p} = \frac{h}{mv} = \frac{h}{\sqrt{2mKE}}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;The wavelength of a photon is a little different, since photons are completely massless. The momentum and energy of a photon are related by a simpler equation \(E = pc\), which applies to all massless particles, not just photons.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;uncertainty&quot;&gt;Uncertainty&lt;&#x2F;h2&gt;
+&lt;p&gt;One key problem for physicists studying particles is the &lt;strong&gt;Heisenberg Uncertainty Principle&lt;&#x2F;strong&gt;. In layman&#x27;s terms, the observation of a particle fundamentally changes its quality, so it can never be truly measured. In mathematical terms, the accuracy of a measurement of a position&#x27;s momentum and position at the same time is limited:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+(Δp_y)(Δy) ≥ \frac{h}{4π}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;and the same function exists for simultaneous measurements of energy and time.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Special Relativity</title>
+		<published>2022-04-05T00:00:00+00:00</published>
+		<updated>2022-04-05T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/special-relativity/" type="text/html"/>
+		<id>https://sharifhsn.github.io/special-relativity/</id>
+		<content type="html">&lt;p&gt;Albert Einstein revolutionized the world of physics when he discovered the special theory of relativity. It is only possible due to his contributions that valuable technologies like GPS function. But what is it exactly?&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;dilation-and-contraction&quot;&gt;Dilation and Contraction&lt;&#x2F;h2&gt;
+&lt;p&gt;The theory behind special relativity is two-fold:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;All inertial frames of reference of equivalent.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Observers must measure the same value for the speed of light in a vacuum.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;This means that if even an observer has a huge difference in relative velocity, the speed of light is the same. This causes knock-on effects on the experience of time, and &lt;strong&gt;time dilation&lt;&#x2F;strong&gt;:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+Δt = \frac{Δt_0}{\sqrt{1-\frac{v^2}{c^2}}}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;The proper time \(Δt_0\) is the time interval with respect to an observer at rest. The dilated time is the time when the observer is at velocity \(v\).&lt;&#x2F;p&gt;
+&lt;p&gt;In the same way that time can be dilated, length can also be contracted:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+L = L_0\sqrt{1-\frac{v^2}{c^2}}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;The relationship here is inverse! Time can only be &lt;em&gt;dilated&lt;&#x2F;em&gt;, and length can only be &lt;em&gt;contracted&lt;&#x2F;em&gt;. If the velocity was the speed of light (impossible) then the time interval would be infinite, and the length of an object would be 0.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;relativistic-addition&quot;&gt;Relativistic Addition&lt;&#x2F;h2&gt;
+&lt;p&gt;Two objects traveling at different relativistic velocities further complicate these calculations. If we want to calculate the proper velocity \(u\) of an object from its relativistic velocity \(u&#x27;\) relative to an object at proper velocity \(v\) or vice versa, then we can use these equations:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+u = \frac{u&#x27; + v}{1 + \frac{vu&#x27;}{c^2}}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+u&#x27; = \frac{u - v}{1 - \frac{vu}{c^2}}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;As you can see, these are very similar equations, but their differences are important.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;mass-and-energy&quot;&gt;Mass and Energy&lt;&#x2F;h2&gt;
+&lt;p&gt;It&#x27;s the moment you&#x27;ve been waiting for, the famous equation!&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+E = \frac{m_0c^2}{\sqrt{1 - \frac{v^2}{c^2}}}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;Oh, it looks a little bit different. That&#x27;s because just like length and time are relativistic, mass is as well. In order to calculate total energy from rest mass, we must apply the same expression to it. There&#x27;s another way to calculate \(E\):&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+E = KE + E_0
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(E_0\) comes from the classic \(E = mc^2\) equation. We can also find the kinetic energy by rearranging these equations as&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+KE = (m - m_0)c^2
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;from finding the difference between relativistic mass and proper mass.&lt;&#x2F;p&gt;
+&lt;p&gt;One more important attribute affected by relativity is momentum. As it depends on mass, it looks similar to the equation for \(E\):&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+p = \frac{m_0v}{\sqrt{1-\frac{v^2}{c^2}}}
+$$&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Waves</title>
+		<published>2022-03-29T00:00:00+00:00</published>
+		<updated>2022-03-29T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/waves/" type="text/html"/>
+		<id>https://sharifhsn.github.io/waves/</id>
+		<content type="html">&lt;p&gt;Light is curious because it is both a particle and a wave, which makes it behave strangely in certain contexts. When projected through a slit, some strange fringes will appear, which is the subject of the famous double slit experiment&#x2F;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;interference&quot;&gt;Interference&lt;&#x2F;h2&gt;
+&lt;p&gt;When waves combine together, it is called &lt;strong&gt;interference&lt;&#x2F;strong&gt;. This interference can be either &lt;em&gt;constructive&lt;&#x2F;em&gt; or &lt;em&gt;destructive&lt;&#x2F;em&gt;. When light is projected through a slit, depending on the angle from the slit to the wall behind it, the light waves will either constructively interfere or destructively interfere, creating bright and dark fringes, respectively.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;em&gt;position&lt;&#x2F;em&gt; of the bright fringes is given by the following equation:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+d\sin{θ} = mλ ⇒ m = 0, 1, 2, 3...
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(d\) is the distance &lt;em&gt;between the slits&lt;&#x2F;em&gt;, \(θ\) is the angle of interference from the central max onward, and \(m\) is the order of the interference fringe. For bright fringes, the order of the interference fringes begins at 0 for the central bright fringe, then increments onward for each surrounding fringe. Note that there is no functional difference between a fringe on either side of the central fringe as long as they are the same order away from it.&lt;&#x2F;p&gt;
+&lt;p&gt;Dark fringes have a similar equation:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+d\sin{θ} = (m + \frac{1}{2})λ
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;The ½ is important here because the location alternates with the bright fringes. \(m\) is also different because it starts at the first dark fringe surrounding the bright fringe. You can think like this:&lt;&#x2F;p&gt;
+&lt;p&gt;... &lt;strong&gt;3&lt;&#x2F;strong&gt; &lt;em&gt;2&lt;&#x2F;em&gt; &lt;strong&gt;2&lt;&#x2F;strong&gt; &lt;em&gt;1&lt;&#x2F;em&gt; &lt;strong&gt;1&lt;&#x2F;strong&gt; &lt;em&gt;0&lt;&#x2F;em&gt; &lt;strong&gt;0&lt;&#x2F;strong&gt; &lt;em&gt;0&lt;&#x2F;em&gt; &lt;strong&gt;1&lt;&#x2F;strong&gt; &lt;em&gt;1&lt;&#x2F;em&gt; &lt;strong&gt;2&lt;&#x2F;strong&gt; &lt;em&gt;2&lt;&#x2F;em&gt; &lt;strong&gt;3&lt;&#x2F;strong&gt; ...&lt;&#x2F;p&gt;
+&lt;p&gt;where the italicized numbers are dark fringes and the bold are bright fringes.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;thin-film&quot;&gt;Thin Film&lt;&#x2F;h2&gt;
+&lt;p&gt;Interference has a curious corollary with refraction if done through a thin film. Light that is transmitted between two media is partially reflected and partially passes through if passing from a medium of lower to higher index of refraction e.g. air to water. It is fully reflected if from higher to lower. The partially reflected light (but &lt;em&gt;not&lt;&#x2F;em&gt; the fully reflected light) undergoes a phase shift by a half wavelength.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s say we want to find the distance that the light travels in the medium, the &amp;quot;height&amp;quot; of the medium layer \(t\). If the light underwent a phase shift, the equation for interference is actually flipped:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+2t = (m + \frac{1}{2})λ_{film}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;for constructive interference, and vice versa for destructive interference. However, if there is no net phase shift, then use the normal equations.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that \(λ_{film}\) here is actually&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+λ_{film} = \frac{λ_{vacuum}}{n_{film}}
+$$&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;&quot;&gt;&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;diffraction&quot;&gt;Diffraction&lt;&#x2F;h2&gt;
+&lt;p&gt;When a wave passes through a tiny slit, it spreads out. The slit has to be really small, as in on the order of the wavelength of the light, in order for this to happen, with more bending with a smaller slit.&lt;&#x2F;p&gt;
+&lt;p&gt;Diffraction has interference as well, so the equation for the position of dark fringes is similar, although different:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+W\sin{θ} = mλ ⇒ m = 1,2,3...
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(W\) is the width of the slit. &lt;strong&gt;Importantly, \(θ\) is different here!!!&lt;&#x2F;strong&gt; It is the angle between the center of the slit and the center of the dark fringe in question. \(m\) is also different in that it &lt;em&gt;cannot&lt;&#x2F;em&gt; be 0! The first dark fringe in diffraction has order 1, because at order 0 there is constructive interference.&lt;&#x2F;p&gt;
+&lt;p&gt;Diffraction grating has different properties than single slit diffraction, however, and is more similar to typical interference, following the constructive interference equation for bright fringes. Be careful about \(d\) in this context! It refers to the distance between each slit, which you might have to derive yourself from other values.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Mirrors</title>
+		<published>2022-03-08T00:00:00+00:00</published>
+		<updated>2022-03-08T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/mirrors/" type="text/html"/>
+		<id>https://sharifhsn.github.io/mirrors/</id>
+		<content type="html">&lt;p&gt;Mirrors can interact with light in interesting ways. In fact, reflection and refraction are probably most people&#x27;s engagement with laws of physics surrounding light in their daily life.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;reflection&quot;&gt;Reflection&lt;&#x2F;h2&gt;
+&lt;p&gt;On a plane mirror, like the kind that you&#x27;re used to in daily life, &lt;em&gt;the angle of incidence equals the angle of reflection&lt;&#x2F;em&gt;. To clarify some terms: &lt;em&gt;incidence&lt;&#x2F;em&gt; refers to the ray that is going towards the mirror, and &lt;em&gt;reflection&lt;&#x2F;em&gt; refers to the ray that is coming out of the mirror. The &lt;em&gt;normal&lt;&#x2F;em&gt; is a perpendicular line, in this case to the plane of the mirror.&lt;&#x2F;p&gt;
+&lt;p&gt;Because of this characteristic of plane mirrors, the reflection of an object (or &lt;strong&gt;image&lt;&#x2F;strong&gt;) will be upright and the same size as the object. The image will be &amp;quot;inside&amp;quot; the mirror, which is called &lt;em&gt;virtual&lt;&#x2F;em&gt;. The distance &amp;quot;within&amp;quot; the mirror to the image is the same distance from the mirror to the object. This is useful for real life because we want to see most objects the same as they actually exist. However, in physics, sometimes we want to manipulate these variables, and for that we use &lt;strong&gt;spherical mirrors&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;A spherical mirror is a mirror that is curved such that it could be cut out of a sphere. It can be either concave or convex (front and back of a spoon).&lt;&#x2F;p&gt;
+&lt;p&gt;There are two points that are significant to a mirror, the focal point \(F\) and the center of curvature \(C\). If the mirror was part of a sphere, then the center of curvature would be the center of that sphere. The focal point is where parallel rays intersect after reflection. Both points are on the &lt;em&gt;principal axis&lt;&#x2F;em&gt; of the mirror. The focal point is halfway between \(C\) and the center of the mirror.&lt;&#x2F;p&gt;
+&lt;p&gt;In order to determine how the image of an object looks when reflected off of a mirror, it is useful to construct a &lt;em&gt;ray diagram&lt;&#x2F;em&gt;. The ray diagram is based on three rules (you only need two).&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;an incident ray parallel to the principal axis reflects through \(F\)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;an incident ray that passes through \(F\) reflects parallel to the principal axis&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;an incident ray which passes through \(C\) reflects on itself&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;magnification&quot;&gt;Magnification&lt;&#x2F;h2&gt;
+&lt;p&gt;The calculation of the distance and size of an image are governed by the following equations:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+\frac{1}{f} = \frac{1}{d_o} + \frac{1}{d_i}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(d_o\) is the distance from the mirror to the object and \(d_i\) is the same for the image. &lt;&#x2F;p&gt;
+&lt;p&gt;The magnification \(m\) of an image is the ratio of the image size to the object size:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+m = \frac{h_i}{h_o} = -\frac{d_i}{d_o}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;Now, you might be wondering about how the sign of each value affects these equations. The answer is, a LOT. To think about mirrors intuitively, think about what each sign must mean.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;\(f\) is positive for concave mirrors because the focal point is front, but negative for convex mirrors because it&#x27;s behind the mirror.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;\(d_o\) is positive for a real object (in front of the mirror), but negative for a virtual object. A virtual object can&#x27;t generally exist, but you can simulate it using reflected light.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;\(d_i\) is the same, but a virtual image makes more sense.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;\(m\) is obvious, positive for upright and negative for inversion&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;refraction&quot;&gt;Refraction&lt;&#x2F;h2&gt;
+&lt;p&gt;If you put a straw in your water, the straw will strangely seem to bend at the water&#x27;s edge and go at an angle. The reason for this is &lt;strong&gt;refraction&lt;&#x2F;strong&gt;: light will change direction when it passes through a medium. The change in angle is described by Snell&#x27;s Law:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+n_1\sin{θ_1} = n_2\sin{θ_2}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(θ_1\) is the &lt;em&gt;angle of incidence&lt;&#x2F;em&gt;, \(θ_2\) is the &lt;em&gt;angle of refraction&lt;&#x2F;em&gt;, and \(n_1\) and \(n_2\) are the &lt;em&gt;indices of refraction&lt;&#x2F;em&gt; for the corresponding media. The index of refraction is expressed as the ratio between \(c\) and the speed of light in the material. If light is very fast in the material, \(n\) will be close to 1.&lt;&#x2F;p&gt;
+&lt;p&gt;When light passes from a medium with a higher index of refraction to a lower one, there&#x27;s an angle at which the refracted light will be parallel to the media edge, known as the &lt;em&gt;critical angle&lt;&#x2F;em&gt; \(θ_c\):&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+\sin{θ_c} = \frac{n_2}{n_1}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;At any angle greater than the critical angle, all the light will be reflected and none will be refracted.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The reason that this is the case can be derived from math. Let&#x27;s say that light passes from water (1.33) into air (1.00). The critical angle would be equivalent to \(\sin^{-1}{\frac{1.00}{1.33}}\) or 48.75°.&lt;&#x2F;p&gt;
+&lt;p&gt;What would happen if we tried to find the angle of refraction based on Snell&#x27;s Law if the incident angle is 50°, so greater than the critical angle?&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+1.33 \cdot \sin{50°} = 1.00 \cdot \sin{θ_2}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+\sin{θ_2} = 1.33 \cdot \sin{50°} = 1.019
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;But there&#x27;s a problem here! The function \(\sin^{-1}{}\) is not defined for \(θ\) greater than 1, so the angle does not exist. This means that refraction does not occur, the light is only reflected.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;lens&quot;&gt;Lens&lt;&#x2F;h2&gt;
+&lt;p&gt;The properties of magnification and refraction are used in lens that are located in glasses, telescopes, microscopes, and even your own eyeball! A &lt;strong&gt;lens&lt;&#x2F;strong&gt; has two mirrors on either side. If the mirrors are convex, the lens is &lt;em&gt;converging&lt;&#x2F;em&gt;, and if they are concave, the lens is &lt;em&gt;diverging&lt;&#x2F;em&gt;. Every lens has &lt;em&gt;two&lt;&#x2F;em&gt; focal points corresponding to each mirror.&lt;&#x2F;p&gt;
+&lt;p&gt;The ray diagram for a converging lens follows similar rules to a concave mirror, but instead of thinking of reflected rays, the rays are refracted through the lens.&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;When a ray passes through the axis of a lens parallel, it will refract towards the other focal point.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;When a ray passes through a focal point, it will refract parallel through the other side.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;When a ray passes through the center of the lens, it will not bend.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;The rules are the same for a diverging lens, though it may not appear that way. All of the rules for a diverging lens are based on a focal point on the other side of the mirror, but fundamentally have the same property.&lt;&#x2F;p&gt;
+&lt;p&gt;All of the formulas are the same for lens like mirrors, however, the meaning of the signs changes in this context.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;(f) is positive for converging lens because the focal point is front, but negative for diverging lens because it&#x27;s behind the lens&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;(d_o) is positive for a real object (same side as light), but negative for a virtual object. A virtual object can&#x27;t generally exist, but you can simulate it using reflected light.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;(d_i) is positive for a real image on the &lt;em&gt;opposite&lt;&#x2F;em&gt; side of the light, and negative for a virtual image on the same side of the light.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;(m) is obvious, positive for upright and negative for inversion&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Electromagnetic Waves</title>
+		<published>2022-03-01T00:00:00+00:00</published>
+		<updated>2022-03-01T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/electromagnetic-waves/" type="text/html"/>
+		<id>https://sharifhsn.github.io/electromagnetic-waves/</id>
+		<content type="html">&lt;p&gt;We have discussed electric fields and magnetic fields, and the way that they change and interact. The full interaction of these fields will create &lt;strong&gt;electromagnetic waves&lt;&#x2F;strong&gt;, the study of which will consume the rest of these notes.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;the-electromagnetic-spectrum&quot;&gt;The Electromagnetic Spectrum&lt;&#x2F;h2&gt;
+&lt;p&gt;It&#x27;s easiest to understand electromagnetic waves (EM waves) in the same way that we understand any other waves, through frequency \(f\) or wavelength \(λ\).&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Throughout these notes, we will refer almost exclusively to the wavelength of an EM wave as identification for consistency&#x27;s sake. Note however that this is always mapped to a corresponding frequency, though inversely related.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Visible light is an EM wave, with wavelengths in the hundreds of nanometers. Stronger EM waves like X-rays or gamma rays go from \(10^{-8}\) to \(10^{-16}\) meters, which is extremely small! In contrast, weaker EM waves like radio waves can have wavelengths in the thousands of meters. As you can see, EM waves have a broad spectrum.&lt;&#x2F;p&gt;
+&lt;p&gt;The wavelength of an EM wave in a vacuum is given by &lt;&#x2F;p&gt;
+&lt;p&gt;$$
+fλ = c
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(c\) is the well-known &lt;em&gt;speed of light&lt;&#x2F;em&gt; at \(3 × 10^{8}\) meters per second. \(c\) can also be more precisely defined as&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+c = \frac{1}{\sqrt{ε_0μ_0}}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(ε_0\) is the permittivity of free space \(8.85×10^{-12}\) and \(μ_0\) is the permeability of free space \(4π×10^{-7}\).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;energy&quot;&gt;Energy&lt;&#x2F;h2&gt;
+&lt;p&gt;EM waves transport energy, and that energy has a certain value depending on the electric and magnetic fields that created the EM wave. The &lt;em&gt;electric energy density&lt;&#x2F;em&gt; is:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+u_E=\frac{1}{2}ε_0E^2
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;In contrast, the &lt;em&gt;magnetic energy density&lt;&#x2F;em&gt; is given by:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+μ_B=\frac{1}{2μ_0}B^2
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;Notice the different units here. The electric energy density is dependent on permittivity, while the magnetic energy density is dependent on the inverse permeability.&lt;&#x2F;p&gt;
+&lt;p&gt;We can combine these two to get the total energy density:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+u = \frac{1}{2}ε_0E^2 + \frac{1}{2μ_0}B^2 = ε_0E^2 = \frac{B^2}{μ_0}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;The direction of the wave must always be mutually perpendicular to the direction to the electric field and the magnetic field. This follows the &lt;strong&gt;right hand rule&lt;&#x2F;strong&gt; where the thumb is the magnetic field \(B\), the pointer finger is the propagation of the wave, and the middle finger is the electric field \(E\). You can remember this because the pointer finger points to where the wave is going, and \(B\) comes before \(E\) in the alphabet, so the first one is the thumb and the second is the middle finger.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;An EM wave has a magnetic field with an rms value of \(3.40 × 10^{-6} T\). The wave passes perpendicularly through an opening that has an area of \(0.35 m^2.\)&lt;&#x2F;p&gt;
+&lt;p&gt;To get the electric field value \(E\), we multiply the magnetic field \(B\) by \(c\) to get \(3 × 10^8\ m&#x2F;s\ •\ 3.4 × 10^{-6} T = 1020\ N&#x2F;C\).&lt;&#x2F;p&gt;
+&lt;p&gt;To get the energy densities \(μ_E\) and \(μ_B\), we simply apply the earlier formulas here.&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+μ_E = \frac{1}{2}ε_0E^2 = \frac{1}{2}(8.85×10^{-12})(1020)^2 = 4.604 × 10^{-6} J&#x2F;m^3
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+μ_B = \frac{B^2}{2μ_0} = \frac{(3.4×10^{-6})^2}{2\ •\ 4π×10^{-7}} = 4.6×10^{-6} J&#x2F;m^3
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;After getting the electric energy density and the magnetic energy density, getting the total energy density is as simple as adding them together to get \(9.204×10^{-6}\ J&#x2F;m^3).&lt;&#x2F;p&gt;
+&lt;p&gt;The intensity of a wave is a simple equation; you can think of it as the density multiplied by speed being how much is being transferred per unit time: \(S = cu\).&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+S = cu = (3×10^8 m&#x2F;s)(9.204×10^{-7} J&#x2F;m^3) = 2761.2 W&#x2F;m^2
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s say we want to find the energy that is carried through this opening over twenty seconds. Energy is in the unit joules \(J\) and \(W\) is \(J&#x2F;s\). In order to convert a dimensions properly, we&#x27;re going to need multiply the intensity by \(s\ •\ m^2\). With this in mind, it&#x27;s clear how we should form our equation. We&#x27;re multiplying the density by the time passed (20 seconds) and the area \(0.35 m^2\).&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+E = StA = (2761.2 W&#x2F;m^2)(20 s)(0.35 m^2) = 19328.4\ J
+$$&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;polarization&quot;&gt;Polarization&lt;&#x2F;h2&gt;
+&lt;p&gt;Electromagnetic waves can be &lt;strong&gt;polarized&lt;&#x2F;strong&gt; in a a particular direction by passing throw a material which only allows for one vector to pass through. Unpolarized light passing through a polarizing material will have &lt;em&gt;half&lt;&#x2F;em&gt; the intensity that it originally had.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Malus&#x27; Law&lt;&#x2F;strong&gt; states that an &lt;em&gt;analyzer&lt;&#x2F;em&gt; which alters the intensity and polarization direction of an EM wave will decrease the intensity as so:&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+\bar{S} = \bar{S_0}\cos^2{θ}
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;and changing the polarization direction to match the analyzer. \(θ\) in this case is the &lt;em&gt;difference&lt;&#x2F;em&gt; between the polarized light and the analyzer. Say the light is polarized at angle of \(30°\) clockwise to the vertical and it passes through a filter that is at an angle of \(15°\) counterclockwise to the vertical. The \(θ\) in this case will be \(45°\).&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A vertically polarized beam of intensity \(S_0 = 60.0\) is incident through three polarizers \(θ_1 = 38.0°\) counter-clockwise, \(θ_2 = 17.0°\) clockwise, and \(θ_3 = 30.0°\) counter-clockwise.&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+S_1 = S_0\cos^2{θ_1} = 60\cos^2{38°} = 37.258\ W&#x2F;m^2
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+S_2 = S_1\cos^2{θ_2} = 37.258\cos^2{55°} = 12.257\ W&#x2F;m^2
+$$&lt;&#x2F;p&gt;
+&lt;p&gt;$$
+S_3 = S_2\cos^2{θ_3} = 12.257\cos^2{47°} = 5.701\ W&#x2F;m^2
+$$&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Electromagnetic Induction</title>
+		<published>2022-02-18T00:00:00+00:00</published>
+		<updated>2022-02-18T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/induction/" type="text/html"/>
+		<id>https://sharifhsn.github.io/induction/</id>
+		<content type="html">&lt;p&gt;The final piece to the puzzle of electromagnetism here is &lt;strong&gt;electromagnetic induction&lt;&#x2F;strong&gt;, where we use magnets to create current.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;induced-emf-current&quot;&gt;Induced Emf&#x2F;Current&lt;&#x2F;h2&gt;
+&lt;p&gt;Like with charges in a magnetic field, magnets do not generate current unless they are moving relative to a wire. The changing magnetic field \(\vec{B}\) is what creates the current. This current is called an &lt;strong&gt;induced current&lt;&#x2F;strong&gt;, and the &amp;quot;emf&amp;quot; that causes it which is the wire itself is an &lt;strong&gt;induced emf&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;The emf can also be induced by changing the area of coil in a magnetic field, as that changes the relationship between the magnetic field and coil.&lt;&#x2F;p&gt;
+&lt;p&gt;These examples are in a closed circuit, which has a current. An open circuit would not have a current, but it would still have the induced emf.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;motional-emf&quot;&gt;Motional Emf&lt;&#x2F;h2&gt;
+&lt;p&gt;An induced emf is created in a metal rod that moves through a magnetic field as long as the velocity is not parallel to the magnetic field. We can use RHR1 to determine where the positive and negative sides of the rod are when the rod has a velocity through a magnetic field. The movement of these charges to either end of the rod cause a charge separation to occur, which leads to a current running from the negative end to the positive end. This is called &lt;strong&gt;motional emf&lt;&#x2F;strong&gt; because it comes from the motion through a magnetic field.&lt;&#x2F;p&gt;
+&lt;p&gt;We can find the motional emf when the length, velocity, and magnetic field are all perpendicular i.e. they all have their own axis:&lt;&#x2F;p&gt;
+&lt;p&gt;$$Ε = vBL$$&lt;&#x2F;p&gt;
+&lt;p&gt;There is another magnetic force that opposes the motional emf. The current creates its own magnetic field, which by RHR1 would actually oppose the velocity of a mutually perpendicular system. We have to have an external force moving the rod otherwise the magnetic field produced by its own current will cause it to stop.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;magnetic-flux&quot;&gt;Magnetic Flux&lt;&#x2F;h2&gt;
+&lt;p&gt;Remember electric flux? Magnetic flux is quite similar in that it is defined as amount of magnetic field passing through an area, so \(Φ = BA\cos{θ}\) in \(Wb\) or \(T \cdot m^2\). We can define motional emf through magnetic flux like so:&lt;&#x2F;p&gt;
+&lt;p&gt;$$Ε = -\frac{ΔΦ}{Δt}$$&lt;&#x2F;p&gt;
+&lt;p&gt;or, emf is the rate of change of magnetic flux. This is why we can induce an emf by changing the area of a coil. The reason that the equation is negative is because the induced current will create a magnetic force which will oppose its velocity direction.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;faraday-s-law&quot;&gt;Faraday&#x27;s Law&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;strong&gt;Faraday&#x27;s Law&lt;&#x2F;strong&gt; is precisely the equation we just laid out but with one additional component to account for loops:&lt;&#x2F;p&gt;
+&lt;p&gt;$$Ε = -N\frac{ΔΦ}{Δt}$$&lt;&#x2F;p&gt;
+&lt;p&gt;The emf is generated if the flux changes, which depends on \(B\), \(A\), or \(ɸ\), which are magnetic field, area, and angle of the magnetic field with respect to the normal of the surface.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;lenz-s-law&quot;&gt;Lenz&#x27;s Law&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;strong&gt;Lenz&#x27;s Law&lt;&#x2F;strong&gt; is less of an equation and more of a method to understand the polarity of an induced emf. Let&#x27;s follow the reasoning:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Check whether the flux is increasing or decreasing.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Find the direction of the induced magnetic field to &lt;em&gt;oppose&lt;&#x2F;em&gt; the change in flux.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Use RHR2 with the previous step to find the positive and negative end, with the polarity coming out of your palm.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;This is best understood through an example. Let&#x27;s imagine we have a loop with a bar magnet approaching at north side head on.&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;The flux is increasing, because the magnet is getting closer.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;The induced magnetic field must oppose the magnet field to decrease the flux.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;RHR2 tells us that if the magnetic field is coming out of our palm at the magnet, the current must be going counter-clockwise. Therefore, the left point is positive and the right is negative, as the external circuit must have positive going to negative.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;transformers&quot;&gt;Transformers&lt;&#x2F;h2&gt;
+&lt;p&gt;A &lt;strong&gt;transformer&lt;&#x2F;strong&gt; is a device that increases or decreases ac voltage. It is responsible for reducing the voltage in your phone charge so you&#x27;re not sending 120 V to your phone that doesn&#x27;t need it. This change is called a &lt;strong&gt;step-up&lt;&#x2F;strong&gt; or &lt;strong&gt;step-down&lt;&#x2F;strong&gt; which increases or decreases the voltage, respectively, directly.&lt;&#x2F;p&gt;
+&lt;p&gt;When we send power over power lines, there is a certain power loss that happens depending on the voltage and the resistance of the transmitting power wire:&lt;&#x2F;p&gt;
+&lt;p&gt;$$P_{lost} = I^2R$$&lt;&#x2F;p&gt;
+&lt;p&gt;which we subtract from our initial power to get the final power.&lt;&#x2F;p&gt;
+&lt;p&gt;If we want to figure out how much voltage we need to step-up or step-down to get a specific power loss, we just resubstitute the desired power loss into that equation to get the current and proportion it to the voltage.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Magnets</title>
+		<published>2022-02-11T00:00:00+00:00</published>
+		<updated>2022-02-11T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/magnets/" type="text/html"/>
+		<id>https://sharifhsn.github.io/magnets/</id>
+		<content type="html">&lt;p&gt;The question of how magnets work has &lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;shorts&#x2F;8bhYMnHb5JY&quot;&gt;long puzzled many&lt;&#x2F;a&gt;. We will endeavor to answer all of those questions today.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;magnetic-fields&quot;&gt;Magnetic Fields&lt;&#x2F;h2&gt;
+&lt;p&gt;Magnets work similarly to electric charges where like poles repel, and unlike poles attract. However, magnets do not ever exist in isolation. Every magnet has a north and south pole, while you can have an isolated positive or negative charge.&lt;&#x2F;p&gt;
+&lt;p&gt;Every magnet has a magnetic field around it, similar to the electric field around electric charges. The direction of the magnetic field is shown by the north pole. Every magnetic field points from south to north; this is why compasses point north. They are based off of the magnetic field of the polarity of the Earth&#x27;s own magnetic field.&lt;&#x2F;p&gt;
+&lt;p&gt;You can apply many of the concepts of electric fields to magnetic fields, such as field lines and the way they curve and indicate field direction.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;magnetic-force&quot;&gt;Magnetic Force&lt;&#x2F;h2&gt;
+&lt;p&gt;Charges experience electric force in a field, and they experience &lt;strong&gt;magnetic force&lt;&#x2F;strong&gt; in a magnetic field. However, a few conditions must be met:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;The charge must be moving.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;The velocity of the charge must have a component perpendicular to the direction of the magnetic field.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;To visualize the second rule, imagine the magnetic force like a buffeting wind around the charge. The wind only has any force if it has something to push on. If you hold a piece of paper parallel to the direction to the wind, it&#x27;ll barely move because there&#x27;s nothing to push.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This is such an important point it&#x27;s in its own section. &lt;strong&gt;Right Hand Rule No. 1 (RHR1)&lt;&#x2F;strong&gt; will tell us the direction of a magnetic force based on the magnetic field and velocity of charge. Your right thumb points in the direction of the charge, and the fingers point in the direction of the magnetic field. The palm faces in the direction of the magnetic force.&lt;&#x2F;p&gt;
+&lt;p&gt;This is only applies to &lt;em&gt;positive charges&lt;&#x2F;em&gt;. Negative charges will have the direction of the force as opposite.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;The magnitude \(B\) of a magnetic field is defined in teslas \(T\) by&lt;&#x2F;p&gt;
+&lt;p&gt;$$B = \frac{F}{|q_0|(v \sin{θ})}$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(F\) is the magnitude of the magnetic force on test charge \(q_0\) with velocity \(v\).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;motion&quot;&gt;Motion&lt;&#x2F;h2&gt;
+&lt;p&gt;We have been comparing electric fields and magnetic fields a lot, but in regards to motion through them they are quite different. Electric fields attract towards its directions, while magnetic fields direct in the other perpendicular direction. If left to its devices, a moving charge would perpetually move in a circle remaining perpendicular to the magnetic field.&lt;&#x2F;p&gt;
+&lt;p&gt;This means that the work done by a magnetic field is also different. In fact, the magnetic force &lt;em&gt;cannot&lt;&#x2F;em&gt; do work, it can only change the direction of the particle, not its speed nor its energy.&lt;&#x2F;p&gt;
+&lt;p&gt;The force required to keep a charge moving in a circle is:&lt;&#x2F;p&gt;
+&lt;p&gt;$$F_c = \frac{mv^2}{r} or\ r = \frac{mv}{|q|B}$$&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;currents-in-a-magnetic-field&quot;&gt;Currents in a Magnetic Field&lt;&#x2F;h2&gt;
+&lt;p&gt;We&#x27;ve discussed charges moving through a magnetic field; what about a current? A current is just a collection of moving charges, after all. If we have a wire with a current running through it placed between two magnets, then we can consider the direction of the current as the charge direction in RHR1 to calculate the direction of the magnetic force.&lt;&#x2F;p&gt;
+&lt;p&gt;We can use a bit of a trick to get the calculation of magnetic force for a current. We can rearrange the earlier equation for a magnetic field to get the equation for force. Current is the same thing as charge over time, so \(\frac{Δq}{Δt}\). Length of the current is the same thing as velocity multiplied by time \((\frac{m}{s} \cdot s)\). If we multiply these, the \(Δt\) will cancel out and we will be left with the same expression as \(|q_0|v\)! Our new equation for force is:&lt;&#x2F;p&gt;
+&lt;p&gt;$$F = ILB \sin{θ}$$&lt;&#x2F;p&gt;
+&lt;p&gt;The angle \(θ\) here maximizes current when perpendicular and is zero when parallel, just as with a single charge.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;torque&quot;&gt;Torque&lt;&#x2F;h2&gt;
+&lt;p&gt;As a refresher, &lt;strong&gt;torque&lt;&#x2F;strong&gt; describes the rate of change of the angular momentum of an object. Current-carrying wires have magnetic force applied to them which causes them to move. If the wire are in a loop, then the magnetic force is applied as torque which causes the loop to rotate. Its resting state is when the normal of the loop is aligned with the magnetic field. You can think of it like a compass needle, which will turn until it reaches its resting state of pointing towards the north pole.&lt;&#x2F;p&gt;
+&lt;p&gt;To calculate the torque, we get the force of each side of the loop turning, which is half the width and so half the force. Summed together we get:&lt;&#x2F;p&gt;
+&lt;p&gt;$$τ = NIAB \sin{θ}$$&lt;&#x2F;p&gt;
+&lt;p&gt;\(N\) here is the number of loops in the wire and \(A\) is the area that the loops make. When the loop is parallel with the magnetic field it experiences the greatest torque, and when it is perpendicular it experiences none.&lt;&#x2F;p&gt;
+&lt;p&gt;The collective expression \(NIA\) is known as the &lt;strong&gt;magnetic moment&lt;&#x2F;strong&gt; of the coil in \(A \cdot m^2\).&lt;&#x2F;p&gt;
+&lt;p&gt;Motors operate using this principle of a coil turning in a magnetic field.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;magnetic-fields-in-a-current&quot;&gt;Magnetic Fields in a Current&lt;&#x2F;h2&gt;
+&lt;p&gt;Current-carrying wires create their own kinds of magnetic fields.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The second Right-Hand Rule (RHR2) is easier to remember, as it&#x27;s just a thumbs-up. The thumb points towards the direction of the current, and the fingers curl in the direction of the magnetic field generated.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;The magnetic field magnitude is given by the following equation:&lt;&#x2F;p&gt;
+&lt;p&gt;$$B = \frac{μ_0I}{2πr}$$&lt;&#x2F;p&gt;
+&lt;p&gt;with \(μ_0\) representing the &lt;em&gt;permeability of free space&lt;&#x2F;em&gt; with the value \(μ_0 = 4π × 10^{-7} T \cdot m&#x2F;A\).  This equation is for an infinitely long, straight wire, which is not necessarily the case.&lt;&#x2F;p&gt;
+&lt;p&gt;Because of this property, currents can affect each other magnetically. Currents in the same direction are attrated to each other.&lt;&#x2F;p&gt;
+&lt;p&gt;Currents in a loop have a slightly different magnetic field equation to the straight wire:&lt;&#x2F;p&gt;
+&lt;p&gt;$$B = N\frac{μ_0I}{2R}$$&lt;&#x2F;p&gt;
+&lt;p&gt;in the center of the loop, where the field is strongest.&lt;&#x2F;p&gt;
+&lt;p&gt;A useful visual for the magnetic field of a current loop is a bar magnet placed in the middle of the loop. If we use RHR2 here, the north pole is on the palm and the south pole is on the back of the hand.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;ampere-s-law&quot;&gt;Ampère&#x27;s Law&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;strong&gt;For any current geometry that produces a magnetic field that does not change in time,&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;$$ΣB_{||}Δl = μ_0I$$&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;where \(Δl\) is a small segment of length along a closed path of arbitrary shape around the current, \(B_{||}\) is the component of the magnetic field parallel to \(Δl\), \(I\) i sthe net current passing through the surface bounded by the path, and the \(μ_0\) is the permeability of free space. The symbol \(Σ\) indicates the sum of all \(B_{||}Δl\) terms must be taken around the closed path.&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Circuits</title>
+		<published>2022-02-01T00:00:00+00:00</published>
+		<updated>2022-02-01T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/circuits/" type="text/html"/>
+		<id>https://sharifhsn.github.io/circuits/</id>
+		<content type="html">&lt;p&gt;Circuits are the method by which all electricity travels throughout the world and power every single device in existence. It is therefore crucial to understand them while understanding electricity.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;electromotive-force-emf-and-current&quot;&gt;Electromotive Force (emf) and Current&lt;&#x2F;h2&gt;
+&lt;p&gt;The &lt;strong&gt;emf&lt;&#x2F;strong&gt; is similar to voltage, but not quite the same. It is the maximum voltage of a battery, signified by \(Ε\) (capital epsilon). It represents the maximum amount of joules of energy that can transfer from a battery based on the charge.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Current&lt;&#x2F;strong&gt; is formed when an electric field parallel to a wire moves free electrons from the positive terminal of a battery to the negative terminal. You can think of it mentally like the flow of charge over time, like water going through a hose, and in fact the equation is \(I = \frac{Δq}{Δt}\). For a non-constant flow, this is the average current. Current uses the unit \(A\) for ampere.&lt;&#x2F;p&gt;
+&lt;p&gt;A &lt;strong&gt;direct current (dc)&lt;&#x2F;strong&gt; has electrons that go through the circuit in the same direction at all times, which is negative to positive. An &lt;strong&gt;alternating current (ac)&lt;&#x2F;strong&gt; alternates direction constantly from moment to moment.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;em&gt;Very important note:&lt;&#x2F;em&gt; electron flow and conventional current \(I\) are &lt;em&gt;&lt;strong&gt;not the same thing&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt;. Conventional current actually goes opposite to electron flow for historical reasons. When we draw current over circuits, we use conventional current notation, so current flows from positive to negative. This is because it was once thought that circuits worked by the passing of positive charges, not negative charges.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;ohm-s-law&quot;&gt;Ohm&#x27;s Law&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;strong&gt;The ratio \(V&#x2F;I\) is a constant, where \(V\) is the voltage applied across a piece of material (such as a wire) and \(I\) is the current through the material:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;$$\frac{V}{I} = R = constant | V = IR$$&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;\(R\) is the resistance of the piece of material in ohms (Ω).&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Again using our hose analogy, resistance is like how narrow the hose opening is which lets our water through. Resistance is typically discussed in the context of &lt;strong&gt;resistors&lt;&#x2F;strong&gt;, which are electrical devices that apply resistance to a circuit.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;resistance-and-resistivity&quot;&gt;Resistance and Resistivity&lt;&#x2F;h2&gt;
+&lt;p&gt;The resistance of a piece of material is dependent on certain qualities. If you think in your head of a small plastic tic-tac as our resistor, this is the formula:&lt;&#x2F;p&gt;
+&lt;p&gt;$$R = ρ\frac{L}{A}$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(L\) is length, \(A\) is cross-sectional area, and \(ρ\) is a constant called &lt;strong&gt;resistivity&lt;&#x2F;strong&gt; that is constant to a material. Conductors have very low resistivities, and insulators have very high resistivities.&lt;&#x2F;p&gt;
+&lt;p&gt;Resistivity also typically depends on temperature, though in more complicated ways than can be expressed in the above formula. The most common way to express it as:&lt;&#x2F;p&gt;
+&lt;p&gt;$$ρ = ρ_0[1 + α(T - T_0)]$$&lt;&#x2F;p&gt;
+&lt;p&gt;You can also use resistance instead of resistivity here. The important constant here is \(α\), which is the &lt;em&gt;temperature coefficient of resistivity&lt;&#x2F;em&gt;, which can be positive or negative depending on how the specific material relates resistivity to temperature.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Some materials, known as &lt;em&gt;superconductors&lt;&#x2F;em&gt;, have resistivity of zero at certain temperatures. This means you can circulate a current indefinitely within that circuit without needing a supply of emf from a battery. They can be used in MRI, maglevs, and computer chips.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;power&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=chPDTUjnWgA&quot;&gt;POWER&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;strong&gt;Power&lt;&#x2F;strong&gt; is an important concept when we want to give energy to electrical appliances. The easiest way to think about it on a high level is the change in energy per unit time. Another way to think about it is the flow of voltage transferred.&lt;&#x2F;p&gt;
+&lt;p&gt;$$P = \frac{Change\ in\ energy}{Time\ interval} = \frac{(Δq)V}{Δt} = \frac{Δq}{Δt}V = IV$$&lt;&#x2F;p&gt;
+&lt;p&gt;The units of power are in watts \(W\), which you might remember from lightbulbs. Current multiplied by voltage makes sense; it&#x27;s the flow multiplied by the quantity, which tells you change in quantity over time. You can also write it as:&lt;&#x2F;p&gt;
+&lt;p&gt;$$P = IV = I^2R = \frac{V^2}{R}$$&lt;&#x2F;p&gt;
+&lt;p&gt;which is often useful when we don&#x27;t have one of those elements.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;alternating-current&quot;&gt;Alternating Current&lt;&#x2F;h2&gt;
+&lt;p&gt;Most batteries in the world use ac instead of dc. Therefore, we must note the differences between it and dc. The voltage is not always the same, and fluctuates constantly according to this equation:&lt;&#x2F;p&gt;
+&lt;p&gt;$$V = V_0 \sin{2πft}$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(V_0\) is the maximum voltage and \(f\) is the frequence of isolation. This value is in radians when the sine function is applied.&lt;&#x2F;p&gt;
+&lt;p&gt;Current oscillates at the same rate, and so does power. We can simply substitute the above equation for \(V\) to evaluate those.&lt;&#x2F;p&gt;
+&lt;p&gt;We often want to understand average current and average voltage in relation to power, which are calculated by dividing the maximum of each by \(\sqrt{2}\). We can use these two values to get average power through the analogous power equations.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;series-wiring&quot;&gt;Series Wiring&lt;&#x2F;h2&gt;
+&lt;p&gt;All the circuits we&#x27;ve discussed have one device with a straight wire. Often we want to have multiple devices on the same circuit.&lt;&#x2F;p&gt;
+&lt;p&gt;When we have multiple resistors in series, their resistances added up to get the total resistance of a circuit. A very useful method to solve these kinds of problems is to &amp;quot;combine&amp;quot; resistors by adding up their resistances. This becomes helpful when we start working with parallel wiring.&lt;&#x2F;p&gt;
+&lt;p&gt;Another way we can think about voltage in this context is that we have voltage that goes through each resistor which is added up to get the final voltage. This will be relevant later when we talk about voltage drops.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;parallel-wiring&quot;&gt;Parallel Wiring&lt;&#x2F;h2&gt;
+&lt;p&gt;Parallel wiring is wiring where the voltage across each device is the same. Now, this might not necessarily make sense; wouldn&#x27;t the voltage be divided still? The element that is divided in parallel is actually the &lt;em&gt;current&lt;&#x2F;em&gt;, whereas in series it is the current that is preserved and the voltage that is divided. This is useful when we want multiple appliances connected to the same power source that do not interfere with each other with respect to voltage.&lt;&#x2F;p&gt;
+&lt;p&gt;Parallel resistors, paradoxically, act as if they have &lt;em&gt;less&lt;&#x2F;em&gt; resistance. Instead of adding up the resistances straightforwardly, parallel resistances add up as so:&lt;&#x2F;p&gt;
+&lt;p&gt;$$\frac{1}{R_p} = \frac{1}{R_1} + \frac{1}{R_2} + ...$$&lt;&#x2F;p&gt;
+&lt;p&gt;A more convenient way to calculate this is&lt;&#x2F;p&gt;
+&lt;p&gt;$$R_p = \frac{R_1 \cdot R_2}{R_1 + R_2}$$&lt;&#x2F;p&gt;
+&lt;p&gt;for only two circuits, though it gets more complex for more.&lt;&#x2F;p&gt;
+&lt;p&gt;When we have multiple parts in series and parallel, the way to solve comes by combining different series and parallel parts together. Mind that the combinations must be &lt;em&gt;only&lt;&#x2F;em&gt; series or &lt;em&gt;only&lt;&#x2F;em&gt; parallel. The easiest way is to start furthest from the capacitor and work your way there.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;internal-resistance&quot;&gt;Internal Resistance&lt;&#x2F;h2&gt;
+&lt;p&gt;We&#x27;ve separated devices into groups of resistors and conducting wire. However, this is a false dichotomy. All materials have some amount of &lt;strong&gt;internal resistance&lt;&#x2F;strong&gt; which resists current. Typically, batteries and wires have extremely low resistance to facilitate current.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;kirchhoff-s-rules&quot;&gt;Kirchhoff&#x27;s Rules&lt;&#x2F;h2&gt;
+&lt;p&gt;If resistors are in series or parallel, we can combine them fairly easily. There&#x27;s trouble when we can&#x27;t do that, however. We must use &lt;strong&gt;Kirchhoff&#x27;s Rules&lt;&#x2F;strong&gt;, specifically the &lt;strong&gt;junction rule&lt;&#x2F;strong&gt; and the &lt;strong&gt;loop rule&lt;&#x2F;strong&gt; to calculate resistance in these cases.&lt;&#x2F;p&gt;
+&lt;p&gt;The junction rule states that the total current directed into a junction must equal the total current directed out of the junction. This is just an extension of conservation of electric charge that we discussed earlier. You can imagine an intersection of cars where you have four cars waiting at the light. They can either turn right or go straight. Either way they go, however, there must be four cars that are leaving the intersection unless something has gone horribly wrong.&lt;&#x2F;p&gt;
+&lt;p&gt;The loop rule relates a similar idea but in relation to electric potential. The voltage rises at every capacitor, and it must have drops through every resistor that equal the rise through the resistor. For example, after a 12 V rise through a capacitor, a pass through a 5 Ω and a 1 Ω resistor must drop 10 V and 2 V respectively in order to have it be the same.&lt;&#x2F;p&gt;
+&lt;p&gt;Some important notes:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;the choice of direction is arbitrary, we will simply end up with a negative current if it is wrong&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;we must indicate the positive and negative directions of every capacitor&#x2F;resistor in order to find our voltage drops&#x2F;rises&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;our final equation will have the drops on one side and the rises on the other side, with every term either being voltage or a resistance multiplied by the variable \(I\)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;the answer is \(I\) which is solved for through normal algebra&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In laboratory, there are various devices we use to measure current and voltage. You should remember that current is only the same in series and voltage is only the same in parallel. Therefore, ammeters must be connected in series and voltmeters in parallel.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;capacitors-in-series-parallel&quot;&gt;Capacitors in Series&#x2F;Parallel&lt;&#x2F;h2&gt;
+&lt;p&gt;Capacitors work opposite to resistors when they are in series and in parallel. They add up charge simply when placed in parallel, and have the inverse reciprocal relationship when placed in series. The reason this happens is because charge and capacitance are directly related while current and resistance are inversely related.&lt;&#x2F;p&gt;
+&lt;p&gt;One note is that with regards to the charges on their plates, capacitors in series always have charges of the same magnitude because they will equalize out.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;rc-circuits&quot;&gt;RC Circuits&lt;&#x2F;h2&gt;
+&lt;p&gt;We often have circuits that have both resistors and capacitors. In this situation, the capacitor&#x27;s time to charge depends on the resistance:&lt;&#x2F;p&gt;
+&lt;p&gt;$$q = q_0[1 - e^{-t&#x2F;(RC)}]$$&lt;&#x2F;p&gt;
+&lt;p&gt;\(RC\) here is very simply, the resistance multiplied by the capacitance, which ends up being a unit in seconds known as \(τ\), the time constant. That is the amount of time for the capacitor to charge to 63.2%, which is \(1 - e^{-1}\).&lt;&#x2F;p&gt;
+&lt;p&gt;Discharging works with a similar equation:&lt;&#x2F;p&gt;
+&lt;p&gt;$$q = q_0e^{-t&#x2F;(RC)}$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(τ\) represents losing 63.2% charge.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Electric Potential</title>
+		<published>2022-01-25T00:00:00+00:00</published>
+		<updated>2022-01-25T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/electric-potential/" type="text/html"/>
+		<id>https://sharifhsn.github.io/electric-potential/</id>
+		<content type="html">&lt;p&gt;Besides electrical charge and field, there&#x27;s another force that is relevant to electricity: &lt;strong&gt;electric potential&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;potential-energy&quot;&gt;Potential Energy&lt;&#x2F;h2&gt;
+&lt;p&gt;Gravity is similar to the electrostatic force, apart from the fact that it acts on mass instead of electric charge. The equations are practically identical. We&#x27;re familiar with the idea of gravitational potential energy; why not apply the concept to charge as well?&lt;&#x2F;p&gt;
+&lt;p&gt;Recall that &lt;strong&gt;work&lt;&#x2F;strong&gt; is expressed as the difference between potential energy. The equation for work done &lt;em&gt;by&lt;&#x2F;em&gt; an electric force is:&lt;&#x2F;p&gt;
+&lt;p&gt;$$W_{AB} = EPE_A - EPE_B$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(A\) and \(B\) are the positions that the charges are in.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;electric-potential-difference&quot;&gt;Electric Potential Difference&lt;&#x2F;h2&gt;
+&lt;p&gt;Remember that the electric force depends on the small test charge \(q_0\). If we divide all parts of the previous equation by \(q_0\), then we get the work per-unit-charge.&lt;&#x2F;p&gt;
+&lt;p&gt;For the first time, we&#x27;re going to be talking about &lt;strong&gt;electric potential&lt;&#x2F;strong&gt;, expressed in &lt;strong&gt;volts&lt;&#x2F;strong&gt; \((V)\). This is different from electric potential energy, which is expressed in joules (\(J)\). The equation for electric potential derived from EPE is \(V = \frac{EPE}{q_0}\), showing that volts are the same as joule&#x2F;coulomb.&lt;&#x2F;p&gt;
+&lt;p&gt;\(V\) can only truly be measured as \(ΔV\), becuase it is relative measurement in terms of work, similar to energy. This potential difference \(ΔV\) is known as &lt;strong&gt;voltage&lt;&#x2F;strong&gt;. When we talk about voltage in common parlance, that is the electric potential difference between two charges, typically the terminals of a capacitor.&lt;&#x2F;p&gt;
+&lt;p&gt;We can think of positives and negatives here like gravity. Because electricity flows from positive to negative, that&#x27;s the direction of &amp;quot;gravity&amp;quot;. Positive charges accelerate to lower electric potential like massive objects accelerate to lower heights. Negative charges oppose this acceleration like the normal force to higher electric potential.&lt;&#x2F;p&gt;
+&lt;p&gt;You might have also seen the unit \(eV\), \(MeV\), or \(GeV\) with reference to energy. This is the unit &lt;em&gt;electron-volt&lt;&#x2F;em&gt;, which is, as implied, the charge of an electron multiplied by one volt. This value is \(1.60 × 10^{-19} J\), and the mega and giga versions are six and nine order magnitudes greater than it, respectively.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;volts-and-point-charges&quot;&gt;Volts and Point Charges&lt;&#x2F;h2&gt;
+&lt;p&gt;If we apply this concept to the point charges we have discussed, we get a pretty simple formula:&lt;&#x2F;p&gt;
+&lt;p&gt;$$ΔV = \frac{-W_{AB}}{q_0} = \frac{kq}{r_B} - \frac{kq}{r_A}$$&lt;&#x2F;p&gt;
+&lt;p&gt;And in order to determine \(V\) for the \(q\) at just point \(A\), we consider point \(B\) to be infinitely far away and eliminate it, leaving us with the final potential equation:&lt;&#x2F;p&gt;
+&lt;p&gt;$$V = \frac{kq}{r}$$&lt;&#x2F;p&gt;
+&lt;p&gt;Note here that \(q\) is not absolute. \(V\) will have the same sign as \(q\).&lt;&#x2F;p&gt;
+&lt;p&gt;Like with electrostatic force, we can calculate \(V\) with respect to many point charges by adding them together, minding our signs .&lt;&#x2F;p&gt;
+&lt;p&gt;We can calculate electric potential energy for multiple point charges in a similar way by adding together every pair EPE \(\frac{kq_1q_2}{r}\).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;equipotential-surfaces&quot;&gt;Equipotential Surfaces&lt;&#x2F;h2&gt;
+&lt;p&gt;An &lt;strong&gt;equipotential surface&lt;&#x2F;strong&gt; is one where the electric potential is the same everywhere. Think of a hollow sphere which surrounds a point charge. Every point on that surface is the same distance from the charge and so will have the same electric potential.&lt;&#x2F;p&gt;
+&lt;p&gt;If you have a charge on an equipotential surface, then no work is done on it by the net electric force if it moves along it. This is because the potential is the same everywhere, looking at the equations from earlier.&lt;&#x2F;p&gt;
+&lt;p&gt;On the same equipotential sphere, the electric field is perpendicular to the surface and points to decreasing potential, like gravity. The most clear example of this is a parallel plate capacitor. If we try to calculate the electric field from electric potential, it is simply&lt;&#x2F;p&gt;
+&lt;p&gt;$$E = -\frac{ΔV}{Δs}$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(Δs\) is an expression of displacement, like distance. This is what we would use to find the electric field or distance for a parallel plate capacitor.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;capacitors-and-dielectrics&quot;&gt;Capacitors and Dielectrics&lt;&#x2F;h2&gt;
+&lt;p&gt;We have already discussed one kind of &lt;strong&gt;capacitor&lt;&#x2F;strong&gt;, the parallel plate capacitor. A capacitor is simply two conductors placed close together, which are not touching. There will often be an insulator placed in between them called a &lt;strong&gt;dielectric&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;The capacitor stores electric charge, with the positive plate having more electric potential. That potential difference is the voltage of the capacitor, although the plates have the same charge.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;The magnitude \(q\) of the charge on each plate of a capacitor is directly proportional to the magnitude \(V\) of the potential difference between the plates:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;$$q = CV$$&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;where \(C\) is the capacitance in farad \((F)\).&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;As you can tell from the equation, capitance is coulomb&#x2F;volt and it represents how well the capacitor can store charge. Like coulombs, it is typically expressed in smaller forms like \(μF\) and \(pF\) which are six and twelve orders of magnitude less.&lt;&#x2F;p&gt;
+&lt;p&gt;We can increase capacitance by adding a dielectric in the capacitor. The molecules in the dielectric will form dipole moments oriented towards the positive and negative plate as appropriate. These dipole moments will stop the electric field from passing through the dielectric, and instead some of it will begin and end at the surface. This reduces the strength of the electric field and allows it to store more charge.&lt;&#x2F;p&gt;
+&lt;p&gt;The equation for capacitance of a parallel plate capacitor based on the dielectric constant \(κ\) is:&lt;&#x2F;p&gt;
+&lt;p&gt;$$C = \frac{κε_0A}{d}$$&lt;&#x2F;p&gt;
+&lt;p&gt;There is also work done to fill a capacitor with charge, because it stores energy. The work done by a battery, for example, to fill up a capacitor&#x27;s charge is expressed in multiple ways as:&lt;&#x2F;p&gt;
+&lt;p&gt;$$Energy = \frac{1}{2}qV = \frac{1}{2}CV = \frac{q^2}{2C} = \frac{1}{2}(\frac{κε_0A}{d})(Ed)^2$$&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Electrostatics</title>
+		<published>2022-01-18T00:00:00+00:00</published>
+		<updated>2022-01-18T00:00:00+00:00</updated>
+		<link href="https://sharifhsn.github.io/electrostatics/" type="text/html"/>
+		<id>https://sharifhsn.github.io/electrostatics/</id>
+		<content type="html">&lt;p&gt;What is electricity, and how does it work?&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;electrons&quot;&gt;Electrons&lt;&#x2F;h2&gt;
+&lt;p&gt;Fundamentally, the negative charge comes from the &lt;strong&gt;electron&lt;&#x2F;strong&gt;, a subatomic particle. The positive charge comes from &lt;strong&gt;protons&lt;&#x2F;strong&gt;, also in the atom. The unit of the charge is the &lt;strong&gt;Coulomb&lt;&#x2F;strong&gt; (\(C\)). An electron has a charge of \(-1.60×10^{-16} C\), and a proton has the same charge but positive. However, the proton is much heavier than an electron, being about 1836 times as massive. This means that electrons are easy to displace, which is why their movement is the fundamental concept behind electricity.&lt;&#x2F;p&gt;
+&lt;p&gt;The way that electric charge is generated is by rubbing two materials together in a way that transfers electrons between the two. For example, if you rub your clothes against a shag carpet, it will transfer electrons to your clothes.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;However, charge is neither created nor destroyed, due to the law of conservation of electric charge!&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;As you might already know from playing around with magnets, like charges repel and unlike charges attract each other. This attraction is known as the &lt;strong&gt;electrostatic force&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conductors-insulators&quot;&gt;Conductors&#x2F;Insulators&lt;&#x2F;h2&gt;
+&lt;p&gt;Electric charge is not limited to its power to attract and repel. It can also move through objects; this is how electricity travels from power plants to your house, through wires. Not all materials are created equal in their ability to &lt;strong&gt;conduct&lt;&#x2F;strong&gt; electricity through them. Those that conduct poorly are called electrical &lt;strong&gt;insulators&lt;&#x2F;strong&gt; and those that can well are called electrical &lt;strong&gt;conductors&lt;&#x2F;strong&gt;. This material property is typically related to how easily valence electrons can move around in the molecules of the material.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;charging-by-contact-induction&quot;&gt;Charging by Contact&#x2F;Induction&lt;&#x2F;h2&gt;
+&lt;p&gt;I said before that electrical charge can be generated by rubbing, for example against a shag carpet. This is known as &lt;strong&gt;charging by contact&lt;&#x2F;strong&gt;. However, this is not the only way to charge an object. As we know, electrons can be attracted and repelled. If a negatively charged object is brought close to a neutrally charged object, the electrons in the neutrally charged object will be repelled to the other side, changing the distribution of charge in the object. This is known as &lt;strong&gt;charging by induction&lt;&#x2F;strong&gt; because the electrons are induced by the charge to move.&lt;&#x2F;p&gt;
+&lt;p&gt;This effect will disappear when the inducing object leaves, unless we introduce &lt;strong&gt;grounding&lt;&#x2F;strong&gt;. A grounding wire is a way to disappear free electrons from a charged object. Typically, an object is wired to a large diffuse object such as the earth, so free electrons will leave the small object forever. In the example I used above, if there is a grounding wire attached to the other side where the electrons were repelled to, then those electrons would &amp;quot;disappear&amp;quot;. After the inducing object leaves, the formerly neutral object would become positively charged.&lt;&#x2F;p&gt;
+&lt;p&gt;This can even occur in materials like plastic which are insulating. Although the free electrons cannot move as in materials like metals, positive charges can still be induced towards the surface, allowing for a surface positive charge that negatively charged objects to stick to.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;coulomb-s-law&quot;&gt;Coulomb&#x27;s Law&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;strong&gt;The magnitude \(F\) of the electrostatic force exerted by one point charge \(q_1\) on another point charge \(q_2\) is directly proportional to the magnitudes \(|q_1|\) and \(|q_2|\) of the charges and inversely proportional to the square of the distance \(r\) between them:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;$$ F = k\frac{|q_1||q_2|}{r^2} $$&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;where \(k\) is a proportionality constant: \(k = 8.99 × 10^9 N \cdot m^2&#x2F;C^2\) in SI units.&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;So what does this law mean? Crucially, this law gives no mention of direction. The magnitude of the force is the same regardless of whether the charges attract or repel, so we don&#x27;t need to worry about that.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The constant \(k\) is sometimes written as \(k = 1&#x2F;(4πε_0)\) where \(ε_0\) is the &lt;em&gt;permittivity of free space&lt;&#x2F;em&gt; with the value \(8.85 × 10^{-12} C^2&#x2F;N \cdot m^2\).&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;A Coulomb is an absolutely massive amount of charge that is typically only found in situations like lightning. It is far more common to encounter microcoulombs expressed as \(μC\) which are \(10^{-6} C\).&lt;&#x2F;p&gt;
+&lt;p&gt;This is a situation that is expressed between only two point charges. What happens when we have multiple point charges? We have to calculate the &lt;em&gt;vector sum&lt;&#x2F;em&gt; of all these forces.&lt;&#x2F;p&gt;
+&lt;p&gt;This is easiest when all the charges are in a line, as this is simply a matter of adding and subtracting the forces depending on whether they are attractive or negative. We must calculate Coulomb&#x27;s law for each pair and then combine those as appropriate.&lt;&#x2F;p&gt;
+&lt;p&gt;When we have points on a plane, things get a little more complicated. The easiest way to handle this is by separating each force into its \(x\) and \(y\) components. Pick one point to be set at the angle 0° degrees with respect to the point we are calculating for, then set the \(θ\) for each other point with respect to that line. Then, get \(F_x\) and \(F_y\) through \(\cos{θ}\) and \(\sin{θ}\), respectively. The point with 0° will only have an \(x\) component.&lt;&#x2F;p&gt;
+&lt;p&gt;Then, once you have the \(F_x\) and \(F_y\) all parcelled out according to positives and negatives, get the total \(F\) by applying the Pythagorean theorem to them. The answer \(θ\) is given by \(\tan^{-1}{\frac{F_y}{F_x}}\).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-electric-field&quot;&gt;The Electric Field&lt;&#x2F;h2&gt;
+&lt;p&gt;We have so far been talking about how individual point charges affect other point charges. When we talk about an entire system of charges, we need a broader, high-level understanding of charge. For that purpose, &lt;strong&gt;the electric field&lt;&#x2F;strong&gt; is essential. Fundamentally, the electric field is defined as the electric force per coulomb \(\vec{E} = \vec{F}&#x2F;q_0\). This calculation pretends that we have a small positive &lt;em&gt;test charge&lt;&#x2F;em&gt; \(q_0\) placed in the middle of this electric field, which is affected by the various charges to have a force pointing a direction. This test charge typically has a small magnitude so as not to disturb the surrounding field.&lt;&#x2F;p&gt;
+&lt;p&gt;The electric field is independent of whatever point charge it&#x27;s affecting. We could imagine a field with a magnitude \(2.0 N&#x2F;C\) and direction upwards that causes a positive charge to go in the same direction as it, but a negative charge to go in the opposite direction. We can calculate the magnitude for each point charge with \(F = |q_0|E\).&lt;&#x2F;p&gt;
+&lt;p&gt;Electric fields, just like forces, are vectors. When we add fields together, we must equally be mindful of \(E_x\) and \(E_y\).&lt;&#x2F;p&gt;
+&lt;p&gt;An electric field is composed of multiple point charges. The amount of electric field that an individual point charge \(q\) produces is expressed by the equation&lt;&#x2F;p&gt;
+&lt;p&gt;$$E = \frac{k|q|}{r^2}$$&lt;&#x2F;p&gt;
+&lt;p&gt;Notice how \(q_0\) the test charge is not included in this equation. Since this new equation only expresses magnitude, we must individually determine direction by the sign of the charge. If \(q\) is positive, \(\vec{E}\) is directed in the opposite direction of \(q\), and vice versa for negative.&lt;&#x2F;p&gt;
+&lt;p&gt;An additionally useful equation relates to &lt;strong&gt;parallel plate capacitors&lt;&#x2F;strong&gt;. These are two parallel plates of opposite charge that have an electric field directed from the positive plate to the negative plate. The equation for this electric field is&lt;&#x2F;p&gt;
+&lt;p&gt;$$E = \frac{q}{ε_0A} = \frac{σ}{ε_0}$$&lt;&#x2F;p&gt;
+&lt;p&gt;As you can see in this equation, the symbol \(σ\) denotes \(q&#x2F;A\) and is sometimes called &lt;em&gt;charge density&lt;&#x2F;em&gt;. Importantly, the distance between the plates is actually totally irrelevant to the electric field, unlike with point charges.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;electric-field-lines&quot;&gt;Electric Field Lines&lt;&#x2F;h2&gt;
+&lt;p&gt;It is often useful to draw fields as a set of lines directed out of or towards a point charge. &lt;em&gt;&lt;strong&gt;In general, electric field lines are always directed away from positive charges and toward negative charges.&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;For convenience, we usually only draw them in two dimensions, though technically charges act in three dimensions. The number of lines is expressed as proportional the magnitude of the charge, so five times as many lines for five times the magnitude. In general, the electric field is stronger when lines are closer together, which is why parallel plate capacitors have the same electric field in the middle but bulge out at the ends.&lt;&#x2F;p&gt;
+&lt;p&gt;The lines are not always straight, as in the case of an &lt;strong&gt;electric dipole&lt;&#x2F;strong&gt;. An electric dipole has two separated point charges of opposite signs and equal magnitude. The field lines in this case come from the positive charges and curve towards the negative charge, getting faster as they get closer. The electric field vector in this case is &lt;em&gt;tangent&lt;&#x2F;em&gt; to the electric field at any point. Between two charges of the same sign, there is practically no electric field because the lines curve away from each other.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;shielding&quot;&gt;Shielding&lt;&#x2F;h2&gt;
+&lt;p&gt;Electric fields can exist anywhere where electrons can move freely, which includes the inside of a conductor. It&#x27;s a logical conclusion: electrons hate being near each other, so they try to get away in the conductor. That leaves them all at the surface of the conductor. The same principle applies for positive charges; conductors generally have all their excess charge at their surface.&lt;&#x2F;p&gt;
+&lt;p&gt;However, since all the excess charge is at the surface, that means that in the interior of the conductor, there is no movement of free electrons because they&#x27;re not there. This means that there is &lt;em&gt;zero&lt;&#x2F;em&gt; electric field inside a conductor.&lt;&#x2F;p&gt;
+&lt;p&gt;If we imagine a conductor within a parallel plate capacitor, there is a lot of electric field going on. However, all of the charges are directed outside of it. Inside the conductor, any charge is completely shielded from the intense electric field outside the conductor.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;gauss-law&quot;&gt;Gauss&#x27; Law&lt;&#x2F;h2&gt;
+&lt;p&gt;We have so far discussed electric fields created by point charges. In fact, an electric field is often composed by multiple charges that are spread out, also known as a &lt;em&gt;charge distribution&lt;&#x2F;em&gt;. Understanding an electric field created by a charge distribution is significantly more complex and requires understanding &lt;strong&gt;electric flux&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;We can think of flux on a high level as similar to a vector, with a direction and magnitude, but with the additional dimension of area. This concept will be important when discussing magnets.&lt;&#x2F;p&gt;
+&lt;p&gt;We can consider the formula for a point charge as a special form of &lt;strong&gt;Gauss&#x27; Law&lt;&#x2F;strong&gt; which describes electric fields in general. Remember how we can substitute \(1&#x2F;(4πε_0)\) for \(k\)? This means that our new equation is \(E = q&#x2F;4(πε_0r^2)\). If we multiply both sides by \(A\) which is \(4πr^2\) for a sphere, then we get&lt;&#x2F;p&gt;
+&lt;p&gt;$$EA = \frac{q}{ε_0}$$&lt;&#x2F;p&gt;
+&lt;p&gt;where \(EA\) is electric flux, also known as \(Φ_E\).&lt;&#x2F;p&gt;
+&lt;p&gt;However, we don&#x27;t always have a nice, neat distribution of charge like in a sphere. A Gaussian surface can be arbitrarily shaped. We have to think of this similarly to how we think about integrals in calculus. If we take an arbitrarily small area \(ΔA\), it has an electric field that is essentially constant in magnitude and direction. The surface has a &lt;em&gt;normal&lt;&#x2F;em&gt; which is a line perpendicular to the surface. The angle \(ϕ\) is between the electric field vector and the normal. With all these variables, Gauss&#x27; Law is expressed as so:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;The electric flux \(Φ_E\) through a Gaussian surface is equal to the net charge \(Q\) enclosed by the surface divided by \(ε_0\), the permittivity of free space:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;$$Σ(E \cos{ϕ})ΔA = \frac{Q}{ε_0}$$&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;with the left side being \(Φ_E\) in \(N \cdot m^2&#x2F;C\).&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;The flux has the same sign as \(Q\).&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>

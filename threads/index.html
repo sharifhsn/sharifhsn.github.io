@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Threads</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Threads</h1>
+    </header>
+    <div class="content">
+        <p>Concurrency is a powerful tool to increase performance in applications. This is usually accomplished using threads.</p>
+<span id="continue-reading"></span><h2 id="motivation">Motivation</h2>
+<p>Clock frequency in CPUs has massively increased over the past few decades, growing at an exponential rate from the tens of MHz to GHz. However, circa 2005, clock frequency began to stagnate, and for the past decade the clock frequency of consumer CPUs have not increased past around 4 GHz. Why is that?</p>
+<p>Clock frequency is typically increased by increasing the number of transistors in a single CPU. This can be done either by increasing the size of the CPU, or decreasing the size of the transistors. Because we don't want huge CPUs in our computers emitting tons of heat, we have opted to decrease the size of transistors. However, there is a limit to how small they can go. When a transistor starts getting smaller than 30 nm, power leakage will begin to affect the CPU, causing the same heat problems that a big CPU does.</p>
+<p>In order to keep up with computing trends, new CPUs have multiple CPU cores with the same transistor density. However, utilizing multiple CPU cores requires parallelism in the CPU. An ideal CPU might run one process on each core, with each process getting full control over the CPU.</p>
+<p>You can visualize this idea like a highway. Having multiple lanes allows cars to travel much faster than if there is only one lane. However, there can be issues when the lanes must combine, like in merging. This causes traffic like if there was only one lane, and can actually increase overhead as cars attempt to merge. Decreasing the amount of merging (or <strong>synchronization</strong>) is key to fast concurrency.</p>
+<h2 id="threads">Threads</h2>
+<p>We have discussed processes before; <strong>threads</strong> are not much different. They contain information about an execution such as the register values, open file streams, etc., but are more lightweight than processes. </p>
+<p>There are multiple frameworks for threading that are useful for different workflows. The <strong>producer/consumer</strong> model is typically used for data analysis. Multiple threads create some data which is handled by a synchronizing consumer thread. The <strong>pipeline</strong> model works like a real pipeline, where multiple threads are consumed in steps and pipeline flows. This is common in GPU programming. The <strong>background</strong> model will work similarly to the interactive/batch model in MLFQ. Background threads do behind-the-scenes dirty work when the CPU is idle, and foreground threads will run the actual important parts of a process.</p>
+<p>Since threads exist within a single process, they share the same address space, including the stack and the heap. This can cause many, many bugs when it comes to accessing and modifying memory. We will discuss methods to solve these bugs later.</p>
+<p>Threads do not share the same instruction pointer, however. Each thread can execute from different parts of the program. All register values are unique to each thread, as they can execute on any CPU.</p>
+<p>Threads can technically share the same stack on the address space. However, this is pretty obviously a bad idea. Typically, threads will create their own stack so that each thread does not interfere with each other's local variables and execution, with their own stack pointer <code>%esp</code> to point to their stack.</p>
+<h2 id="os-support">OS Support</h2>
+<p>It's all well and good to have threads, but we need a way for the OS to know how we're switching between threads. There are multiple ways to do this.</p>
+<p><strong>Userspace threads</strong> are a way to have concurrency regardless of what the OS thinks. A run-time will execute along with your program and swap between threads itself without the OS knowing. This is how <code>pthread</code> works, and also how Project 2 does. However, the power that concurrency grants for multicore CPUs is still dependent on the number of kernel threads generated, because those are the only ones that run on each CPU.</p>
+<p><strong>Kernel threads</strong> can be associated one-to-one with user-level threads. This way, threads can take advantage of multiprocessing because the kernel will parallelize operations across CPUs. However, this incurs an overhead for the syscalls needed to parallelize threads, and there will never be enough kernel threads for the user threads.</p>
+<h2 id="scheduling">Scheduling</h2>
+<p>Small operations like incrementing a variable can be difficult when we have threads accessing the same data. The simple instruction <code>balance++</code> where <code>balance</code> is stored at memory location <code>0x9cd4</code> would have this assembly output:</p>
+<pre data-lang="nasm" style="background-color:#2b303b;color:#c0c5ce;" class="language-nasm "><code class="language-nasm" data-lang="nasm"><span style="color:#d08770;">0x195    </span><span style="color:#b48ead;">mov </span><span style="color:#d08770;">0x9cd4</span><span>, </span><span style="color:#8fa1b3;">%</span><span style="color:#bf616a;">eax
+</span><span style="color:#d08770;">0x19a    </span><span style="color:#b48ead;">add </span><span style="color:#96b5b4;">$</span><span style="color:#d08770;">0x1</span><span>, </span><span style="color:#8fa1b3;">%</span><span style="color:#bf616a;">eax
+</span><span style="color:#d08770;">0x19d    </span><span style="color:#b48ead;">mov </span><span style="color:#8fa1b3;">%</span><span style="color:#bf616a;">eax</span><span>, </span><span style="color:#d08770;">0x9cd4
+</span></code></pre>
+<p>If we have a context switch when <code>%eip</code> is at <code>0x19a</code>, the first thread will <code>add</code> but not store the new value back in memory. That means that the variable <code>balance</code> would be less than expected because the <code>add</code> by the first thread would not be stored into memory.</p>
+<p>This can lead to <em>non-determinism</em>, where the same input will cause different outputs, as well as <em>race conditions</em>, where the result of a program will depend on the CPU timing of different operations.</p>
+<p>We want these three instructions to be executed uninterrupted. This is known as <strong>atomicity</strong>. In this <strong>critical section</strong>, no process or thread can interrupt the currently executing thread. However, if we allow programs to do this, then they can take advantage of this property and essentially disable the timer for context switches by declaring the entirety of execution atomic. We can't have full blocking on interrupts for threads, so we only lock other threads from executing at the critical section. When the timer interrupt hits, the scheduler will still take control, but no other thread will be able to execute at the critical section.</p>
+<h2 id="synchronization-primitives">Synchronization Primitives</h2>
+<p>There are many high-level <strong>synchronization primitives</strong> in the OS that exist to ensure the correct order of instructions. Each kind of lock is designed to solve a specific problem; no single lock can solve all of them.</p>
+<p>We want to have correctness in our concurrency. This means that we must have mutual exclusion where only one thread can access the critical section at a time. If multiple threads are waiting for something, they cannot be stuck forever, they must make progress. Similarly, threads cannot be forced to wait an unreasonably large amount of time. Concurrency must also be fair and not favor any thread over any thread. And obviously, we do not want to overly tax the CPU with the overhead of synchronization.</p>
+<p>We need underlying hardware atomic operations in order to implement synchronization. When these hardware instructions execute, <em>no instruction or interrupt</em> can execute. Example instructions are <code>Test&amp;Set</code> and <code>Compare&amp;Swap</code>.</p>
+<p>The reason we need this is because if we don't make these instructions atomic, we can encounter race conditions. Imagine an unset lock with a while loop and two threads. The first thread successfully enters the loop because the lock is unacquired. However, before it can acquire the lock, the thread switches and the second thread executes and acquires the lock. Now the first thread has not acquired the lock but it is still in the loop, so when it runs again it will acquire the lock even though it has already been acquired, allowing two threads in the same critical section! In order to combat this, testing and setting are the same atomic operation so there isn't a gap that can allow a switch in between those two operations.</p>
+<h2 id="spinlocks">Spinlocks</h2>
+<p>Making our implementation fair is not as easy. If we imagine the most basic spinlock which switches back and forth, a program that knows how long a context switch will take will acquire the lock right before every context switch so no other program will be obtain it.</p>
+<p>In order to introduce fairness, the ticket system for schedulers can be used here. Every thread is assigned a ticket for every turn it gets, with the first thread getting ticket 1, second ticket 2, etc. Now when a thread releases a lock, the ticket increments to the next thread. Even if it wants to maliciously acquire the lock before a context switch occurs, it can't because it has lost its turn.</p>
+<p>We need a special atomic function to make this work like <code>Test&amp;Set</code> with basic mutex. We should be able to get a ticket number and increment it atomically. The function used for this is <code>Fetch&amp;Add</code>.</p>
+<pre data-lang="c" style="background-color:#2b303b;color:#c0c5ce;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#b48ead;">int </span><span style="color:#8fa1b3;">FetchAndAdd</span><span>(</span><span style="color:#b48ead;">int </span><span>*</span><span style="color:#bf616a;">ptr</span><span>) {
+</span><span>    </span><span style="color:#b48ead;">int</span><span> old = *ptr; </span><span style="color:#65737e;">// these two lines are
+</span><span>    *ptr = old + </span><span style="color:#d08770;">1</span><span>; </span><span style="color:#65737e;">// executed atomically!
+</span><span>    </span><span style="color:#b48ead;">return</span><span> old;
+</span><span>}
+</span></code></pre>
+<p>Spinlocks are fast when we have a short critical section because we're not context switching very often, so when we switch between locks constantly we want to avoid that overhead as much as possible as that dominates execution time. However, in a situation where there is only one CPU, letting the threads spin on a lock is extremely wasteful. The CPU scheduler has no idea that a thread is waiting for a lock so it will ignorantly run it even though all it does is spin.</p>
+<p>One alternative is to yield the thread instead of letting it spin, telling the CPU scheduler that the thread doesn't need to run right now. <em>In general</em>, a shorter critical section is okay to spin, but a longer critical section is not okay to spin.</p>
+<h2 id="condition-variables">Condition Variables</h2>
+<p>Mutex locks are just a way of restricting access to a critical section. It's synchronous, but there's no order to the way that the threads have to run. That is up to the caprices of the scheduler. However, let's say that ordering is significant to the execution of our threads. How can we ensure that threads are executed in a certain order?</p>
+<p>We need some functions and concepts to implement this. There are two system call functions <code>wait(cond_t, mutex_t)</code> and <code>signal(cond_t)</code> that are used with <strong>condition variables</strong> <code>cond_t</code>.</p>
+<p>Let's assume that a thread has acquired the lock, but it has not satisfied the condition to run yet because another thread must run first to preserve ordering. In that case, the condition variable will indicate that the thread cannot run and it will call <code>wait</code> to sleep the thread until the condition variable changes, releasing the lock so that the other thread can run. The caller of <code>signal</code> wants to wake up that sleeping thread, unless there are no sleeping threads, in which case it does nothing.</p>
+<p>The best time to use condition variables is in a producer/consumer system, like in a pipe. Producers write to a pipe, and consumers read from the pipe. The pipe buffer has a limited size, so the producer can only add data to it if the buffer is empty, and the consumer can only read from it if the buffer has contents. For simplicity, assume a buffer of single unit size for now.</p>
+<pre data-lang="c" style="background-color:#2b303b;color:#c0c5ce;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#b48ead;">void </span><span>*</span><span style="color:#8fa1b3;">producer</span><span>(</span><span style="color:#b48ead;">void </span><span>*</span><span style="color:#bf616a;">arg</span><span>) {
+</span><span>    </span><span style="color:#b48ead;">for </span><span>(Int i = </span><span style="color:#d08770;">0</span><span>; i &lt; loops; i++) {
+</span><span>        </span><span style="color:#bf616a;">Mutex_lock</span><span>(&amp;m); </span><span style="color:#65737e;">// lock the mutex
+</span><span>        </span><span style="color:#b48ead;">while </span><span>(numfull == max) { </span><span style="color:#65737e;">// while the buffer is full,
+</span><span>            </span><span style="color:#bf616a;">Cond_wait</span><span>(&amp;cond, &amp;m;) </span><span style="color:#65737e;">// wait
+</span><span>        }
+</span><span>        </span><span style="color:#bf616a;">do_fill</span><span>(i); </span><span style="color:#65737e;">// put data in buffer
+</span><span>        </span><span style="color:#bf616a;">Cond_signal</span><span>(&amp;cond); </span><span style="color:#65737e;">// signal conditional variable
+</span><span>        </span><span style="color:#bf616a;">Mutex_unlock</span><span>(&amp;m); </span><span style="color:#65737e;">// unlock the mutex
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">void </span><span>*</span><span style="color:#8fa1b3;">consumer</span><span>(</span><span style="color:#b48ead;">void </span><span>*</span><span style="color:#bf616a;">arg</span><span>) {
+</span><span>    </span><span style="color:#b48ead;">while</span><span>(</span><span style="color:#d08770;">1</span><span>) { </span><span style="color:#65737e;">// consume on and on forever
+</span><span>        </span><span style="color:#bf616a;">Mutex_lock</span><span>(&amp;m); </span><span style="color:#65737e;">// lock the mutex
+</span><span>        </span><span style="color:#b48ead;">while </span><span>(numfull == </span><span style="color:#d08770;">0</span><span>) { </span><span style="color:#65737e;">// while buffer is empty,
+</span><span>            </span><span style="color:#bf616a;">Cond_wait</span><span>(&amp;cond, &amp;m); </span><span style="color:#65737e;">// wait
+</span><span>        }
+</span><span>        </span><span style="color:#b48ead;">int</span><span> tmp = </span><span style="color:#bf616a;">do_get</span><span>(); </span><span style="color:#65737e;">// get the data
+</span><span>        </span><span style="color:#bf616a;">Cond_signal</span><span>(&amp;cond); </span><span style="color:#65737e;">// signal conditional variable
+</span><span>        </span><span style="color:#bf616a;">Mutex_unlock</span><span>(&amp;m); </span><span style="color:#65737e;">// unlock the mutex
+</span><span>        </span><span style="color:#96b5b4;">printf</span><span>(&quot;</span><span style="color:#d08770;">%d</span><span style="color:#96b5b4;">\n</span><span>&quot;, tmp); </span><span style="color:#65737e;">// do something with data
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>Let's consider an example with a producer and two consumers, as well as a FIFO scheduler. The first consumer thread runs and waits immediately because the buffer is empty. The second consumer thread does the same. The producer thread runs through its entire loop, filling the buffer, then when it loops again it will wait (since our buffer is size 1). The first consumer thread will return to the while loop, and now that the buffer is no longer empty it will fetch the data, signal the thread, and finish.</p>
+<p>However, there is a problem here. The <code>Cond_signal</code> function signal is extremely generic and does not signal a specific thread. Instead, it will signal a random thread, which may be the producer or other consumer thread. But the whole point of using conditional variables is so that we have ordering!</p>
+<p>We need to have <em>multiple</em> conditional variables:</p>
+<pre data-lang="c" style="background-color:#2b303b;color:#c0c5ce;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#b48ead;">void </span><span>*</span><span style="color:#8fa1b3;">producer</span><span>(</span><span style="color:#b48ead;">void </span><span>*</span><span style="color:#bf616a;">arg</span><span>) {
+</span><span>    </span><span style="color:#b48ead;">for </span><span>(Int i = </span><span style="color:#d08770;">0</span><span>; i &lt; loops; i++) {
+</span><span>        </span><span style="color:#bf616a;">Mutex_lock</span><span>(&amp;m); </span><span style="color:#65737e;">// lock the mutex
+</span><span>        </span><span style="color:#b48ead;">while </span><span>(numfull == max) { </span><span style="color:#65737e;">// while the buffer is full,
+</span><mark style="background-color:#65737e30;"><span>            </span><span style="color:#bf616a;">Cond_wait</span><span>(&amp;empty, &amp;m;) </span><span style="color:#65737e;">// wait until buffer is empty
+</span></mark><span>        }
+</span><span>        </span><span style="color:#bf616a;">do_fill</span><span>(i); </span><span style="color:#65737e;">// put data in buffer
+</span><span>        </span><span style="color:#bf616a;">Cond_signal</span><span>(&amp;fill); </span><span style="color:#65737e;">// signal to show buffer is somewhat filled
+</span><span>        </span><span style="color:#bf616a;">Mutex_unlock</span><span>(&amp;m); </span><span style="color:#65737e;">// unlock the mutex
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span style="color:#b48ead;">void </span><span>*</span><span style="color:#8fa1b3;">consumer</span><span>(</span><span style="color:#b48ead;">void </span><span>*</span><span style="color:#bf616a;">arg</span><span>) {
+</span><span>    </span><span style="color:#b48ead;">while</span><span>(</span><span style="color:#d08770;">1</span><span>) { </span><span style="color:#65737e;">// consume on and on forever
+</span><span>        </span><span style="color:#bf616a;">Mutex_lock</span><span>(&amp;m); </span><span style="color:#65737e;">// lock the mutex
+</span><span>        </span><span style="color:#b48ead;">while </span><span>(numfull == </span><span style="color:#d08770;">0</span><span>) { </span><span style="color:#65737e;">// while buffer is empty,
+</span><span>            </span><span style="color:#bf616a;">Cond_wait</span><span>(&amp;fill, &amp;m); </span><span style="color:#65737e;">// wait until buffer is somewhat filled
+</span><span>        }
+</span><span>        </span><span style="color:#b48ead;">int</span><span> tmp = </span><span style="color:#bf616a;">do_get</span><span>(); </span><span style="color:#65737e;">// get the data
+</span><span>        </span><span style="color:#bf616a;">Cond_signal</span><span>(&amp;empty); </span><span style="color:#65737e;">// signal to show that buffer is empty
+</span><span>        </span><span style="color:#bf616a;">Mutex_unlock</span><span>(&amp;m); </span><span style="color:#65737e;">// unlock the mutex
+</span><span>        </span><span style="color:#96b5b4;">printf</span><span>(&quot;</span><span style="color:#d08770;">%d</span><span style="color:#96b5b4;">\n</span><span>&quot;, tmp); </span><span style="color:#65737e;">// do something with data
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>In this example, the consumer thread will only run when the producer has signaled that there is content in the buffer.</p>
+<h2 id="semaphore">Semaphore</h2>
+<p>Conditional variables do not have any state. They only signal the condition to wake or sleep a thread. This can be useful if you have lots of threads that do the exact same thing, like in a producer-consumer model. However, if you want a more complex way to represent state, you need a <strong>semaphore</strong>.</p>
+<p>Semaphores are essentially conditional variables that contain an integer value which can be changed by threads. This allows threads to have multiple options based on a single variable shared across multiple threads just by changing the value in the semaphore. The semaphore is incremented every time a thread is woken, and decremented every time a thread sleeps.</p>
+<p>The atomic operations for semaphores are <code>Allocate&amp;Initialize</code>, <code>Wait</code>, and <code>Post</code>. We must first create the semaphore by allocating/initializing it. The <code>Wait</code> operation decrements the semaphore if it is greater than 0, and <code>Post</code> will increment the semaphore and wake a sleeping thread.</p>
+<p>In this context, joining and exiting threads have no complication with mutexes; all you need to do is wait and post the semaphore, respectively.</p>
+<p>We can actually construct locks using semaphores. Acquiring and releasing locks work the same way as waiting and posting, so you can just use those same atomic operations instead of <code>Test&amp;Set</code>. In reverse, you can build a semaphore using locks and conditional variables, though in practice that's a little more complicated.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">23 March 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/operating-systems-design/">Operating Systems Design</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs416/">#cs416</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

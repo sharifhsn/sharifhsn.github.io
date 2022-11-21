@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>ISP Addressing</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>ISP Addressing</h1>
+    </header>
+    <div class="content">
+        <p>How does an ISP assign IP addresses to its customers?</p>
+<span id="continue-reading"></span>
+<p>An ISP has a block of addresses that are partitioned to its customers. If an ISP network has an address like <code>200.8.4/24</code> address, that is 256 addresses. <code>/20</code> is for 4K hosts, and <code>/16</code> is for 64K hosts. In fact, the calculation is \( 2^{32 - n} \).</p>
+<h2 id="subnetting">Subnetting</h2>
+<p>A network can be subdivided into <strong>subnets</strong>. This way you can have each router handling a smaller portion of the network, or have different kinds of routers i.e. wired/wireless handling different subnets.</p>
+<p>In order to divide IP addresses, we use a <strong>subnet mask</strong>. For example, if our network is <code>128.64.32/24</code>, a range we could have is <code>128.64.32.0-127</code> and <code>128-255</code>. The easiest way to mask this is to look at the most significant bit. In the first range, the most significant bit is 0, and in the second range, the most significant bit is 1. The mask in this case would be <code>255.255.255.128</code> or in hex, <code>F.F.F.8</code>. If we bitwise AND this mask with the IP address, we will get the correct subnet.</p>
+<p>We can follow the same procedure to get further divisions by the power of 2. We can mask over two bits to get four subnets of ranges <code>0-63</code>, <code>64-127</code>, <code>128-191</code>, and <code>192-255</code> with a mask of <code>255.255.255.192</code>.</p>
+<p>Let's think of an analogy. If we want to deliver some mail to our neighbor, the easiest way to do it is to go directly to his mailbox and give it to him instead of passing it off to the post office. In the same way, we can quickly send messages between hosts on the same subnet.</p>
+<p>In order to facilitate this, the router will first check if the sender and destination (both first &amp;ed with the subnet mask) are in the same subnet. If they are, it doesn't bother sending the message over the Internet and it will actually just directly send the message to the destination itself.</p>
+<p>In particular, this makes email between people on the same networks extremely quick. This is why it's nice to have email between people with the <code>scarletmail.rutgers.edu</code> domain.</p>
+<h2 id="ipv4-header">IPv4 Header</h2>
+<p>In order to get a packet to a destination host, we need a packet header with the identity of both the destination identity and the source identity. At this layer, we don't worry about reliable exchange, dropping packets, sequence numbers, etc. That's for TCP to handle, our only job is to send the packet to the destination.</p>
+<p>However, we have to detect some kinds of problems. We don't want to loop packets over and over, this will overload the network. There used to be a worry of fragmentation, if the size of the packet is greater than the <em>maximum transmission unit</em> (MTU) of the router. Nowadays, everyone has broadband so this is not an issue because everybody has high link speeds. When IPv4 was invented we needed checksums for verification if there are bit flips. IPv6 addresses have much less checksum machinery because it's a waste nowadays, it only checks at the end. IPv4 has to calculate a checksum at every router, which catches errors early but is generally wasteful.</p>
+<p>The <em>time to live</em> (TTL) is 1 byte long and is used to protect against loops. It starts at 255 and decrements every time it passes through a router. If the TTL is 0,  the packet is dropped and a &quot;time exceeded&quot; error is thrown to sender. This prevents the packet from being looped around forever.</p>
+<p>An entire 4 bytes is devoted to fragmentation machinery. This is not in IPv6, which simply throw an error if the packet is too large. The reason this is fine because it is a rare case nowadays and it cuts fat out of the header. Here are the steps of fragmentation:</p>
+<ol>
+<li>
+<p>router receives packet larger than MTU</p>
+</li>
+<li>
+<p>if <em>Don't Fragment</em> (DF) flag is set, throw <em>Fragmentation Needed</em> error</p>
+</li>
+<li>
+<p>else, divide the packet into fragments maximum size <code>outgoing MTU</code> - header size (20 bytes)</p>
+</li>
+<li>
+<p>in each new packet fragment, the <code>length</code> field is the size of the fragment, the <em>More Fragments</em> (MF) flag is set except for the last fragment, and the <code>fragment offset</code> field is set to the offset of the fragment in 8-byte blocks. The checksum is recomputed for the fragment. <a href="https://en.wikipedia.org/wiki/IPv4#Fragmentation_and_reassembly">IPv4 - Wikipedia</a></p>
+</li>
+</ol>
+<h2 id="icmp">ICMP</h2>
+<p>What do we do to propagate errors? We're already using IP for sending messages, how do we send errors? This what the <strong>ICMP</strong> protcol is for. It is unreliable like UDP, and is tightly coupled with the implementation of IP. Its protcol ID is 1, which signifies its importance.</p>
+<p>There are certain known error codes. The <em>echo request/reply</em> also known as <em>ping</em> is simply a request to check if the host is alive and responding. There is also the <strong>traceroute</strong>, which records the route that a packet takes by tracking TTL. As we know, when a router receives a packet, it decrements TTL. If we start TTL at 0 and slowly increase it, it will throw time exceeded back to us from each router in order. This way, we can see every router on the way to our destination.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">28 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/internet-technology/">Internet Technology</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs352/">#cs352</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

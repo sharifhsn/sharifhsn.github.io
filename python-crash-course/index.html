@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>A Crash Course in Python</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>A Crash Course in Python</h1>
+    </header>
+    <div class="content">
+        <p>Python is a powerful jack-of-all-trades language that is much less limited than OCaml.</p>
+<span id="continue-reading"></span><h2 id="expressions">Expressions</h2>
+<p>Arithmetic works in a very simple and clear way in Python, basically like a calculator.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#d08770;">2 </span><span style="color:#65737e;"># 2
+</span><span style="color:#d08770;">2 </span><span>+ </span><span style="color:#d08770;">4 </span><span style="color:#65737e;"># 6
+</span><span>(</span><span style="color:#d08770;">2 </span><span>+ </span><span style="color:#d08770;">5</span><span>) * (</span><span style="color:#d08770;">3 </span><span>- </span><span style="color:#d08770;">5</span><span>) </span><span style="color:#65737e;"># -20
+</span></code></pre>
+<p>Unlike in OCaml, operations can be performed between floats and integers with no issues; Python will simply change the types behind the scenes. This is called <strong>type coercion</strong>.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#d08770;">2 </span><span>+ </span><span style="color:#d08770;">3.5 </span><span style="color:#65737e;"># 5.5
+</span></code></pre>
+<p>This causes an interesting side effect: what is the return type of this function?</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">add</span><span>(</span><span style="color:#bf616a;">a</span><span>, </span><span style="color:#bf616a;">b</span><span>):
+</span><span>    </span><span style="color:#b48ead;">return </span><span>a + b
+</span></code></pre>
+<p>In OCaml, the equivalent function would have type <code>int -&gt; int -&gt; int</code>, since the operation <code>+</code> is only valid for <code>int</code>. However, this function is actually polymorphic in Python! In OCaml, you would call it type <code>'a</code>. In Python, this type is called <strong>Any</strong>, and operation changes based on what the types are. The reason that this is possible is because <em>everything</em> in Python is an object. Essentially, the variables <code>a</code> and <code>b</code> are just boxes that could contain anything, and Python only checks whether the operation <code>+</code> is defined for the two variables at runtime.</p>
+<h2 id="strings">Strings</h2>
+<p>String manipulation is a very common operation in Python, so there are some very useful ways to handle strings built into the language.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>&quot;</span><span style="color:#a3be8c;">hello </span><span>&quot; + &quot;</span><span style="color:#a3be8c;">world</span><span>&quot; </span><span style="color:#65737e;"># &quot;hello world&quot;
+</span><span>&quot;</span><span style="color:#a3be8c;">hello</span><span>&quot; * </span><span style="color:#d08770;">3 </span><span style="color:#65737e;"># &quot;hellohellohello&quot;
+</span></code></pre>
+<p>You can also convert types to strings very easily.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#bf616a;">str</span><span>(</span><span style="color:#d08770;">5</span><span>) </span><span style="color:#65737e;"># &quot;5&quot;
+</span><span style="color:#bf616a;">str</span><span>(</span><span style="color:#d08770;">3.5</span><span>) </span><span style="color:#65737e;"># &quot;3.5&quot;
+</span></code></pre>
+<p>And vice versa.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#bf616a;">int</span><span>(&quot;</span><span style="color:#a3be8c;">5</span><span>&quot;) </span><span style="color:#65737e;"># 5
+</span><span style="color:#bf616a;">float</span><span>(&quot;</span><span style="color:#a3be8c;">3.5</span><span>&quot;) </span><span style="color:#65737e;"># 3.5
+</span></code></pre>
+<p>These are special built-in functions to make our lives earlier.</p>
+<h2 id="variables">Variables</h2>
+<p>Like with OCaml, there is no need to specify types as in Java. Unlike OCaml, Python does not use type inference. Instead, every variable can contain any type in a box as mentioned earlier.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>a = </span><span style="color:#d08770;">3
+</span><span>b = &quot;</span><span style="color:#a3be8c;">hello</span><span>&quot;
+</span></code></pre>
+<p>Variables in Python work differently under the hood than other languages. A variable is essentially just a name for an element.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>c = b
+</span></code></pre>
+<p><code>c</code> here is not just equal to <code>b</code>... it is actually <code>b</code> itself! And any change you make to <code>b</code> will reflect in <code>c</code> because of that. Actual copies must be explicit.</p>
+<h2 id="slices">Slices</h2>
+<p><strong>Slices</strong> are one of the most powerful tools in Python. In fact, it might be what Python is most known for and most useful for. Slicing allows for powerful manipulation of list-like data.</p>
+<p>Ordinary list access uses bracket notation with a single number to access a single element. Slice notation works similarly, but it allows returning multiple elements as a sub-list of the original list.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span>x = &quot;</span><span style="color:#a3be8c;">hello world</span><span>&quot;
+</span><span>x[</span><span style="color:#d08770;">1</span><span>:</span><span style="color:#d08770;">7</span><span>] </span><span style="color:#65737e;"># &quot;ello w&quot;
+</span></code></pre>
+<p>You might notice that I just performed this operation on a string; didn't I just say that slices work on list-like types? In Python, strings are just fancy lists of chars!.</p>
+<h2 id="tuples-and-lists">Tuples and Lists</h2>
+<p>A tuple is an immutable set of multiple elements, just like in OCaml. Slicing operations work the same way in that they return a subsequence tuple. There's a weird side effect where if you slice in a way that returns a single element, you can get a single-element tuple.</p>
+<p>Lists in Python are much more flexible in OCaml, as they can be heterogenous with any type within. They are also mutable, so elements of lists can be reassigned.</p>
+<p>Slicing can superpower this assignment by reassigning multiple values at once</p>
+<h2 id="control">Control</h2>
+<p>The traditional <code>if</code> statements are back, but with a bit of a twist. Python has <em>significant whitespace</em>, which means that the amount that you indent by affects the actual execution of the code. This is quite rare.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">if </span><span>x == </span><span style="color:#d08770;">15</span><span>:
+</span><span>    y = </span><span style="color:#d08770;">0 </span><span style="color:#65737e;"># this tab is mandatory!
+</span><span>x = </span><span style="color:#d08770;">3 </span><span style="color:#65737e;"># this line is outside the if block
+</span></code></pre>
+<p>There is a special keyword called <code>pass</code> which exists to allow empty blocks. Normally, this construct is forbidden:</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">if </span><span>x == </span><span style="color:#d08770;">15</span><span>:
+</span><span>x = </span><span style="color:#d08770;">3 </span><span style="color:#65737e;"># error!
+</span></code></pre>
+<p>But by using <code>pass</code>, this is possible:</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">if </span><span>x == </span><span style="color:#d08770;">15</span><span>:
+</span><span>    </span><span style="color:#b48ead;">pass </span><span style="color:#65737e;"># does nothing
+</span><span>x = </span><span style="color:#d08770;">3
+</span></code></pre>
+<p>Like in C, boolean evaluation is 0 for false, true for everything else. However, you <em>cannot</em> assign a variable in a conditional! So this C construct would not be allowed:</p>
+<pre data-lang="c" style="background-color:#2b303b;color:#c0c5ce;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#b48ead;">while </span><span>((</span><span style="color:#b48ead;">int</span><span> x = </span><span style="color:#bf616a;">some_func</span><span>()) == </span><span style="color:#d08770;">0</span><span>) {
+</span><span>    </span><span style="color:#65737e;">// this is allowed in C
+</span><span>}
+</span></code></pre>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">while </span><span>(x = </span><span style="color:#bf616a;">some_func</span><span>()) == </span><span style="color:#d08770;">0</span><span>:
+</span><span>    </span><span style="color:#b48ead;">pass </span><span style="color:#65737e;"># this is not allowed in Python!
+</span></code></pre>
+<h2 id="functions">Functions</h2>
+<p>Functions are defined using the <code>def</code> keyword.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">fac</span><span>(</span><span style="color:#bf616a;">n</span><span>):
+</span><span>    </span><span style="color:#b48ead;">if </span><span>n &lt; </span><span style="color:#d08770;">0</span><span>:
+</span><span>        </span><span style="color:#b48ead;">return </span><span>&quot;</span><span style="color:#a3be8c;">negative!</span><span>&quot;
+</span><span>    </span><span style="color:#b48ead;">elif </span><span>n == </span><span style="color:#d08770;">0</span><span>:
+</span><span>        </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">1
+</span><span>    </span><span style="color:#b48ead;">else</span><span>:
+</span><span>        </span><span style="color:#b48ead;">return </span><span>n * </span><span style="color:#bf616a;">fac</span><span>(n - </span><span style="color:#d08770;">1</span><span>)
+</span></code></pre>
+<p>Functional programming can be used similarly to OCaml where everything is a function.</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">compose</span><span>(</span><span style="color:#bf616a;">f</span><span>, </span><span style="color:#bf616a;">g</span><span>):
+</span><span>    </span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">foo</span><span>(</span><span style="color:#bf616a;">x</span><span>):
+</span><span>        </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">f</span><span>(</span><span style="color:#bf616a;">g</span><span>(x))
+</span><span>    </span><span style="color:#b48ead;">return </span><span>foo
+</span></code></pre>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">compose </span><span style="color:#bf616a;">f g </span><span>=
+</span><span>    </span><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">foo </span><span style="color:#bf616a;">x </span><span>=
+</span><span>        f g x
+</span><span>    </span><span style="color:#b48ead;">in</span><span> foo x
+</span></code></pre>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">14 April 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs314/">#cs314</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Data Types in OCaml</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Data Types in OCaml</h1>
+    </header>
+    <div class="content">
+        <p>When we make our programs more and more complex, we need more complex data types as well. We have only used OCaml's built-in data types, how can we construct our own data types?</p>
+<span id="continue-reading"></span><h2 id="type"><code>type</code></h2>
+<p>The <code>type</code> keyword is similar to the <code>typedef</code> keyword in C, except more limited in scope. A <code>type</code> can only be multiple variants of arbitrary values.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#65737e;">(* coin is enum with variants Heads and Tails*)
+</span><span style="color:#b48ead;">type coin </span><span>= Heads | Tails
+</span></code></pre>
+<p>Each variant can also contain data of other data types.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">type shape </span><span>=
+</span><span> | Rect </span><span style="color:#b48ead;">of float </span><span>* </span><span style="color:#b48ead;">float
+</span><span> | Circle </span><span style="color:#b48ead;">of float
+</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">r </span><span>= Rect (</span><span style="color:#d08770;">3.0</span><span>, </span><span style="color:#d08770;">4.0</span><span>) </span><span style="color:#65737e;">(* r has type shape *)
+</span></code></pre>
+<p><code>shape</code> here has two variants. It can either be a tuple of two <code>float</code>s when it is a <code>Rect</code>, or it can be a single <code>float</code> when it is a <code>Circle</code>.</p>
+<p>These data types are also known as <em>algebraic data types</em> or <em>tagged unions</em>.</p>
+<h2 id="option">Option</h2>
+<p>ADTs can be useful when we want to ensure the complete handling of all cases. For example, if an object is nullable, it is useful to make sure that we must handle the null case instead of passing that off to the developer who might carelessly not handle it. This is where the <strong>option</strong> type comes from.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">type &#39;a option </span><span>=
+</span><span> | Some </span><span style="color:#b48ead;">of &#39;a
+</span><span> | None
+</span></code></pre>
+<p>The <code>'a</code> keyword means that that the type <code>option</code> is polymorphic, and the variant <code>Some</code> will contain whatever type that <code>option</code> is defined for. When handling an <code>option</code>, you <em>must</em> destructure it into its <code>Some</code> and <code>None</code> variants and handle both cases, otherwise OCaml will warn you for a non-exhaustive pattern match.</p>
+<h2 id="list">List</h2>
+<p>We can actually define our own list data type as a <strong>recursive data type</strong>, which is a data type which contains itself.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">type &#39;a list </span><span>=
+</span><span> | Nil
+</span><span> | Cons </span><span style="color:#b48ead;">of &#39;a </span><span>* </span><span style="color:#b48ead;">&#39;a list
+</span></code></pre>
+<p>Here, <code>list</code> has two variants, <code>Nil</code> and a <code>Cons</code> tuple of an element and a <code>list</code>. If we think of the traditional list data type, this is actually just a more verbose version. <code>[]</code> is sugar for <code>Nil</code> and <code>::</code> is sugar for <code>Cons</code> tuple. </p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">len </span><span style="color:#bf616a;">l </span><span>=
+</span><span>    </span><span style="color:#b48ead;">match</span><span> l </span><span style="color:#b48ead;">with
+</span><span>    </span><span style="color:#b48ead;">| </span><span>Nil -&gt; </span><span style="color:#d08770;">0
+</span><span>    </span><span style="color:#b48ead;">| </span><span>Cons (</span><span style="color:#bf616a;">_</span><span>, </span><span style="color:#bf616a;">t</span><span>) -&gt; </span><span style="color:#d08770;">1 </span><span>+ (len t)
+</span><span style="color:#65737e;">(* same as *)
+</span><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">len </span><span style="color:#bf616a;">l </span><span>=
+</span><span>    </span><span style="color:#b48ead;">match</span><span> l </span><span style="color:#b48ead;">with
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#d08770;">[] </span><span>-&gt; </span><span style="color:#d08770;">0
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#d08770;">_ </span><span>:: </span><span style="color:#bf616a;">t </span><span>-&gt; </span><span style="color:#d08770;">1 </span><span>+ (len t)
+</span></code></pre>
+<h2 id="exceptions">Exceptions</h2>
+<p><strong>Exceptions</strong> are a special data type used for errors in OCaml. Exceptions are similar to type constructors in that they can take arguments or have none.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">exception </span><span>Sign of </span><span style="color:#b48ead;">int
+</span><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">f </span><span style="color:#bf616a;">n </span><span>=
+</span><span>    </span><span style="color:#b48ead;">if</span><span> n &gt; </span><span style="color:#d08770;">0 </span><span style="color:#b48ead;">then
+</span><span>        raise (Sign n)
+</span><span>    </span><span style="color:#b48ead;">else
+</span><span>        raise (Failure &quot;</span><span style="color:#a3be8c;">foo</span><span>&quot;)
+</span></code></pre>
+<p>We can <code>raise</code> an exception with arguments whenever we want, which will exit the function with the exception name and its arguments. <code>Failure</code> is a generic exception type that is used with strings.</p>
+<p>There is also special <code>try</code> syntax used to catch exceptions.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">g </span><span style="color:#bf616a;">n </span><span>=
+</span><span>    </span><span style="color:#b48ead;">try
+</span><span>        f n
+</span><span>    </span><span style="color:#b48ead;">with </span><span>Sign </span><span style="color:#bf616a;">n </span><span>-&gt;
+</span><span>            Printf.printf &quot;</span><span style="color:#a3be8c;">Caught %d</span><span style="color:#d08770;">\n</span><span>&quot; n
+</span><span>          </span><span style="color:#b48ead;">| </span><span>Failure </span><span style="color:#bf616a;">s </span><span>-&gt;
+</span><span>            Printf.printf &quot;</span><span style="color:#a3be8c;">Caught %s</span><span style="color:#d08770;">\n</span><span>&quot; s
+</span></code></pre>
+<p>The function <code>g</code> will try running <code>f n</code>, but if that raises an exception, it will be caught in <code>with</code>. It can be pattern matched for different exception types.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">17 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs314/">#cs314</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Lets, Tuples, and Records in OCaml</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Lets, Tuples, and Records in OCaml</h1>
+    </header>
+    <div class="content">
+        <p>Lists are the most basic data structure in OCaml, but there are others that we need to be aware of.</p>
+<span id="continue-reading"></span><h2 id="let-expressions">Let Expressions</h2>
+<p>We have seen the keyword <code>let</code> used to define expressions and store values. However, the same keyword can be used to create expressions which bind variables in other expressions. The <code>let</code> <em>statements</em> we used before do not evaluate to any value, while <strong>let expressions</strong> do evaluate.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#bf616a;">x </span><span>= </span><span style="color:#d08770;">5 </span><span style="color:#b48ead;">in</span><span> x * </span><span style="color:#d08770;">3
+</span></code></pre>
+<p>The <code>in</code> keyword gives us a clue on what's going on. You can think of it almost like a function where we replace variables in the inner expression with the values in the outer expression. The expression above evaluates to 15, because it is <code>x * 3</code> <em>in</em> which <code>x</code> is 5.</p>
+<p>We can type check this expression where <code>x</code> has the same type of the binding expression.</p>
+<p>If you omit <code>in</code>, you can think of that as a <code>let</code> expression which is bound in the global scope instead of the scope of the body expression.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#bf616a;">x </span><span>= </span><span style="color:#d08770;">37</span><span>;;
+</span></code></pre>
+<p>In this statement <code>x</code> is defined as 37 in the global scope and it can be used elsewhere.</p>
+<p>I've used the word <em>scope</em> a lot here, so let's define that a little more concretely. In the above <code>let</code> expression, the variable <code>x</code> is not visible in any other part of the program. Let's imagine that we have both of these lines together, the <code>let</code> expression and the <code>let</code> statement. They're both named <code>x</code>, so what would the value be?</p>
+<p>We can imagine evaluating expressions right to left, and upon encountering a variable, act like it is a pointer to an expression in the outer scope. In the innermost scope, the expression is <code>x * 3</code>. This expression has no meaning because <code>x</code> is a variable, so we back up one scope and check if <code>x</code> is defined. And in fact, it is! So we will replace the <code>x</code> in that expression with 5. Note that even though <code>x</code> is defined as 37 in the global scope, the inner scope <strong>shadows</strong> the global scope.</p>
+<p>Shadowing refers to when a variable name is rebound in an inner scope to have a different meaning. Some languages, such as Java, do not allow you to do this because of possible confusion. However, it is sometimes useful to use the same name for different things, so languages like C and OCaml permit shadowing.</p>
+<p>You can also use <code>let</code> expressions inside a function, and this is often good style because it clarifies constants:</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">area </span><span style="color:#bf616a;">d </span><span>=
+</span><span>    </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">pi </span><span>= </span><span style="color:#d08770;">3.14 </span><span style="color:#b48ead;">in
+</span><span>    </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">r </span><span>= d /. </span><span style="color:#d08770;">2.0 </span><span style="color:#b48ead;">in
+</span><span>    pi *. r *. r
+</span></code></pre>
+<p>Much better than C <code>#define</code>, right?</p>
+<p>OCaml does not permit you to mutate variables. However, you can simulate this by shadowing a variable with a new value:</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#bf616a;">x </span><span>= </span><span style="color:#d08770;">0</span><span>;;
+</span><span>x = x + </span><span style="color:#d08770;">1</span><span>;; </span><span style="color:#65737e;">(* not allowed! *)
+</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">x </span><span>= x + </span><span style="color:#d08770;">1</span><span>; </span><span style="color:#65737e;">(* allowed, but discouraged *)
+</span></code></pre>
+<p>This is kind of an ugly hack so you should avoid it in real code, though it is technically possible under OCaml's rules.</p>
+<p>We can nest <code>let</code> expressions, but this is generally bad practice like shadowing. Realistically, it's usually better to just write linear expressions.</p>
+<p><code>let</code> expressions don't just have to use a plain variable. We can also use patterns to bind expressions, and if the binding expressions fails to match the pattern then we have an exception. This is useful when we want to extract a particular value from an expression.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span>[x] = [</span><span style="color:#d08770;">1</span><span>] </span><span style="color:#b48ead;">in </span><span style="color:#d08770;">1 </span><span>:: x </span><span style="color:#65737e;">(*  evaluates to [1; 1*)
+</span></code></pre>
+<h2 id="tuples">Tuples</h2>
+<p>Tuples represent collections, like lists, but they contain a fixed amount of values. The tradeoff is that they can be <em>heterogenous</em>, which means they can have multiple types. The type of a tuple is the type of each of its component, separated by asterisks.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span>(</span><span style="color:#d08770;">1</span><span>, </span><span style="color:#d08770;">2</span><span>) </span><span style="color:#65737e;">(* int * int *)
+</span><span>(</span><span style="color:#d08770;">1</span><span>, &quot;</span><span style="color:#a3be8c;">string</span><span>&quot;, </span><span style="color:#d08770;">3.5</span><span>) </span><span style="color:#65737e;">(* int * string * float *)
+</span></code></pre>
+<p>Because each tuple has a distinct type, a list of tuples can only have one type of tuples in it.</p>
+<p>Tuples lend themselves particularly well to pattern matching. Instead of having multiple function arguments like is typical in OCaml, we can have one argument that is a tuple and then pattern match it in order to destructure it. This is also a convenient way to return multiple variables from a function, which is otherwise not allowed.</p>
+<h2 id="records">Records</h2>
+<p>Each element of a tuple is referenced by its position. Sometimes, we want to reference elements by name, like in a dictionary. For this use, we use <strong>records</strong>. Records are a distinct type that must be pre-defined before being used.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">type date </span><span>= { month: </span><span style="color:#b48ead;">string</span><span>; day: </span><span style="color:#b48ead;">int</span><span>; year: </span><span style="color:#b48ead;">int </span><span>}
+</span></code></pre>
+<p>Now, we can construct records by using the same brace notation but giving each name a value.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#bf616a;">today </span><span>= { day=</span><span style="color:#d08770;">3</span><span>; year=</span><span style="color:#d08770;">2022</span><span>; month=&quot;</span><span style="color:#a3be8c;">f</span><span>&quot;^&quot;</span><span style="color:#a3be8c;">eb</span><span>&quot; };;
+</span></code></pre>
+<p>You might notice that this has a similar syntax to C-style structs. The fields can be accessed through <code>.</code> syntax as in <code>today.day</code>, and the order of the struct assignment doesn't matter.</p>
+<p>Records can also be conveniently destructured, like all other data structures. </p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date"> 3 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs314/">#cs314</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

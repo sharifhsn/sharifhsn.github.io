@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Functions in OCaml</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Functions in OCaml</h1>
+    </header>
+    <div class="content">
+        <p>A <strong>function</strong> takes arguments, performs operations using them, and returns a value. In OCaml, we can write functions like so</p>
+<span id="continue-reading"></span><pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">fact </span><span style="color:#bf616a;">n </span><span>= </span><span style="color:#65737e;">(* the function is named fact and its arg is n *)
+</span><span>    </span><span style="color:#b48ead;">if</span><span> n = </span><span style="color:#d08770;">0 </span><span style="color:#b48ead;">then </span><span style="color:#d08770;">1
+</span><span>    </span><span style="color:#b48ead;">else</span><span> n * fact (n - </span><span style="color:#d08770;">1</span><span>) ;;
+</span></code></pre>
+<p>This is a <em>recursive</em> function, so we must prepend the keyword <code>rec</code> to the name of the function. The reason for this is that the function name is not automatically in scope, so if we don't use that we won't necessarily know what <code>fact</code> refers to. <code>rec</code> adds the function name into scope.</p>
+<p>As you can see, the declaration of a function is fairly similar to the declaration of a variable. In fact, we can use functions as variables in OCaml! This is because functions in OCaml are <em>first-class functions</em>.</p>
+<p>You also might have noticed here that we haven't mentioned the type of anything. This is because the type of the function can be inferred, also known as <strong>type inference</strong>. This process is a normal part of type checking for correctness. The compiler itself will look for a type that the code is correct for. In this example, <code>n</code> is compared with an integer, so it must only be an <code>int</code>. The return type is <code>n</code> multiplied by its own return type, so that must also be <code>int</code>. The compiler can see without us telling it that the function is of type <code>int -&gt; int</code>.</p>
+<p>But what is that <code>int -&gt; int</code> that I just wrote? That is the constructor for a function type. The last type indicates the return type, and all other types are the arguments in order. The function type <code>float -&gt; int -&gt; float</code>, for example, takes a <code>float</code> and <code>int</code> as its arguments and returns a <code>float</code>. Try looking at different OCaml functions and guessing its type as a fun exercise! :smile:</p>
+<blockquote>
+<p>Aside: you might question why we couldn't just get a float as a result from the multiplication. The standard operands in OCaml only apply to <code>int</code>, and applying them to other types is an error. In order to add <code>float</code>, we must use <code>+.</code>, not <code>+</code>.</p>
+</blockquote>
+<p>Type checking works like a proof by contradiction. We assume that a function has some type, then check if there are any logical contradictions created by this assumption. If there are, then we reject this type.</p>
+<h2 id="calling-a-function">Calling a Function</h2>
+<p>Function calls (also known as <em>applications</em>) look very similar to function declarations; they are simply the name of the function followed by its arguments, no parentheses necessary. The type checking involved is that we check if every expression supplied as an argument corresponds to the same type as it's supposed to. We evaluate each expression from right to left to see if they're correct or not (though this doesn't matter unless you have side effects).</p>
+<p>Once we find the value for each argument, we replace each argument in the function with its value, which creates an expression that can be evaluated to the final value.</p>
+<blockquote>
+<p>Aside: Although we have type inference, we can use <em>type annotations</em> with OCaml. These increase the readability of code by making the type of the variable obvious: <code>let (x : int) = 3</code></p>
+</blockquote>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">25 January 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs314/">#cs314</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

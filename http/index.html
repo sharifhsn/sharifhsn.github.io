@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>HTTP Explained</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>HTTP Explained</h1>
+    </header>
+    <div class="content">
+        <p><strong>HTTP</strong> is probably the most visible Internet protocol to end users. It appears (as well as its cousin, <strong>HTTPS</strong>) at the beginning of every URL we use to access the internet. But how does it work?</p>
+<span id="continue-reading"></span>
+<p>HTTP stands for HyperText Transfer Protocol. It defines the structure of messages that are passed between two programs: a <em>client</em> and a <em>server</em>. But before we talk about HTTP, let's clarify some vocabulary</p>
+<h2 id="web-terminology">Web Terminology</h2>
+<ul>
+<li>
+<p><strong>object</strong> - a file that has an associated URL</p>
+</li>
+<li>
+<p><strong>Web page</strong> - a document that consists of multiple objects, typically a base HTML file and other objects. The HTML file will reference other objects through a path.</p>
+</li>
+<li>
+<p><strong>URL</strong> - address consisting of the following parts:</p>
+</li>
+</ul>
+<table><thead><tr><th align="center">protocol</th><th align="center">hostname</th><th align="center">path name</th></tr></thead><tbody>
+<tr><td align="center">http://</td><td align="center">www.someSchool.edu</td><td align="center">/someDepartment/picture.gif</td></tr>
+</tbody></table>
+<ul>
+<li>
+<p><strong>Web browser</strong> - an application such as Firefox or Chrome that acts as the client in HTTP</p>
+</li>
+<li>
+<p><strong>Web server</strong> - an application such as Apache that acts as the server in HTTP and houses the Web objects in question</p>
+</li>
+</ul>
+<h2 id="http-low-level">HTTP Low-Level</h2>
+<p>Under the hood, HTTP uses TCP to make a reliable connection between the server and client. The client and server both send requests and receive responses from their respective socket interfaces.</p>
+<p>When a file is sent, there is no information that the server inherently remembers about the HTTP connection. Because of this, HTTP is considered a <strong>stateless protocol</strong>. This is not always desirable. Sometimes, websites want to remember clients in order to ease use of a website. We will discuss workarounds later.</p>
+<h2 id="connections">Connections</h2>
+<p>The original HTTP 1.0 protocol was <em>non-persistent</em>. This means that every request made between a client and a server had its own connection that was opened and closed every time a request was made. Here's the process:</p>
+<ol>
+<li>
+<p>A TCP connection is created between the client and server on port 80.</p>
+</li>
+<li>
+<p>An HTTP request message is sent from the client to the server through the socket.</p>
+</li>
+<li>
+<p>The server receives the message, retrieves the object that it is requesting, and sends the response message to the client through the socket.</p>
+</li>
+<li>
+<p>The server &quot;closes&quot; the TCP connection (TCP will wait until it knows that the client has received the message)</p>
+</li>
+<li>
+<p>The client receives the message and the connection terminates. It will extract the HTML file from the message and initiate a new request for each object referenced within, repeating these steps as needed.</p>
+</li>
+</ol>
+<p>Clearly, this method is inefficient. We are opening a TCP connection for every single request that is made between the same client and server. This inefficiency is mediated slightly by the ability to open serial TCP connections; typical web browsers open 5 to 10 parallel TCP connections. The response time for each connection is \(2 \cdot RTT + T_{trans}\).</p>
+<p>HTTP 1.1 introduced <em>persistent</em> connections. In step 4, the server doesn't close the TCP connection after sending the response. The entire Web page is sent over the same TCP connection, and the requests can be pipelined for further performance gains. The connection is typically closed on timeout. HTTP/2 further builds on this by interleaving requests and responses in the same connection with a way to preserve ordering on each end.</p>
+<h2 id="message-format">Message Format</h2>
+<pre data-lang="http" style="background-color:#2b303b;color:#c0c5ce;" class="language-http "><code class="language-http" data-lang="http"><span>GET /http HTTP/1.1
+</span><span>Host: sharifhsn.github.io
+</span><span>Connection: close
+</span><span>User-agent: Mozilla/5.0
+</span><span>Accept-language: fr
+</span></code></pre>
+<p>The <code>Host</code> line is technically unnecessary, since the connection is already established by this point, but it's useful for Web proxy caches. The <code>Connection</code> line means this connection should be non-persistent. The <code>User-agent</code> line specifies the <strong>user agent</strong>, which is the browser type that is making the request to the server. This is used so that the server can send different websites to different browsers. <code>Accept-language</code> expresses a preference for content in French if it exists, otherwise give the default. In general, the header lines exist to give information that is necessary for the request.</p>
+<p>The HTTP response is different than the request. An example response to this message might be:</p>
+<pre data-lang="http" style="background-color:#2b303b;color:#c0c5ce;" class="language-http "><code class="language-http" data-lang="http"><span>HTTP/1.1 200 OK
+</span><span>Connection: close
+</span><span>Date: Tue, 09 Aug 2011 15:44:04 GMT
+</span><span>Server: Apache/2.2.3 (CentOS)
+</span><span>Last-Modified: Tue, 09 Aug 2011 15:11:03 GMT
+</span><span>Content-Length: 6821
+</span><span>Content-Type: text/html
+</span></code></pre>
+<p>The status line at the top tells us some similar information, like the protocol we are using. The <code>200 OK</code> is our status code for a good response. There are other status codes:</p>
+<ul>
+<li>
+<p>200 OK: request succeeded, information returned.</p>
+</li>
+<li>
+<p>301 Moved Permanently: the address is moved, for example when a website links to its www address; there will be a location header telling the client where the new place is to go</p>
+</li>
+<li>
+<p>400 Bad Request: request is written poorly and could not be understood</p>
+</li>
+<li>
+<p>505 HTTP Version Not Supported: self-explanatory lol</p>
+</li>
+</ul>
+<p>There's tons of valid header lines we can use. The HTTP specification allows for many header lines to be used from various software. Writing a correct HTTP implementation isn't easy.</p>
+<h2 id="cookies">Cookies</h2>
+<p>I mentioned before that HTTP is stateless, which means that the server does not preserve any information about the client after the connection ends. However, websites really want ways to identify users for operations such as logins. In order to facilitate state, websites use <strong>cookies</strong>. You might have heard of them when you log in to a website and it asks you to accept cookies.</p>
+<p>The typical creation method of a cookie might look like this:</p>
+<ol>
+<li>
+<p>A client makes a request to the server for the first time.</p>
+</li>
+<li>
+<p>The server generates an identification number for the client.</p>
+</li>
+<li>
+<p>The server sends a HTTP response to the client with a cookie in the header: <code>Set-cookie: 1678</code></p>
+</li>
+<li>
+<p>The client browser stores the cookie in a special file and sends a request to the server with the same cookie number.</p>
+</li>
+<li>
+<p>Now, whenever the client requests the server, it will include a cookie in the header which the server will use.</p>
+</li>
+</ol>
+<h2 id="caching">Caching</h2>
+<p>You might have heard of a <strong>proxy server</strong> before. These servers are usually used by ISPs like your home ISP and your university ISP. These servers contain frequently-accessed data from several origin servers and are located much more closely to the client.</p>
+<p>These servers are extremely helpful in improving response times for the client as well as reducing traffic for the server. The close location and LAN nature of proxy servers mean that the request/response time between clients and servers are quick. And since the origin server is not accessed as often, its burden of traffic is significantly reduced.</p>
+<p>The delay in fetching a response from the Internet tends to be dominated by the time for the institutional server receiving a response from the Internet. However, if there is heavy traffic on the <em>access link</em> between the institutional server and the Internet router, that can slow down speeds to minutes per request, which is obviously unacceptable.</p>
+<p>$$ requestRate \cdot requestSize / speed = trafficIntensity $$</p>
+<p>The intensity between client and LAN is usually negligible, but the access link between LAN and Internet dominates. With a Web cache, hit rate is generally between 0.2 and 0.7.</p>
+<p>$$ cacheHit \cdot LANspeed + (1 - cacheHit) \cdot internetSpeed$$</p>
+<p>The traffic intensity stops being an issue and Internet delay dominates again once a cache is introduced. It's less expensive and faster than increasing access link speed.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">20 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/internet-technology/">Internet Technology</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs352/">#cs352</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

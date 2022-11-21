@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>FTP Explained</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>FTP Explained</h1>
+    </header>
+    <div class="content">
+        <p>Before we had Google Drive, users needed a way to access files from other people quickly and easily. The method for that was <strong>FTP</strong>.</p>
+<span id="continue-reading"></span><h2 id="ftp">FTP</h2>
+<p>The point of the <strong>File Transfer Protocol</strong>, was, as is obvious, to transfer files between two hosts. Like HTTP, FTP operates between a server and client, each of which have their own filesystem that they want to access. It also creates a TCP connection which has certain verification steps to establish a connection that allows the client to copy files stored in the server or vice versa.</p>
+<p>Unlike HTTP however, FTP operates using <em>two</em> parallel connections, the <strong>control connection</strong> and the <strong>data connection</strong>. As the names imply, the control connection is used for verification and command information such as which file to get in which directory, and the data connection is the connection used to send the files. This is called an <em>out-of-band</em> connection, unlike HTTP and SMTP, which have the request information in a header in the same connection and are therefore <em>in-band</em>.</p>
+<p>The session begins with a control connection initiated by the client to identify the user and commands. The server receives this information, and if it approves, it initiates a data connection with the client. Like HTTP 1.0, this is a non-persistent connection that is only open for the passing of a single file.</p>
+<p>The nature of FTP authentication means that FTP must maintain state about the user account, unlike HTTP which is totally stateless by design. This introduces constraints on the number of simultaneous FTP connections.</p>
+<h2 id="commands">Commands</h2>
+<p>FTP commands work like HTTP commands in request headers. They are ASCII and each lines ends with <code>\r\n</code>. Some example commands are:</p>
+<ul>
+<li>
+<p><code>USER username</code></p>
+</li>
+<li>
+<p><code>PASS password</code></p>
+</li>
+<li>
+<p><code>LIST</code>: works like the <code>ls</code> command for the remote directory, sent over data connection</p>
+</li>
+<li>
+<p><code>RETR filename</code>: retrieves the file from the remote directory, over data</p>
+</li>
+<li>
+<p><code>STOR filename</code>: stores the file from current directory into remote, over data</p>
+</li>
+</ul>
+<p>Every command has a corresponding reply with a status code, similar to HTTP status codes.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date"> 7 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/internet-technology/">Internet Technology</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs352/">#cs352</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

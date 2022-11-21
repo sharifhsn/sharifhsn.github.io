@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Electromagnetic Induction</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Electromagnetic Induction</h1>
+    </header>
+    <div class="content">
+        <p>The final piece to the puzzle of electromagnetism here is <strong>electromagnetic induction</strong>, where we use magnets to create current.</p>
+<span id="continue-reading"></span><h2 id="induced-emf-current">Induced Emf/Current</h2>
+<p>Like with charges in a magnetic field, magnets do not generate current unless they are moving relative to a wire. The changing magnetic field \(\vec{B}\) is what creates the current. This current is called an <strong>induced current</strong>, and the &quot;emf&quot; that causes it which is the wire itself is an <strong>induced emf</strong>.</p>
+<p>The emf can also be induced by changing the area of coil in a magnetic field, as that changes the relationship between the magnetic field and coil.</p>
+<p>These examples are in a closed circuit, which has a current. An open circuit would not have a current, but it would still have the induced emf.</p>
+<h2 id="motional-emf">Motional Emf</h2>
+<p>An induced emf is created in a metal rod that moves through a magnetic field as long as the velocity is not parallel to the magnetic field. We can use RHR1 to determine where the positive and negative sides of the rod are when the rod has a velocity through a magnetic field. The movement of these charges to either end of the rod cause a charge separation to occur, which leads to a current running from the negative end to the positive end. This is called <strong>motional emf</strong> because it comes from the motion through a magnetic field.</p>
+<p>We can find the motional emf when the length, velocity, and magnetic field are all perpendicular i.e. they all have their own axis:</p>
+<p>$$Ε = vBL$$</p>
+<p>There is another magnetic force that opposes the motional emf. The current creates its own magnetic field, which by RHR1 would actually oppose the velocity of a mutually perpendicular system. We have to have an external force moving the rod otherwise the magnetic field produced by its own current will cause it to stop.</p>
+<h2 id="magnetic-flux">Magnetic Flux</h2>
+<p>Remember electric flux? Magnetic flux is quite similar in that it is defined as amount of magnetic field passing through an area, so \(Φ = BA\cos{θ}\) in \(Wb\) or \(T \cdot m^2\). We can define motional emf through magnetic flux like so:</p>
+<p>$$Ε = -\frac{ΔΦ}{Δt}$$</p>
+<p>or, emf is the rate of change of magnetic flux. This is why we can induce an emf by changing the area of a coil. The reason that the equation is negative is because the induced current will create a magnetic force which will oppose its velocity direction.</p>
+<h2 id="faraday-s-law">Faraday's Law</h2>
+<p><strong>Faraday's Law</strong> is precisely the equation we just laid out but with one additional component to account for loops:</p>
+<p>$$Ε = -N\frac{ΔΦ}{Δt}$$</p>
+<p>The emf is generated if the flux changes, which depends on \(B\), \(A\), or \(ɸ\), which are magnetic field, area, and angle of the magnetic field with respect to the normal of the surface.</p>
+<h2 id="lenz-s-law">Lenz's Law</h2>
+<p><strong>Lenz's Law</strong> is less of an equation and more of a method to understand the polarity of an induced emf. Let's follow the reasoning:</p>
+<ol>
+<li>
+<p>Check whether the flux is increasing or decreasing.</p>
+</li>
+<li>
+<p>Find the direction of the induced magnetic field to <em>oppose</em> the change in flux.</p>
+</li>
+<li>
+<p>Use RHR2 with the previous step to find the positive and negative end, with the polarity coming out of your palm.</p>
+</li>
+</ol>
+<p>This is best understood through an example. Let's imagine we have a loop with a bar magnet approaching at north side head on.</p>
+<ol>
+<li>
+<p>The flux is increasing, because the magnet is getting closer.</p>
+</li>
+<li>
+<p>The induced magnetic field must oppose the magnet field to decrease the flux.</p>
+</li>
+<li>
+<p>RHR2 tells us that if the magnetic field is coming out of our palm at the magnet, the current must be going counter-clockwise. Therefore, the left point is positive and the right is negative, as the external circuit must have positive going to negative.</p>
+</li>
+</ol>
+<h2 id="transformers">Transformers</h2>
+<p>A <strong>transformer</strong> is a device that increases or decreases ac voltage. It is responsible for reducing the voltage in your phone charge so you're not sending 120 V to your phone that doesn't need it. This change is called a <strong>step-up</strong> or <strong>step-down</strong> which increases or decreases the voltage, respectively, directly.</p>
+<p>When we send power over power lines, there is a certain power loss that happens depending on the voltage and the resistance of the transmitting power wire:</p>
+<p>$$P_{lost} = I^2R$$</p>
+<p>which we subtract from our initial power to get the final power.</p>
+<p>If we want to figure out how much voltage we need to step-up or step-down to get a specific power loss, we just resubstitute the desired power loss into that equation to get the current and proportion it to the voltage.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">18 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/physics/">Physics</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/phys204/">#phys204</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

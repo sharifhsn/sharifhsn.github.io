@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Floating Point Architecture</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Floating Point Architecture</h1>
+    </header>
+    <div class="content">
+        <p>Floating point numbers are complicated enough in the abstract. How do systems programmers and hardware designers cope with the complexity of floating point?</p>
+<span id="continue-reading"></span><h2 id="floating-point-instructions">Floating Point Instructions</h2>
+<p>In the general computer architecture, CPUs function by executing a stream of instructions. The set of instructions is defined by the hardware model, such as x86 or ARM. Instructions are typically tiny operations that need to be done extremely often. Some examples of instructions are <code>mov</code> to move values in and out of memory, <code>sub</code> to subtract numbers in registers, etc. In order to speed up floating point operations, hardware can include floating point instructions instead of letting software handle it.</p>
+<p>Most of the time, instruction sets only allow floating point operations in the same precision. However, there is a useful optimization that is not often implemented in hardware. A hypothetical instruction to multiply two single precision numbers that results in a double precision number would be very useful. In particular, it would enable for the use of <em>iterative improvement</em> algorithms that would otherwise have compounding catastrophic cancellations if the precision was not increased temporarily.</p>
+<h2 id="subexpression-evaluation">Subexpression Evaluation</h2>
+<p>The order of operations is very important for preserving invariants in floating point. For example, floating point numbers do not necessarily follow the associative property, so compilers that optimize out parentheses will exhibit undefined behavior.</p>
+<p>This can also cause issues when numbers with different precisions are operated on. There are two solutions to this problem. One is the solution that languages like OCaml take where all values in an arithmetic expression must have the same type. This means that integers will never be implicitly cast to floating point when they are operated with them, because they are not allowed to be operated with them anyway. However, this can be an overly strict restriction on the types of programs that can be written.</p>
+<p>Another solution is the one that C takes, which is to establish rules for subexpression evaluation while allowing mixed type expressions. K&amp;R C requires that every operation be done in double precision, but this can cause incompatibility between expressions and a stored value that are in different precisions.</p>
+<p>A better way to do subexpression evaluation is to set a tentative precision for each expression, then increase the precision as needed in the wider expression. However, this means that the precision of a sub-expression can change with the expression it is embedded in, which is potentially unexpected behavior for a programmer.</p>
+<h2 id="ieee-conformation">IEEE Conformation</h2>
+<p>Languages like C conform to the IEEE specification, but the ways in which they do it can cause issues in implementation. If the exact rounding operation is implemented in hardware, then all the language has to do is call the appropriate instruction. </p>
+<p>However, there are some aspects of floating point that are harder to represent.  Floating point has a certain <em>state</em> associated with it, with rounding mode, flags, trap handlers, etc. This state must be read and written to, and must be preserved across subroutines.</p>
+<p><code>NaN</code>s also cause issue. The reflexive property is typically taken as invariant since it is in integer math, but it can be disastrous with <code>NaN</code>s. One massive consequence of the inclusion of <code>NaN</code>s is that floating point numbers <em>cannot have a total order</em>. This is because <code>NaN</code>s are explicitly unordered with respect to other floating point numbers. This has cascading consequences for the implementation of comparison operators like &lt;, &gt;, and =.</p>
+<h2 id="optimization">&quot;Optimization&quot;</h2>
+<p>Compilers make many optimizations to programs in order to increase performance or reduce instruction count. These optimizations are usually made with certain invariants in mind so that the accuracy of the program is not affected. However, because floating point has different invariants than integer math, compilers can make mistakes when optimizing floating point math. For example,</p>
+<pre data-lang="c" style="background-color:#2b303b;color:#c0c5ce;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#b48ead;">float</span><span> ε = </span><span style="color:#d08770;">1</span><span>;
+</span><span style="color:#b48ead;">do </span><span>{
+</span><span>    ε = </span><span style="color:#d08770;">0.5 </span><span>* ε;
+</span><span>} </span><span style="color:#b48ead;">while </span><span>(ε + </span><span style="color:#d08770;">1 </span><span>&gt; </span><span style="color:#d08770;">1</span><span>);
+</span></code></pre>
+<p>will estimate \(ε\). However, a compiler might notice that <code>ε + 1 &gt; 1</code> for integer math is equivalent to <code>ε &gt; 0</code> and make that optimization, without considering that the expression \(ε ⊕ 1\) has a special meaning that is different for floating point numbers than a test for positivity.</p>
+<p>In general, many algorithms with floating point will exhibit expressions that, upon first blush, seem to be redundant in integer math. Having consideration for the ways in which floating point math can change values is important.</p>
+<h2 id="exceptions">Exceptions</h2>
+<p>Trap handlers are empowered to be able to access variables in programs. However, computers which have parallel arithmetic may not necessarily be able to easily identify which operation threw an exception. Trap handlers must also be able to identify programs.</p>
+<p>The reordering of certain instructions can also cause issues. Compilers will often change the order of certain arithmetic instructions when they are exact so that the semantics don't change. However, if the operation traps, then it is not as easy to identify the operation that trapped, since the operation that happened in parallel will modify the trapped arithmetic.</p>
+<p>One solution to this is <em>presubstitution</em> where a user that knows that an exception can create their own handler for an exception and substitute the value themselves beforehand. However, because it goes against IEEE-754, it's unlikely to be proliferated.</p>
+<p><em>All this information comes from the landmark paper <a href="https://docs.oracle.com/cd/E19957-01/800-7895/800-7895.pdf">What Every Computer Scientist Should Know About Floating-Point Arithmetic</a></em></p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">31 May 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/computer-architecture/">Computer Architecture</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/floating-point/">#floating-point</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

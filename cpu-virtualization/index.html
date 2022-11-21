@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>CPU Virtualization</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>CPU Virtualization</h1>
+    </header>
+    <div class="content">
+        <p>We need a way to map on to the physical CPU through our operating system. We do this through virtualization.</p>
+<span id="continue-reading"></span><h2 id="processes">Processes</h2>
+<p>A <strong>process</strong> is an <em>execution stream</em> in the context of a process state. It is a self-contained stream of executing instructions on the CPU. Each process has a state which is composed by everything that the code can affect or be affected by, for example <em>registers</em>, address space, open files, etc. We need this state so that we can pause and resume processes without resetting the whole thing, just by picking up where the state left off.</p>
+<p>You can think of address space as the region of memory in which the CPU operates, though this is a simplification due to memory virtualization.</p>
+<p>A process is technically different than a program. When we talk about a program, it's usually a collection of files on our computer. The process refers to the actually executing code which is dynamic with respect to its code. We can have multiple processes executed that are the same program.</p>
+<p>Processes do not share information with other processes. This is distinct from the idea of threads. If a process examines the &quot;same&quot; memory address with respect to its address space as another process, they will see different values. Even though both process are looking at <code>0xFFE84264</code> the memory virtualization means that they are looking at different physical memory. Threads share data so they have the same address space; they are in a way a lightweight process.</p>
+<h2 id="address-space">Address Space</h2>
+<p>As mentioned, every process has its own address space. The OS assigns a chunk of memory towards it (again, this memory is virtual). At the high address, there is a stack of local variables that grows downwards. This stack contains the execution of the program, such as functions being called. The code segment which is the actual program is read from the absolute bottom. There are a few segments like <code>.data</code> and <code>.bss</code> which refer to global initialized/uninitialized variables, respectively. Then there is the heap, which is dynamic and grows upward. Usually, the heap is much larger than the stack because it contains allocated memory for the process.</p>
+<blockquote>
+<p>The stack and the heap grow towards each other, so you might think they would collide at some point. In reality, there is a wide enough chasm between them that if they collide, you have bigger problems to worry about.</p>
+</blockquote>
+<h2 id="cpu-virtualization">CPU Virtualization</h2>
+<p>Our problem is that a CPU can only execute one execution stream at one time. We want processes to be running at the same time, so how do we achieve the illusion that the process has full control of the CPU?</p>
+<p>One solution is <em>direct execution</em>. We will run the process as simply as possible and execute all of its instructions in sequence. This is extremely simple to implement, but it means we can only run one process at once. If the process runs forever, then the CPU is stuck. Processes might write to other data that it's not supposed to, or do some slow I/O operation, or execute privileged instructions it's not allowed to accesss. In general, we don't want to trust processes to behave. Operating systems use <em>limited direct execution</em>, which maintains some control over the execution of the process instead of giving it unfettered access to the CPU.</p>
+<h2 id="system-calls">System Calls</h2>
+<p>We want to make sure user process can't harm other processes. CPU hardware supports privilege levels for security reasons. These instructions should only be run in kernel space by the operating system, and user processes in user space can not access them. Privileges can have multiple levels. In order for processes to access privileges, we use <strong>system calls</strong> that can either pass the function off to the OS or give the process privilege, also known as a <em>trap</em>.</p>
+<pre data-lang="c" style="background-color:#2b303b;color:#c0c5ce;" class="language-c "><code class="language-c" data-lang="c"><span>ID1 = </span><span style="color:#bf616a;">syscall</span><span>(SYS_getpid); </span><span style="color:#65737e;">// syscall
+</span><span>
+</span><span>ID2 = </span><span style="color:#bf616a;">getpid</span><span>(); </span><span style="color:#65737e;">// call to libc
+</span></code></pre>
+<p>Let's say a process wants to execute <code>read()</code>, which is a syscall. It will move the syscall ID for read <code>0x6</code> into the <code>%eax</code> register for execution, then run the instruction <code>syscall</code>.  The operating system will then read the trap table to figure out what to do. The trap table is located in the hardware, which typically has an entry for system calls. Other traps could be <code>illegal access</code> for memory region that it doesn't have access to. A trap just refers to a hardware operation that triggers on some software interaction. This is why Javascript can't just randomly hack your computer from the internet; it is executing within a user process e.g. Chrome and is limited by the hardware traps in what it can do.</p>
+<h2 id="multiprogramming">Multiprogramming</h2>
+<p>We want to make sure that multiple processes can run at once. This means we must switch between processes. There are two components to this; how to switch, and when to switch.</p>
+<p>The dispatch loop has a simple structure, but the devil is in the details.</p>
+<pre data-lang="c" style="background-color:#2b303b;color:#c0c5ce;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#b48ead;">while </span><span>(</span><span style="color:#d08770;">1</span><span>) {
+</span><span>    </span><span style="color:#65737e;">// run process A for some time-slice
+</span><span>    </span><span style="color:#65737e;">// stop process A and save its context
+</span><span>    </span><span style="color:#65737e;">// CONTEXT SWITCH
+</span><span>    </span><span style="color:#65737e;">// load context of another process B
+</span><span>}
+</span></code></pre>
+<p>We have multiple ways to context switch. One way is <em>cooperative multi-tasking</em>. We trust the process to give up the CPU when it has judged some amount of work has been done or time has passed. We will provide <code>yield()</code> syscall for magnanimously donating CPU time to another process. However, this is annoying to program in, so most programs do not do this.</p>
+<p>Modern programs use <em>true multi-tasking</em>, which gives OS control over which processes are running. The hardware will generate a timer interrupt every 10 ms, for example (Linux) that the OS will decide when to switch or not.</p>
+<h2 id="pcb">PCB</h2>
+<p>The <strong>process control block</strong> is a descriptor of a process that saves its context into a <code>struct</code>. There is a <code>struct</code> for every process that is running in the CPU. A PCB stores the following information:</p>
+<ul>
+<li>
+<p>PID -  unique identification for a process</p>
+</li>
+<li>
+<p>Process state (<code>enum</code> running, ready, or blocked)</p>
+</li>
+<li>
+<p>Execution state (registers at time of pause)</p>
+</li>
+<li>
+<p>Scheduling priority</p>
+</li>
+<li>
+<p>Accounting information (parent/child procs)</p>
+</li>
+<li>
+<p>Credentials (resource access/owner)</p>
+</li>
+<li>
+<p>File pointers</p>
+</li>
+</ul>
+<p>When we save the context of the process in the dispatch loop, the PCB is where it is saved. It is typically less than a few kilobytes depending on the complexity of the process. The PCB is stored on the <em>kernel stack</em> which is a stack data structure located in kernel space. Switching a context means moving the stack pointer to the process that is going to resume and then retrieving that PCB from the stack. Then, we exit kernel space and resume executing B in user space by restoring the PCB information to the CPU.</p>
+<p>When a process is doing I/O, it's not using the CPU. This is an excellent point where the OS can block the process and run some other processes that actually need the CPU. Once the I/O is done, it is moved from the blocked state to the ready state. The convention is that only ready state programs can go to the running state.</p>
+<h2 id="process-creation">Process Creation</h2>
+<p>One way to create a process is just creating one from scratch. We will load the code we're running into memory at the bottom of the stack and create the stack. We also create a PCB with a kernel stack and everything, then put the process in the ready state. However, there are lots of complicated parts of processes that are difficult to initialize from scratch e.g. permissions, I/O, environment vars so this is generally not preferred.</p>
+<p>A better way is to clone an existing process and change it to the appropriate information. <code>fork()</code> clones the calling process and <code>exec(char *file)</code> replaces the current process with the new process.</p>
+<p>When we fork, we save the current state of the program as a new PCB that is added to the kernel stack, which is very optimized to use copy-on-write semantics.</p>
+<blockquote>
+<p>The basic idea of copy-on-write is that it uses a pointer/reference for memory until we need to modify memory. This is an incremental process that trades off some overhead for a pay-as-you-go memory saving system.</p>
+</blockquote>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date"> 4 January 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/operating-systems-design/">Operating Systems Design</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs416/">#cs416</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

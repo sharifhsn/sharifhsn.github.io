@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Floating Point</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Floating Point</h1>
+    </header>
+    <div class="content">
+        <p><strong>Floating point representation</strong> is a complex topic full of nuance. To understand it, we must focus on the abstract method used to represent non-integer numbers.</p>
+<span id="continue-reading"></span><h2 id="numbers-in-computers">Numbers in Computers</h2>
+<p>Math is infinite. Or at least it can be. Numbers like \(5\) can be represented finitely, but a number like \(π\) is not so simple to represent. \(3.14159265358979\dots\) but that still isn't enough. It'll never be enough.</p>
+<p>Unfortunately, computers are not infinite. Although we would like to hold every digit of \(π\) in our computer's memory, the fact is that there will always be limits to how numbers can be represented in computers.</p>
+<p>Integers are numbers like \(3\), \(15\), \(-154\), etc. They have no decimal point and can be negative. Representing these numbers in a computer is fairly simple, with the limit only being placed on the size of the number.</p>
+<p>However, not all real numbers play so nicely. How do we represent the value \(12.5\) in memory? We can't have half bits. Can we go infinitely precise on decimals, like \(7.2028301324\)? What about the size? How do we set these bounds?</p>
+<h2 id="floating-point">Floating Point</h2>
+<p>We have to have a different standard to define how these numbers will be represented in a computer. This standard is called <strong>floating point</strong>.</p>
+<p>Generally, a floating point representation is composed of three parts: the <strong>base</strong> \(β\), the <strong>significand</strong> \(p\), and the largest/smallest allowed exponents \(e_{max}\) and \(e_{min}\). This is the complete formula for floating point (ignoring specific details):</p>
+<p>$$
+\lceil \log_2{(e_{max} - e_{min} + 1)} \rceil + \lceil \log_2{β^p \rceil + 1}
+$$</p>
+<p>For example, let's say we had a floating point representation in base 2 which allowed for exponents of sizes up to \(+128\) and down to \(-127\), and had twenty-three bits of precision for the significand. This representation would need 32 bits.</p>
+<p>A number written in floating point representation might look like this:</p>
+<p>$$
+1.010001 × 2^{7}
+$$</p>
+<p>where the first part is the significand, the base of the exponent is the base, and it's raised to its exponent. Floating point numbers are written like scientific notation to be <em>normalized</em>, where there is only one nonzero digit in front of the decimal point—this will become important for IEEE 754.</p>
+<h2 id="imprecision">Imprecision</h2>
+<p>I mentioned bits of precision, which is finite. Some decimal numbers can't be represented by a finite amount of precision. For example, the number \(0.3\) is finitely representable in base 10, but becomes \(\overline{1.001} × 2^{-2}\) in binary. This number will <em>never</em> be perfectly represented in binary, so we have to have approximations.</p>
+<p>In order to understand how much error we encounter, we must be able to measure it. There are two techniques to measure error in floating point: <code>ulps</code> or &quot;units in the last place&quot; and <em>relative error</em>.</p>
+<p>Let's use an example here, with \(β = 10\) and \(p = 3\). We want to approximate \(2.781828\) to a floating point number with this precision. Since we can only encode 3 digits of precision, we end up with \(2.78 × 10^0\). If we imagine a special decimal point after the precision stops for floating point, then the difference between these two is \(0.1828\). This is difference for <code>ulps</code>. <strong>The closest floating point number can still have a <code>ulps</code> error of up to \(\frac{β}{2} \cdot β^{-p}\). This number is known as the machine epsilon \(ε\).</strong></p>
+<p>Relative error is a familiar concept in most sciences. It is simply the difference between measured and actual, divided by the actual value. In this case, our floating point approximation \(2.78 × 10^0\) is the &quot;measured&quot; value and our real number \(2.781828\) is our actual value. In this case, it is \(0.001828 / 2.781828 = 0.0006\). Since this number can be small, it is often expressed in terms of \(ε\). In this example, \(ε = 5 × 10^{-3} = 0.005\) so our relative error is \(0.13ε\).</p>
+<p>Since we know the maximum <code>ulp</code> error for the closest floating point number, we should find the same for relative error. One difference about relative error is that it changes based on the size of the numbers, not just the absolute error in the significand. The largest possible error is \(\frac{β}{2}β^{-p} × β^e\).</p>
+<p>However, the relative error changes based on the size of the real number in question, and all real numbers within the same exponent range will have this error. So, the relative error for a number closer to \(1.0 × β^e\) will be larger than for a number closer to \(β × β^e\). This variation is called <strong>wobble</strong>. The relative error is always bounded by \(ε\), as in the prior example. Depending on the significand, however, the wobble can be up to \(β\) for the same exponent. Crucially, this wobble can be expressed in either relative error or <code>ulps</code>, as long as the other is held fixed.</p>
+<p>Typically, relative error is used, because it is more useful for compounding operations whereas <code>ulps</code> can vary wildly within \(β\).</p>
+<p>An important concept to understand here is <strong>contaminated digits</strong>. These are the least significant digits of a floating point number which may be error-prone and are therefore untrustworthy. The number of contaminated digits is \(\log_β{n}\) where \(n\) is the factor of the relative error to \(ε\), like \(0.13\) in the earlier example.</p>
+<h2 id="error-mitigation">Error Mitigation</h2>
+<p>We have found how to measure error; now how do we reduce it? One method is to use <strong>guard digits</strong>. When performing calculations, a computer can &quot;extend&quot; the calculation by a few digits so that the extended digits are contaminated by the floating point operation. These digits will then be rounded out of the final result, reducing the contamination of the result.</p>
+<p>Without a guard digit, the relative error can be large as \(β - 1\), which can put every digit in error! However, adding just <em>one</em> guard digit bounds the relative error to <em>less than \(2ε\)!</em></p>
+<p>Another method is to reduce the number of <strong>cancellations</strong>. A cancellation occurs when nearby quantities are subtracted. When this happens, the most significant and uncontaminated digits cancel out and the less significant, more contaminated digits are left. Cancellations can seriously magnify rounding errors in a series of cancellations; this is called <em>catastrophic cancellation</em>. However, cancellation can also be <em>benign</em>. If the two quantities being subtracted are exactly known, then the subtraction will have a tiny relative error if done with a guard digit.</p>
+<p>Sometimes, we can rearrange formulas to have less or more benign cancellations. For example, the formula \(x^2 - y^2\) has a catastrophic cancellation because \(x^2\) and \(y^2\) both suffer from rounding error. However, this formula can be rearranged to \((x ⊕ y) ⊗ (x ⊖ y)\). The cancellation is now benign because \(x\) and \(y\) are presumably exact values without rounding error yet.</p>
+<blockquote>
+<p>Notice that the operands in that formula are circled. This is a notation to indicate that these operations are performed by a computer and therefore may accrue rounding error, whereas the ordinary operands are used for exact calculations.</p>
+</blockquote>
+<p>However, the impact of making a cancellation benign can be limited if the inputs to the equation are already inexact. This is common when converting between decimal and binary numbers. <strong>It is always worth eliminating a cancellation, though.</strong></p>
+<h2 id="exact-rounding">Exact Rounding</h2>
+<p>Although guard digits mitigate error, they will in many cases give a different value than the <strong>exactly rounded</strong> result. That is the result if the floating point number was computed exactly, then rounded to precision. Many algorithms require exact rounding to work properly.</p>
+<p>The nature of rounding is controversial. The most commonly accepted rounding mode is <em>round to even</em>. This will round numbers that end in the half digit to whichever direction makes the number even. For example, \(12.5\) will round to \(12\), not \(13\) because \(12\) is even. This achieves the result of rounding up and down being equal chance for the half digit, 5 in this case.</p>
+<p>Exact rounding is useful for holding certain invariants in floating point calculation. For example, one way to increase precision in calculations is to split a multiple precision number into an array of single precision numbers. Adding these numbers back together with exact rounding will recover the multiple precision numbers.</p>
+<p>We can represent a multiplication of two double precision floating point numbers \(x\) and \(y\) using this method. We can split \(x\) into \(x_h\) and \(x_l\), each of which are single precision, and \(y\) into \(y_h\) and \(y_l\) likewise. Then, we can represent the multiplication as so:</p>
+<p>$$
+x \cdot y = (x_h + x_l)(y_h + y_l) = x_hy_h + x_hy_l + x_ly_h + x_ly_l
+$$</p>
+<p>In this way, a multiplication of two double precision numbers can be represented as the sum of multiplications of single precision numbers. Because the numbers are exactly rounded, the number is completely recoverable. This means that double precision multiplication can be possible on a computer which only supports single precision multiplication.</p>
+<p><em>All this information comes from the landmark paper <a href="https://docs.oracle.com/cd/E19957-01/800-7895/800-7895.pdf">What Every Computer Scientist Should Know About Floating-Point Arithmetic</a></em></p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">28 May 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/computer-architecture/">Computer Architecture</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/floating-point/">#floating point</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Lambda Calculus</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Lambda Calculus</h1>
+    </header>
+    <div class="content">
+        <p>When we discuss the principles of programming languages, <strong>lambda calculus</strong> is the bedrock of our discussion. It is the most abstract, formal way to describe functions and application.</p>
+<span id="continue-reading"></span><h2 id="turing-completeness">Turing Completeness</h2>
+<p>A programming language is said to be <strong>Turing complete</strong> if it can compute any function also computable on a Turing machine. It must either be able to emulate a Turing machine, or it must be able to emulate a Turing complete language.</p>
+<p>Although this is a powerful definition, in truth it is a simple one to satisfy. Features like loops and currying are not related to Turing completeness.</p>
+<h2 id="syntax">Syntax</h2>
+<p>Lambda calculus is a very simple language which only uses functions and applications, but is still Turing complete.</p>
+<p>An expression in lambda calculus is defined as</p>
+<pre data-lang="bnf" style="background-color:#2b303b;color:#c0c5ce;" class="language-bnf "><code class="language-bnf" data-lang="bnf"><span>e ::= x    # variable
+</span><span>    | λx.e # abstraction (function definition)
+</span><span>    | e e  # application (function call)
+</span></code></pre>
+<p>Everything is a function in lambda calculus. We can make a simple interpreter in OCaml as with Imp:</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">type exp </span><span>=
+</span><span>    | Var </span><span style="color:#b48ead;">of string
+</span><span>    | Lam </span><span style="color:#b48ead;">of string </span><span>* </span><span style="color:#b48ead;">exp
+</span><span>    | App </span><span style="color:#b48ead;">of exp </span><span>* </span><span style="color:#b48ead;">exp
+</span></code></pre>
+<p>in the same order that was defined earlier. <code>Lam</code> here is similar to <code>Fun</code> for Imp. The lambda calculus expression</p>
+<pre data-lang="bnf" style="background-color:#2b303b;color:#c0c5ce;" class="language-bnf "><code class="language-bnf" data-lang="bnf"><span>(λx.λy.x y) λx.x x
+</span></code></pre>
+<p>can be deconstructed to its AST as</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span>App(
+</span><span>    Lam(&quot;</span><span style="color:#a3be8c;">x</span><span>&quot;,
+</span><span>        Lam(&quot;</span><span style="color:#a3be8c;">y</span><span>&quot;,
+</span><span>            App(Var &quot;</span><span style="color:#a3be8c;">x</span><span>&quot;, Var &quot;</span><span style="color:#a3be8c;">y</span><span>&quot;)
+</span><span>        )
+</span><span>    ),
+</span><span>    Lam(&quot;</span><span style="color:#a3be8c;">x</span><span>&quot;,
+</span><span>        App(Var &quot;</span><span style="color:#a3be8c;">x</span><span>&quot;, Var &quot;</span><span style="color:#a3be8c;">y</span><span>&quot;)
+</span><span>    )
+</span><span>)
+</span></code></pre>
+<p>Let's parse this out forwards. First we read that there is a parenthesis, which means that there is an expression enclosed within. There is a \(λ\), which means that the expression is a lambda. The next letter is <code>x</code>, which is the name of the <code>Lam</code>. The period following separates the function definition to the containing expression, which continues to another \(λ\). That means that the containing expression is also a <code>Lam</code>, which is called &quot;y&quot;. The containing expression is now an <code>App</code> which is composed of two <code>Var</code>s. This is the end of the nesting because we hit the end parenthesis. The same logic applies for the second expression but with less nesting. Since we have two expressions at the top-level, the full expression is an <code>App</code>.</p>
+<p>The scope of \(λ\) extends as far to the right as possible, excepting parentheses. This is why we needed the parentheses for the first term in the above statement, otherwise the first \(λ\) would extend throughout the entire statement. The application, however, is left-associative, like OCaml. </p>
+<h2 id="beta-reduction">Beta Reduction</h2>
+<p>A function call of type <code>(λx.e1) e2</code> replaces all instances of <code>x</code> in <code>e1</code> with <code>e2</code>. That means that we can substitute this statement with <code>e1{e2/x}</code>. This is called <strong>beta reduction</strong>. All we have done is apply the function and replace the formal parameters through substitutions. Beta reductions should always be idempotent for the statement. When no more beta reductions can be performed on a term, then it is said to be in <em>beta normal form</em>, for example <code>λx.e</code>.</p>
+<p>Another example will be instructive here. Take the term <code>(λx.λz.x z) y</code>. This is a function application, since it has two terms. It follows the form that we stated earlier, so we can substitute all instances of <code>y</code> on the outside \(λ\). This would give us the final term <code>λz.(y z)</code> eliminating the outside <code>λx</code> and replacing the <code>x</code> in the inner term with <code>y</code>.</p>
+<h2 id="alpha-conversion">Alpha Conversion</h2>
+<p>Lambda calculus is <strong>statically scoped</strong> which means that variable definitions are only scoped locally. That means that within a function, you can rename <em>bound</em> variables with the same meaning. This is called <strong>alpha conversion</strong>.</p>
+<p>An important distinction here is between a free and bound variable. Free variables are not contained within a lambda, while bound variables are. For example, in <code>(λy.λz.y z x)</code>, <code>y</code> and <code>z</code> are bound to <code>λz</code> and <code>λy</code>, respectively, while <code>x</code> is free. <code>λy</code> contains the <code>App</code> of <code>λz</code> and <code>z</code>.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date"> 3 March 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs314/">#cs314</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

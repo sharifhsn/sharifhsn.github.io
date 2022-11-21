@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Lists in OCaml</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Lists in OCaml</h1>
+    </header>
+    <div class="content">
+        <p>Lists are the most basic data structure in OCaml. The most analoguous structure is a vector in C++ or Rust. Lists are <em>homogenous</em> and of <em>arbitrary length</em>.</p>
+<span id="continue-reading"></span>
+<p>The most basic list is <strong>nil</strong>, the empty list: <code>[]</code>. We can prepend elements to a list through the <strong>cons</strong> operator: <code>::</code>. Every display of a list is actually just syntactic sugar for every element being cons with the empty list:</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span>[</span><span style="color:#d08770;">1</span><span>, </span><span style="color:#d08770;">2</span><span>, </span><span style="color:#d08770;">3</span><span>] = </span><span style="color:#d08770;">1 </span><span>:: </span><span style="color:#d08770;">2 </span><span>:: </span><span style="color:#d08770;">3 </span><span>:: </span><span style="color:#d08770;">[]
+</span></code></pre>
+<p>Importantly, lists are immutable! When they are created, they cannot be changed. If you want to add an element to a list, you must construct a new list based on the old one.</p>
+<blockquote>
+<p>This might seem inefficient, to create a new list every time we want to change it. But the semantics of a language do not necessarily correspond to its compiled execution. In particular, the invariant that lists are immutable can lead to optimizations where a compiler doesn't need to keep track of mutated information.</p>
+</blockquote>
+<p>It is convention to call the right hand side the <em>tail</em> and the left hand side the <em>head</em>. The cons operator has an element on the left side and an list on the right side.</p>
+<p>Let's think of lists in terms of expressions. <code>[]</code> is a value like 0 or 1. The cons operator evaluates the left expression to an element and the right expression to a list of type element. Like with function arguments, the order of this evaluation is irrelevant as long as we don't introduce side effects.</p>
+<p>Lists can also have the <strong>polymorphic</strong> type <code>'a</code>. This is similar to a generic type in languages like Java, C++, and Rust. An <code>'a</code> list can have any type. This is most useful when it comes to function types. If the function type accepts or returns a <code>'a</code> type, then it is a generic function that can be used on a list of any type. Nil is a <code>'a</code> list.</p>
+<p>You can also have nested lists like this:</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#bf616a;">m </span><span>= [[</span><span style="color:#d08770;">1</span><span>]; [</span><span style="color:#d08770;">2</span><span>; </span><span style="color:#d08770;">3</span><span>]] ;; </span><span style="color:#65737e;">(* int list list *)
+</span></code></pre>
+<p>Unlike tuples, these lists do not have to be the same size. They do need to have the same type, however, so this is a list of int lists, or an <code>int list list</code>.</p>
+<p>The cons operator <em>does not</em> work to concatenate two lists. It can only add one element to an existing list. This is a very common bug (at least for myself). OCaml has a special sugar operand <code>@</code> to concatenate lists, although it is technically an ordinary function.</p>
+<h2 id="pattern-matching">Pattern Matching</h2>
+<p><strong>Pattern matching</strong> is an extremely important concept in OCaml for functional programming. It allows for powerful destructuring of enums, collections, and other complex objects.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">head </span><span style="color:#bf616a;">l </span><span>=
+</span><span>    </span><span style="color:#b48ead;">match</span><span> l </span><span style="color:#b48ead;">with
+</span><span>    </span><span style="color:#b48ead;">| </span><span>(</span><span style="color:#bf616a;">h</span><span> :: </span><span style="color:#bf616a;">_</span><span>) -&gt; h
+</span></code></pre>
+<p>This function <code>head</code> here matches the list <code>l</code> where there is an element <code>h</code> that is cons with an arbitrary expression. The <code>_</code> indicates that some expression must be present, but we don't care about what expression it is, and in fact we are throwing it away. <code>h</code> is also an arbitrary expression, but we are using it as the return type.</p>
+<p>This match statement is not <em>exhaustive</em>. An exhaustive match means that there is an evaluation for every possible case of <code>l</code>. Here, there is no case for when <code>l</code> is nil. This does not work in OCaml; every match must be exhaustive. Here is an example of an exhaustive match:</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">sum </span><span style="color:#bf616a;">l </span><span>=
+</span><span>    </span><span style="color:#b48ead;">match</span><span> l </span><span style="color:#b48ead;">with
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#d08770;">[] </span><span>-&gt; </span><span style="color:#d08770;">0
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#bf616a;">h </span><span>:: </span><span style="color:#bf616a;">t </span><span>-&gt; h + sum t
+</span></code></pre>
+<p>This <code>sum</code> function works for every case of <code>l</code>. Either it is nil, or it is a head cons a tail. You will also notice here that the two cases resolve to the same type. This is another requirement for match statements: all patterns must evaluate to the same type, which is not necessarily the type of the initial expression. Here, the initial expression has the type <code>int list</code> and the return expression has the type <code>int</code>. This function only works for <code>int list</code>. This restriction is not present for our <code>head</code> function because <code>h</code> is polymorphic type <code>'a</code>.</p>
+<p>Pattern matching is generally much better than its alternatives. OCaml will warn you if your function is non-exhaustive, and it will throw an exception for an unhandled case. Also, duplicated cases are easy to avoid becaues OCaml will give a similar warning for unused cases.</p>
+<h2 id="recursion-with-lists">Recursion with Lists</h2>
+<p>In order to manipulate lists in any significant way, we need to use recursion. Lists are immutable, so functions over them must be recursive.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">length </span><span style="color:#bf616a;">l </span><span>=
+</span><span>    </span><span style="color:#b48ead;">match</span><span> l </span><span style="color:#b48ead;">with
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#d08770;">[] </span><span>-&gt; </span><span style="color:#d08770;">0
+</span><span>    </span><span style="color:#b48ead;">| </span><span>(</span><span style="color:#bf616a;">_</span><span> :: </span><span style="color:#bf616a;">t</span><span>) -&gt; </span><span style="color:#d08770;">1 </span><span>+ length t
+</span></code></pre>
+<p>We can think of this as recursive because we have our base case of nil and our iterative step of applying the function to successive tails. This function does not use <code>h</code>, but we might, as in the <code>sum</code> function above. Recursion might seem like it incurs overhead here, as in C-like languages recursion typically costs stack frames. However, OCaml knows that even though you are writing your code recursively, all you're doing is iterating over an immutable list, so it will elide those issues. Such recursive functions are called <strong>tail-recursive</strong> and are essential to the use of functional languages.</p>
+<p>However, these functions work through the lists forward, like a linked list. How can we do something like reversing a list?</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">rev_aux </span><span style="color:#bf616a;">l acc </span><span>=
+</span><span>    </span><span style="color:#b48ead;">match</span><span> l </span><span style="color:#b48ead;">with
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#d08770;">[] </span><span>-&gt; acc
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#bf616a;">x </span><span>:: </span><span style="color:#bf616a;">xs </span><span>-&gt; rev_aux xs (x :: acc)
+</span><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">rev </span><span style="color:#bf616a;">l </span><span>= rev_aux l </span><span style="color:#d08770;">[]
+</span></code></pre>
+<p>The key here is the variable <code>acc</code>, which is known as an <strong>accumulator</strong>. This is a variable that is included with each recursive function call that accumulates operations on it. This is a way of simulating side effects in a controlled way which is often useful. <code>acc</code> will accumulate heads while the tail grows smaller, and the actual <code>rev</code> function will get the accumulated nil that it passed to <code>rev_aux</code>.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">27 January 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs314/">#cs314</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

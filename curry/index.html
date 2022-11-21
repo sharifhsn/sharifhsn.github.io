@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Currying Arguments in a Function</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Currying Arguments in a Function</h1>
+    </header>
+    <div class="content">
+        <p><strong>Currying</strong> is the concept of having multiple arguments in a function. OCaml defaults to currying its functions. <code>int -&gt; int -&gt; int</code> is a function that takes two <code>int</code>s and returns an <code>int</code>.</p>
+<span id="continue-reading"></span>
+<p>The <code>-&gt;</code> is <em>right-associated</em> and the function application is <em>left-associated</em>. The last element of the function definition is always the return type, but calling a function always counts arguments from the left.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">f </span><span style="color:#bf616a;">a b </span><span>= a / b;;
+</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">f </span><span>= fun a -&gt; (</span><span style="color:#b48ead;">fun </span><span style="color:#bf616a;">b </span><span>-&gt; a / b);;
+</span></code></pre>
+<p>These two lines are equivalent because the second line is just the uncurried function separated into two parts. The <code>fun</code> lambda only has one argument, and the <code>-&gt;</code> keyword is right-associated so <code>b</code> is considered part of the arguments.</p>
+<p>Currying allows you to pass only a portion of the expected arguments to the function, the same way that Python uses keyword arguments.</p>
+<p>Another way to enable multiple arguments is by using a tuple that contains both arguments, which are destructured in the function definition. However, the advantage of currying is that you can separate the call of the function from the arguments.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">add </span><span style="color:#bf616a;">a b </span><span>= a + b;;
+</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">addthree </span><span>= add </span><span style="color:#d08770;">3</span><span>;;
+</span><span>addthree </span><span style="color:#d08770;">4</span><span>;; </span><span style="color:#65737e;">(* evaluates to 7 *)
+</span></code></pre>
+<p>This code allows <code>addthree</code> to exist as an implementation of <code>add</code> with a specific argument already given.</p>
+<p>However, it's not all roses with currying. Function need to retain state regardless of stack state, so the local variable <code>3</code> that is temporarily in the function <code>addthree</code> may not always be there. Anonymous functions may not have the same call stack.</p>
+<p>In C-like languages, local variables are contained within their own stack frames. When a function calls another function, the new stack frame that is created contains its own local variables. If a variable is declared, then initialized through a function call, that variable contains junk until the function returns.</p>
+<p>If we return a function that references a local variable in another function, reading it off the stack can get confusing. The first variable you look for is still uninitialized, so you need to evaluate where that variable is coming from to understand.</p>
+<p>We solve this problem using <strong>static scoping</strong>. Nonlocal names refer to their nearest binding in the program text. This is also known as lexical scoping. If two variables have the same name in an inner scope and an outer scope, then we read the one in the inner scope first.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">21 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs314/">#cs314</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

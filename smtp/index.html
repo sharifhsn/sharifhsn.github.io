@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>SMTP Explained</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>SMTP Explained</h1>
+    </header>
+    <div class="content">
+        <p>Email is the most popular way in the world to send large messages. This is a complicated process which requires its own protocol: <strong>SMTP</strong>.</p>
+<span id="continue-reading"></span><h2 id="smtp">SMTP</h2>
+<p>The <strong>Simple Mail Transfer Protocol</strong> is how user agents communicate with mail servers. On a high level, email works similarly to physical mail. The mail server is like a post office with mailboxes for each user agent. When a person wants to send a message, they put the envelope in their own mailbox. The mailman user agent then takes the envelope to the post office and puts it in their server mailbox. When a person wants to retrieve a message, their mailman gets all the mail in their post office mailbox and delivers it to the person's personal mailbox. The SMTP post office workers at the server are responsible for moving the mail between mailboxes.</p>
+<p>To continue the post office analogy, we can imagine an email being sent between Alice and Bob. Alice lives in Hong Kong and Bob lives in San Juan, so they have different post offices. The workers at the Hong Kong post office see that there is an envelope in Alice's message queue addressed to Hong Kong. They open a TCP connection as the client to the San Juan server and sends the envelope to the San Juan post office. The workers at San Juan now have an envelope, and they see that it is addressed to Bob. They then place the envelope in Bob's mailbox. When Bob wants to check his email, he sends his mailman over to the post office, who returns with the email from Alice.</p>
+<p>Let's examine the TCP connection a little more closely. The connection is established on port 25, which is reserved for SMTP. It does some handshaking on the application layer in order to establish the email addresses of the sender and the recipient. The simple exchange goes like this:</p>
+<ul>
+<li>
+<p>server sends 220 with hostname, client responds with HELO and its own hostname</p>
+</li>
+<li>
+<p>server confirms 250 that it's ok</p>
+</li>
+<li>
+<p>client tells server MAIL FROM and RCPT TO addresses and the server confirms each with 250</p>
+</li>
+<li>
+<p>client sends <code>DATA</code> and server confirms with 354 that it's ready to receive mail</p>
+</li>
+<li>
+<p>the client sends the entirety of the message, ending with a lone period to finish the message, which the server confirms with 250</p>
+</li>
+<li>
+<p>the client can repeat steps 3-5 for any additional messages, then sends <code>QUIT</code> for a server 221 response that closes the connection</p>
+</li>
+</ul>
+<h2 id="vs-http">vs. HTTP</h2>
+<p>Both HTTP and SMTP are protocols that transfer files between clients and servers, so there are natural parallels. However, there are also significant differences.</p>
+<p>There is a difference in who initiates the connection which defines the two. In HTTP, the <em>requesting</em> client initiates the connection, making it a <strong>pull protocol</strong>; you can think of the client &quot;pulling&quot; the data from the server. In SMTP, it is the <em>sending</em> client that initiates the connection, making it a <strong>push protocol</strong> where the client &quot;pushes&quot; the data to the other server.</p>
+<p>SMTP also has many restrictions. The message can only be in ASCII, so any data that is sent over that is not in ASCII, like multimedia, must be encoded and decoded. HTTP allows any data to be transferred. A result of this is that HTTP data of different types like multimedia must be in its own response message, while SMTP objects are all in the same ASCII message.</p>
+<p>There is some peripheral data that SMTP messages can include in a header, just like HTTP, such as the sender, receiver, and the subject of the email. <em>These are different from commands; this data is part of the actual email, not the protocol!</em></p>
+<h2 id="mail-access">Mail Access</h2>
+<p>There's a part of the post office analogy that has been ignored so far. How exactly does the mailman get to the post office? After all, this is another client-server connection, so there must also be a protocol that defines this interaction. We can use SMTP for the mailman delivering the envelope, as this is the same kind of &quot;push&quot; that the post office uses to send to the other post office. But this introduces an issue for the person on the other end; if the mailman can only push mail it already has to somewhere else, then how does Bob's mailman get the mail on the server? There are many protocols that can define this interaction, such as <strong>POP3</strong>, <strong>IMAP</strong>, and HTTP.</p>
+<p>In 2022, HTTP is the obvious choice for this exchange. After all, everyone accesses email through their web browser, which is making HTTP requests anyway. Why not just use an HTTP request to get the mail from the mail server? And as you might expect, almost every email provider today, from Gmail to Hotmail to Yahoo Mail uses Web-based email.</p>
+<p>However, back when &quot;user agent&quot; and &quot;web browser&quot; weren't synonymous, people had applications dedicated to accessing email that couldn't access the web or use HTTP. In those times, <strong>Post Office Protocol—Version 3</strong> and <strong>Internet Mail Access Protocol</strong> were used.</p>
+<p>POP3 is a simple and therefore limited protocol. It operates over port 110 and has three steps: authorization, transaction, and update. The post office first authenticates the mailman by asking him for a username and password before he can check your mailbox. Then, the mailman retrieves the envelope from the post office. While the mailman is at the post office, they can also do some operations like marking emails for deletion and getting statistics for your account. When the mailman leaves the post office, the workers throw away all the mail that the mailman marked for deletion.</p>
+<p>It's common for users to want to organize emails through folders like Inbox, Junk, etc. This is of course possible through user agent, but POP3 does not allow for this organization in your post office mailbox. IMAP provides this as well as many more features. It is stateful so that the user can keep the folders that it creates at the mailbox. One more important feature is its ability to lazily fetch emails from the mailbox, so the user's entire inbox is not just sent immediately. Imagine if you had to download every email in your inbox in order to access it! I know my connection wouldn't be able to handle my 1k+ unread emails.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">10 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/internet-technology/">Internet Technology</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs352/">#cs352</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

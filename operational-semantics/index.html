@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Operational Semantics</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Operational Semantics</h1>
+    </header>
+    <div class="content">
+        <p>What are the formal semantics of how a programming language works, mathematically? That's a broad topic. <strong>Operational semantics</strong>, which are how programs <em>execute</em>, are narrow enough for one article.</p>
+<span id="continue-reading"></span><h2 id="rules">Rules</h2>
+<p>The basis behind the mathematics of operation are based on using <strong>rules</strong> to define a <strong>judgment</strong>. The expression <code>e</code> will always evaluate to the value <code>v</code>. We can construct a micro-OCaml through the datatypes <code>exp</code> and <code>value</code>:</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span>eval: exp -&gt; value
+</span></code></pre>
+<p>This way of presenting semantics is called a <strong>definitional interpreter</strong>. <code>eval</code> means <code>exp -&gt; value</code>, and we use interpretations to define the language's meaning.</p>
+<h2 id="grammar">Grammar</h2>
+<p>It is useful to define <strong>meta-variables</strong> which represent categories of syntax. We will list a few here:</p>
+<ul>
+<li>
+<p><code>x</code>: any identifier or variable name</p>
+</li>
+<li>
+<p><code>n</code>: a numeral value</p>
+</li>
+<li>
+<p><code>e</code>: any expression</p>
+</li>
+<li>
+<p><code>::=</code>: meta-syntax for definition</p>
+</li>
+<li>
+<p><code>|</code>: meta-syntax for variants</p>
+</li>
+</ul>
+<pre data-lang="bnf" style="background-color:#2b303b;color:#c0c5ce;" class="language-bnf "><code class="language-bnf" data-lang="bnf"><span>e ::= x | n | e + e | let x = e in e
+</span></code></pre>
+<p>This is an important line which defines what an expression <em>exactly</em> is. Up until now, we have used the term expression quite loosely, so it's good to have an exact definition in operational semantics. An expression is either an identifier, a numeral or a combination of expressions. The last variant may seem a little strange to you, but remember, <code>let</code> expressions are simply replacing identifiers in an expression, so they are also expressions. This is a powerful definition because it fully encompasses the <strong>abstract syntax tree (AST)</strong>.</p>
+<p>We can define an evaluation as <code>eval: exp -&gt; value</code> where evaluation is the process of turning an expression into a final value (in this case an <code>int</code> only).</p>
+<h2 id="rules-of-inference">Rules of Inference</h2>
+<p>In order to prove the veracity of a judgment, we check its composite rules. For example, let's prove that <code>1 + 3 ⇒ 4</code> is true. <code>1</code> and <code>3</code> are expressions in the sum function which evaluate to their own numeral value. Two values being added together is their sum, which is <code>4</code>.</p>
+<p>The notation of <strong>rules of inference</strong> are used to present rules in formal mathematics:</p>
+<p>$$\frac{H_1 \mathellipsis H_n}{C}$$</p>
+<p>If all the hypotheses are true, then the conclusion is true. If there are no hypotheses, then the conclusion is automatically true (<strong>axiom</strong>).</p>
+<p>Let's express those same rules about numeral self evaluation and sum expressions in rules of inference:</p>
+<p>$$\frac{e_1 ⇒ n_1 \quad e_2 =&gt; n_2 \quad n_3 \ \text{is} \ n_1 + n_2}{e_1 + e_2 ⇒ n_3}$$</p>
+<p>We can similarly describe the more complicated rules of let expressions:</p>
+<p>$$\frac{e_1 ⇒ v1 \quad e_2\{v_1/x\} ⇒ v_2}{\text{let} \ x = e_1 \ \text{in} \ e_2 ⇒ v_2}$$</p>
+<h2 id="derivations">Derivations</h2>
+<p>The <strong>derivation</strong> is a process in which we apply rules to an expression in succession. We take our conclusion, then break it up into its constituent rules. If any of the rules need more rules themselves, we break them up too. Think of it like a tree which expands out from the conclusion. Let's use <code>let x = 4 in x + 3 ⇒ 7</code> as an example.</p>
+<p>$$\frac{4 ⇒ 4 \quad \dfrac{4 ⇒ 4 \quad 3 ⇒ 3 \quad 7 \ \text{is}\ 4 + 3}{4 + 3 ⇒ 7}}{\text{let}\ x = 4 \ \text{in} \ x + 3 ⇒ 7}$$</p>
+<p>Let's look at this derivation step by step. First, we start at our conclusion. We say that <code>x = 4</code> in the let expression. Because <code>4</code> is used an expression here, we need to generate the hypothesis that the expression <code>4</code> will evaluate to itself, which is true from our reflective axiom. Then, we need to show that the resulting expression <code>4 + 3 ⇒ 7</code> is valid, which requires the sum rule of inference. Knowing that <code>4</code> and <code>3</code> evaluate to themselves and that <code>7</code> is the sum of those two values, then we can confirm that hypothesis and therefore the conclusion!</p>
+<p>The way that we've written this derivation is recursive in nature. This is how definitional interpreters will evaluate expressions; they will search the expression for any constituent and evaluate them in turn in order to evaluate the entire expression.</p>
+<p>$$\frac{\text{eval Num } 4 ⇒ 4 \quad \text{Plus(Ident(&quot;x&quot;), Num 3)}}{\text{eval Let(&quot;x&quot;, Num 4, Plus(Ident(&quot;x&quot;), Num 3))}}$$</p>
+<p>All evaluation is mathematical proof. An expression <code>e</code> that provably evaluates to value <code>v</code> <strong>is</strong> <code>v</code>.</p>
+<h2 id="environment">Environment</h2>
+<p>From a mathematical perspective, an environment is a partial function that maps identifiers to values. Because it's partial, not all possible identifiers are mapped, so some identifiers are undefined.</p>
+<p>The notation for an empty environment is <code>•</code>, which is undefined for every identifier. We can use notation here like in OCaml lists where we can define arguments as either the nil form <code>•</code> or a mapping cons the rest of the environment. Lookup of a value is similarly recursive like an OCaml list. In fact, in an OCaml definitional interpreter, the environment has type <code>(id * value) list</code> where we can search and match mappings like a regular <em>association list</em>.</p>
+<p>We can add environment semantics to our previous understandings of judgments like so: <code>A; e ⇒ v</code>. Now, when we use identifiers in expressions, we can search the environment for the equivalent value and substitute it. The environment is the formal way of representing <em>state</em> in an operation.</p>
+<h2 id="conditionals">Conditionals</h2>
+<p>So far all we've done in terms of operational semantics is define variables and perform simple sums on them. One of the greatest powers of programming is the ability to implement control flow: if this, then that. Since we're programming functionally and not imperatively, these conditionals evaluate to expressions, not just operations, so we must have else as well to account for all cases.</p>
+<p>To accommodate this, we must expand our earlier definition of expressions to include <em>equality</em> and the <em>if expression</em>. The if expression takes an equality expression as a conditional, and if it satisfies the boolean argument then the if body is returned as the evaluation, else the else body.</p>
+<h1 id=""></h1>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">17 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs314/">#cs314</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

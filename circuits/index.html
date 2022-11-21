@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Circuits</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Circuits</h1>
+    </header>
+    <div class="content">
+        <p>Circuits are the method by which all electricity travels throughout the world and power every single device in existence. It is therefore crucial to understand them while understanding electricity.</p>
+<span id="continue-reading"></span><h2 id="electromotive-force-emf-and-current">Electromotive Force (emf) and Current</h2>
+<p>The <strong>emf</strong> is similar to voltage, but not quite the same. It is the maximum voltage of a battery, signified by \(Ε\) (capital epsilon). It represents the maximum amount of joules of energy that can transfer from a battery based on the charge.</p>
+<p><strong>Current</strong> is formed when an electric field parallel to a wire moves free electrons from the positive terminal of a battery to the negative terminal. You can think of it mentally like the flow of charge over time, like water going through a hose, and in fact the equation is \(I = \frac{Δq}{Δt}\). For a non-constant flow, this is the average current. Current uses the unit \(A\) for ampere.</p>
+<p>A <strong>direct current (dc)</strong> has electrons that go through the circuit in the same direction at all times, which is negative to positive. An <strong>alternating current (ac)</strong> alternates direction constantly from moment to moment.</p>
+<blockquote>
+<p><em>Very important note:</em> electron flow and conventional current \(I\) are <em><strong>not the same thing</strong></em>. Conventional current actually goes opposite to electron flow for historical reasons. When we draw current over circuits, we use conventional current notation, so current flows from positive to negative. This is because it was once thought that circuits worked by the passing of positive charges, not negative charges.</p>
+</blockquote>
+<h2 id="ohm-s-law">Ohm's Law</h2>
+<p><strong>The ratio \(V/I\) is a constant, where \(V\) is the voltage applied across a piece of material (such as a wire) and \(I\) is the current through the material:</strong></p>
+<p>$$\frac{V}{I} = R = constant | V = IR$$</p>
+<p><strong>\(R\) is the resistance of the piece of material in ohms (Ω).</strong></p>
+<p>Again using our hose analogy, resistance is like how narrow the hose opening is which lets our water through. Resistance is typically discussed in the context of <strong>resistors</strong>, which are electrical devices that apply resistance to a circuit.</p>
+<h2 id="resistance-and-resistivity">Resistance and Resistivity</h2>
+<p>The resistance of a piece of material is dependent on certain qualities. If you think in your head of a small plastic tic-tac as our resistor, this is the formula:</p>
+<p>$$R = ρ\frac{L}{A}$$</p>
+<p>where \(L\) is length, \(A\) is cross-sectional area, and \(ρ\) is a constant called <strong>resistivity</strong> that is constant to a material. Conductors have very low resistivities, and insulators have very high resistivities.</p>
+<p>Resistivity also typically depends on temperature, though in more complicated ways than can be expressed in the above formula. The most common way to express it as:</p>
+<p>$$ρ = ρ_0[1 + α(T - T_0)]$$</p>
+<p>You can also use resistance instead of resistivity here. The important constant here is \(α\), which is the <em>temperature coefficient of resistivity</em>, which can be positive or negative depending on how the specific material relates resistivity to temperature.</p>
+<blockquote>
+<p>Some materials, known as <em>superconductors</em>, have resistivity of zero at certain temperatures. This means you can circulate a current indefinitely within that circuit without needing a supply of emf from a battery. They can be used in MRI, maglevs, and computer chips.</p>
+</blockquote>
+<h2 id="power"><a href="https://www.youtube.com/watch?v=chPDTUjnWgA">POWER</a></h2>
+<p><strong>Power</strong> is an important concept when we want to give energy to electrical appliances. The easiest way to think about it on a high level is the change in energy per unit time. Another way to think about it is the flow of voltage transferred.</p>
+<p>$$P = \frac{Change\ in\ energy}{Time\ interval} = \frac{(Δq)V}{Δt} = \frac{Δq}{Δt}V = IV$$</p>
+<p>The units of power are in watts \(W\), which you might remember from lightbulbs. Current multiplied by voltage makes sense; it's the flow multiplied by the quantity, which tells you change in quantity over time. You can also write it as:</p>
+<p>$$P = IV = I^2R = \frac{V^2}{R}$$</p>
+<p>which is often useful when we don't have one of those elements.</p>
+<h2 id="alternating-current">Alternating Current</h2>
+<p>Most batteries in the world use ac instead of dc. Therefore, we must note the differences between it and dc. The voltage is not always the same, and fluctuates constantly according to this equation:</p>
+<p>$$V = V_0 \sin{2πft}$$</p>
+<p>where \(V_0\) is the maximum voltage and \(f\) is the frequence of isolation. This value is in radians when the sine function is applied.</p>
+<p>Current oscillates at the same rate, and so does power. We can simply substitute the above equation for \(V\) to evaluate those.</p>
+<p>We often want to understand average current and average voltage in relation to power, which are calculated by dividing the maximum of each by \(\sqrt{2}\). We can use these two values to get average power through the analogous power equations.</p>
+<h2 id="series-wiring">Series Wiring</h2>
+<p>All the circuits we've discussed have one device with a straight wire. Often we want to have multiple devices on the same circuit.</p>
+<p>When we have multiple resistors in series, their resistances added up to get the total resistance of a circuit. A very useful method to solve these kinds of problems is to &quot;combine&quot; resistors by adding up their resistances. This becomes helpful when we start working with parallel wiring.</p>
+<p>Another way we can think about voltage in this context is that we have voltage that goes through each resistor which is added up to get the final voltage. This will be relevant later when we talk about voltage drops.</p>
+<h2 id="parallel-wiring">Parallel Wiring</h2>
+<p>Parallel wiring is wiring where the voltage across each device is the same. Now, this might not necessarily make sense; wouldn't the voltage be divided still? The element that is divided in parallel is actually the <em>current</em>, whereas in series it is the current that is preserved and the voltage that is divided. This is useful when we want multiple appliances connected to the same power source that do not interfere with each other with respect to voltage.</p>
+<p>Parallel resistors, paradoxically, act as if they have <em>less</em> resistance. Instead of adding up the resistances straightforwardly, parallel resistances add up as so:</p>
+<p>$$\frac{1}{R_p} = \frac{1}{R_1} + \frac{1}{R_2} + ...$$</p>
+<p>A more convenient way to calculate this is</p>
+<p>$$R_p = \frac{R_1 \cdot R_2}{R_1 + R_2}$$</p>
+<p>for only two circuits, though it gets more complex for more.</p>
+<p>When we have multiple parts in series and parallel, the way to solve comes by combining different series and parallel parts together. Mind that the combinations must be <em>only</em> series or <em>only</em> parallel. The easiest way is to start furthest from the capacitor and work your way there.</p>
+<h2 id="internal-resistance">Internal Resistance</h2>
+<p>We've separated devices into groups of resistors and conducting wire. However, this is a false dichotomy. All materials have some amount of <strong>internal resistance</strong> which resists current. Typically, batteries and wires have extremely low resistance to facilitate current.</p>
+<h2 id="kirchhoff-s-rules">Kirchhoff's Rules</h2>
+<p>If resistors are in series or parallel, we can combine them fairly easily. There's trouble when we can't do that, however. We must use <strong>Kirchhoff's Rules</strong>, specifically the <strong>junction rule</strong> and the <strong>loop rule</strong> to calculate resistance in these cases.</p>
+<p>The junction rule states that the total current directed into a junction must equal the total current directed out of the junction. This is just an extension of conservation of electric charge that we discussed earlier. You can imagine an intersection of cars where you have four cars waiting at the light. They can either turn right or go straight. Either way they go, however, there must be four cars that are leaving the intersection unless something has gone horribly wrong.</p>
+<p>The loop rule relates a similar idea but in relation to electric potential. The voltage rises at every capacitor, and it must have drops through every resistor that equal the rise through the resistor. For example, after a 12 V rise through a capacitor, a pass through a 5 Ω and a 1 Ω resistor must drop 10 V and 2 V respectively in order to have it be the same.</p>
+<p>Some important notes:</p>
+<ul>
+<li>
+<p>the choice of direction is arbitrary, we will simply end up with a negative current if it is wrong</p>
+</li>
+<li>
+<p>we must indicate the positive and negative directions of every capacitor/resistor in order to find our voltage drops/rises</p>
+</li>
+<li>
+<p>our final equation will have the drops on one side and the rises on the other side, with every term either being voltage or a resistance multiplied by the variable \(I\)</p>
+</li>
+<li>
+<p>the answer is \(I\) which is solved for through normal algebra</p>
+</li>
+</ul>
+<blockquote>
+<p>In laboratory, there are various devices we use to measure current and voltage. You should remember that current is only the same in series and voltage is only the same in parallel. Therefore, ammeters must be connected in series and voltmeters in parallel.</p>
+</blockquote>
+<h2 id="capacitors-in-series-parallel">Capacitors in Series/Parallel</h2>
+<p>Capacitors work opposite to resistors when they are in series and in parallel. They add up charge simply when placed in parallel, and have the inverse reciprocal relationship when placed in series. The reason this happens is because charge and capacitance are directly related while current and resistance are inversely related.</p>
+<p>One note is that with regards to the charges on their plates, capacitors in series always have charges of the same magnitude because they will equalize out.</p>
+<h2 id="rc-circuits">RC Circuits</h2>
+<p>We often have circuits that have both resistors and capacitors. In this situation, the capacitor's time to charge depends on the resistance:</p>
+<p>$$q = q_0[1 - e^{-t/(RC)}]$$</p>
+<p>\(RC\) here is very simply, the resistance multiplied by the capacitance, which ends up being a unit in seconds known as \(τ\), the time constant. That is the amount of time for the capacitor to charge to 63.2%, which is \(1 - e^{-1}\).</p>
+<p>Discharging works with a similar equation:</p>
+<p>$$q = q_0e^{-t/(RC)}$$</p>
+<p>where \(τ\) represents losing 63.2% charge.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date"> 1 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/physics/">Physics</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/phys204/">#phys204</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

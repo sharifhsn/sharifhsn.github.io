@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>IEEE-754</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>IEEE-754</h1>
+    </header>
+    <div class="content">
+        <p><strong>IEEE-754</strong> is the standard for floating point computation around the world. Thus, any real-world discussion of floating point must include it.</p>
+<span id="continue-reading"></span><h2 id="format">Format</h2>
+<p>IEEE-754 floating point numbers are always in base 2 binary; this makes sense as it minimizes wobble which scales with \(β\). It also allows for a special optimization that can add an extra bit of precision without increasing the size of the number. To demonstrate that, we can look at the number \(001010.0011\). The normalized floating point representation of this is \(1.0100011 × 2^3\). Notice how the digit in front of the decimal point is always 1. It can't be 0, because then we could just shift the decimal point and throw away the zero as we did with the initial number. Therefore, IEEE-754 assumes that the first bit is always 1 and only encodes the bits after the decimal point, granting an extra 1. There is an obvious problem with this: the number 0 cannot be represented. In IEEE-754, if the significand and exponent are all 0, then the number is the special case of 0.</p>
+<p>IEEE-754 allows for four possible precisions: single, double, single-extended, and double-extended:</p>
+<table><thead><tr><th>Parameter</th><th>Single</th><th>Single-Extended</th><th>Double</th><th>Double-Extended</th></tr></thead><tbody>
+<tr><td>\(p\)</td><td>24</td><td>32</td><td>53</td><td>64</td></tr>
+<tr><td>\(e_{max}\)</td><td>+127</td><td>+1023</td><td>+1023</td><td>+16383</td></tr>
+<tr><td>\(e_{min}\)</td><td>-126</td><td>-1022</td><td>-1022</td><td>-16382</td></tr>
+<tr><td>bits for exponent</td><td>8</td><td>11</td><td>11</td><td>15</td></tr>
+<tr><td>total # of bits</td><td>32</td><td>43</td><td>64</td><td>79</td></tr>
+</tbody></table>
+<p>The usefulness of extended precision is that it grants a large amount of guard digits for internal calculations, for example in a calculator. There are fast algorithms for common transcendental functions like \(\log\), but most of them have a large amount of possible error. By using extended precision internally then rounding to regular precision on display, calculators can quickly compute transcendental functions for users accurately.</p>
+<p>The exponent value is calculated using a <em>bias</em> so it can represent negative values. The initial unbiased exponent is subtracted by \(2^{e - 1} - 1\), e.g. 127 for single precision. The reason that the \(e_max\) is always bigger than \(e_min\) is to prevent overflow when the reciprocal of the smallest numbers are taken. In turn, the reciprocal of the largest numbers will create underflow. In general, underflow is preferable to overflow, for reasons that will be clear when we discuss overflow in more depth.</p>
+<p>Operations between floating point numbers in IEEE-754 are always exactly rounded. Having a guard digit can reduce error, but it does not guarantee the same result as exact rounding, so it cannot be used. There are methods using two guard digits and a &quot;sticky&quot; bit that can be used for efficient exact rounding, however. Exact rounding is important so that the result of two operations can always be guaranteed to be the same, regardless of hardware. The operations defined under IEEE to be exactly rounded are +, -, ×, /, √, %, and conversion with integers. Conversion between binary and decimal is <em>not</em> necessarily exactly rounded, because the most efficient conversion algorithms are not exactly rounded. Transcendental functions are also not specified as exactly rounded because there is no efficient algorithm that works across all hardware.</p>
+<h2 id="nan-and"><code>NaN</code> and ∞</h2>
+<p>If you've used a calculator before, chances are you have seen both of these terms before. But what do they mean in the context of floating point?</p>
+<p>Not all bit patterns in IEEE-754 follow the rules that were laid out earlier for significands and exponents. Some aren't even valid floating point numbers! There are special values that are possible:</p>
+<table><thead><tr><th>Exponent</th><th>Fraction</th><th>Represents</th></tr></thead><tbody>
+<tr><td>\(e = e_{min} - 1\)</td><td>f = 0</td><td>±0</td></tr>
+<tr><td>\(e = e_{min} - 1\)</td><td>f ≠ 0</td><td>\(0.f × 2^{e_{min}}\) (<strong>denormalized</strong>)</td></tr>
+<tr><td>\(e_{min} ≤ e ≤ e_{max}\)</td><td>—</td><td>\(1.f × 2^e\) (<strong>normalized</strong>)</td></tr>
+<tr><td>\(e = e_{max} + 1\)</td><td>f = 0</td><td>±∞</td></tr>
+<tr><td>\(e = e_{max} + 1\)</td><td>f ≠ 0</td><td><code>NaN</code></td></tr>
+</tbody></table>
+<p>The middle row represents normalized numbers, which we are already familiar with. We will discuss each of the other special values.</p>
+<p>As mentioned earlier, 0 is an exception where the significand and exponent are both 0. But wait, why can 0 be positive <em>and</em> negative? IEEE-754 also defines that \(+0 = -0\) so the distinction seems useless. The reason both are allowed is because it preserves the sign of infinity when they interact. It also allows for functions that are only defined for positive or negative numbers to be able to safely include 0 in them.</p>
+<p><em>Denormalized numbers</em> are numbers with 0 as the hidden bit instead of 1. The reason they need to exist and break these rules is because small numbers being subtracted can end up underflowing to 0. It breaks a common invariant in code that the difference between two unequal numbers is not 0, and can cause bugs. Denormalized numbers gradually underflow to 0 so this problem does not occur. It also significantly reduces relative error for very small numbers.</p>
+<p>The idea of infinity is an important one to measure for floating point. Unlike with integer arithmetic, division by zero is not an immediate error which aborts the operation. Rather, overflow can be an expected result which is handled for by using infinity. If the infinity ends up in a denominator, then the computation can underflow to 0 which can be an expected result.</p>
+<p><code>NaN</code> stands for &quot;Not a Number&quot; and is perhaps the most unique special value<code>NaN</code> does not represent any computable value, and it is &quot;infectious&quot;; any operation with<code>NaN</code> will result in an <code>NaN</code> and <code>NaN</code>s always compare to false, even with other <code>NaNs</code>. They are a result of computations like \(0/0\) or \(\sqrt{-1}\) which are not well-defined in real numbers, and also cannot be represented by infinity. These are all the operations that will produce an <code>NaN</code>:</p>
+<table><thead><tr><th>Operation</th><th>Production</th></tr></thead><tbody>
+<tr><td>+</td><td>\(∞ + (-∞)\)</td></tr>
+<tr><td>×</td><td>\(0 × ∞\)</td></tr>
+<tr><td>/</td><td>\(0/0\), \(∞/∞\)</td></tr>
+<tr><td>%</td><td>\(x % 0\), \(∞ % y\)</td></tr>
+<tr><td>√</td><td>\(\sqrt{x}\) for \(x &lt; 0\)</td></tr>
+</tbody></table>
+<p>Unlike with denormalized numbers, the value in the significand does not necessarily represent any specific values. Often, some information about the operation will be placed in the significand as a signal. If an operation is done between a real number and an <code>NaN</code>, it will not change the significand of the <code>NaN</code>.</p>
+<h2 id="exceptions">Exceptions</h2>
+<p><code>NaN</code> and ∞ allow floating point calculations to continue in the face of special circumstances without aborting immediately. However, this behavior is not always appropriate. Implementations of IEEE-754 typically have <strong>trap handlers</strong> that will handle <strong>exceptions</strong> generated by such circumstances. There are five classes of exception that can each be set by a status flag: overflow, underflow, division by zero, invalid operations, and inexact operations. Invalid operations are any that involve <code>NaN</code> except for those when one of the operands are already <code>NaN</code>.</p>
+<p>Operations in IEEE-754 must be exact, so if an operation is performed that is inexact, it will raise an exception. However, this raises an issue. Inexact exceptions can happen extremely often, and telling the OS to summon the trap handler every time harms performance. In order to prevent this, a software flag is typically enabled upon inexact exception to mask off future exceptions until the flag is reset.</p>
+<p>Although trap handlers can abort the algorithm, they can also exhibit other behavior which can aid algorithms in being more efficient and accurate. For example, IEEE-754 will wrap around overflowing numbers by dividing the computed result by \(2^α\). \(α\) is 192 for single precision and 1536 for double precision. This is useful in partial products when the operation might overflow and underflow at several points. By allowing the products to continue without aborting, the final product might cancel out under/overflows and be in range without having to stop the OS at every point.</p>
+<h2 id="rounding">Rounding</h2>
+<p>We stated earlier that round to even is the best and most commonly accepted method of rounding. This is the default mode of IEEE-754. However, there are other acceptable rounding modes that can be enabled for certain operations. These are round to 0, to +∞, and to -∞. These modes turn rounding into floor/ceiling operations, which are useful for computing intervals.</p>
+<p>We can represent floating point results as an interval between two numbers where the first is rounded to -∞ and the second is rounded to +∞. The exact result is somewhere between those two numbers. This representation can be useful to get an idea of how wide your error is when calculating a result. If the result with single precision has a very wide interval, then you might redo the result in double precision and so on to shrink the interval to some acceptable level of error.</p>
+<p><em>All this information comes from the landmark paper <a href="https://docs.oracle.com/cd/E19957-01/800-7895/800-7895.pdf">What Every Computer Scientist Should Know About Floating-Point Arithmetic</a></em></p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">31 May 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/computer-architecture/">Computer Architecture</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/floating-point/">#floating-point</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

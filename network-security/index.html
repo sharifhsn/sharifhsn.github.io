@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Network Security</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Network Security</h1>
+    </header>
+    <div class="content">
+        <p>The internet has taken over the world, but with it have come malicious actors. People want to spy on you, scam you, steal from you, or harm you through the internet. Through <strong>network security</strong>, we can shield potential victims from at least some of these harms.</p>
+<span id="continue-reading"></span><h2 id="attacks">Attacks</h2>
+<p>Attacks on a network can be performed <em>passively</em>, for example in eavesdropping. The network cannot tell the difference between this passive attack and ordinary traffic because no more traffic is being injected.</p>
+<p><em>Active</em> attacks, by contrast, are done by changing the kind or amount of traffic. This typically manifests as a <strong>DoS</strong> <strong>(Denial of Service)</strong> attack. This is usually a significant increase in traffic which shuts down the network due to congestion. If only one host is attacking the network, then the network can easily shut a particular malicious host out. DoS attacks are usually distributed, hence <strong>DDoS</strong> <strong>(Distributed Denial of Service)</strong>.</p>
+<p>Teardrop attacks are a modern form of DDoS. Instead of sending lots of useless traffic, all they do is open a new connection with a socket. Even though this is a small operation, when done on large scale, it can tax the memory of a server. We mentioned previously that in order to compensate for fragmentation, routers will keep a memory buffer to store fragments. This can be exploited by malicious packets that are all fragments which will run out the memory of the router.</p>
+<p>The three main aspects of network security are <strong>authentication</strong>, <strong>confidentiality</strong>, and <strong>integrity</strong>.</p>
+<ul>
+<li>
+<p>Authentication: How do you prove that someone is who they say they are?</p>
+</li>
+<li>
+<p>Confidentiality: How can you hide data from prying eyes?</p>
+</li>
+<li>
+<p>Integrity: How can you prove that data has not been altered midstream?</p>
+</li>
+</ul>
+<p>In order to protect these, we need a <strong>security model</strong>.</p>
+<ol>
+<li>
+<p>An algorithm to ensure security that must be well-known.</p>
+</li>
+<li>
+<p>Trusted parties know how to generate secret information.</p>
+</li>
+<li>
+<p>Distribute that information through a secure method.</p>
+</li>
+<li>
+<p>Specify a protocol for trusted parties to decrypt data.</p>
+</li>
+</ol>
+<h2 id="encryption">Encryption</h2>
+<p><strong>Encryption</strong> or <strong>cryptography</strong> is the encoding of a message in such a way that only the communicating parties can interpret it. That way, if a malicious party tries to read the message, they will be unable to understand it because they cannot decrypt it.</p>
+<p>Encryption has two sides, the encryption algorithm and the decryption key. The algorithm should be publicly available in order to prove that it works. When you feed the decryption key into the algorithm, it will spit out a string associated with only that key.</p>
+<p>The secret key itself should be long enough that the algorithm cannot easily be broken, but also short enough so that it can be transmitted easily. Fun fact: before minimum password lengths were instituted, the most common password was &quot;god&quot;.</p>
+<p>The most basic kind of encryption algorithm is a substitution cipher. By simply replacing letters in a message with another letter with a known mapping, a message can be encoded and decoded. However, it is relatively trivial to break this cipher because the English language has patterns that can identify certain letters better than others.</p>
+<p>You can increase the complexity of this algorithm through polyalphabetic encryption, where the cipher itself changes after every letter. Famously, this is how the Enigma cipher used by the Nazis during World War II worked.</p>
+<p>Transposition ciphers will change the <em>order</em> of the words as well. This might seem like a really good cipher, unfortunately it can similarly be broken by looking at the structure of language.</p>
+<p>In order to actually encrypt data, real-world encryption algorithms use a combination of these techniques.</p>
+<p>But how do we generate the decryption key? There needs to be one for every user, but they need to be as random as possible and nigh impossible to crack, so we can't use plaintext passwords.</p>
+<p>We can use <em>pseudorandom number generators</em> in order to create a key. A pseudorandom number generator is an algorithm which, starting with some seed, will produce a string of numbers based on that seed which <em>appear</em> to be random. The seed will typically based on some environmental noise that can't be easily predicted, such as the time of day at which the algorithm runs. The generator should be <em>highly</em> sensitive to changes in seed.</p>
+<h2 id="symmetric-key">Symmetric Key</h2>
+<p>Using the same key, two parties should be able to both encrypt and decrypt the message. By applying the key to the message, the message should be encrypted, then decrypted.</p>
+<p>There are two main kinds of symmetric ciphers: <em>stream ciphers</em>, and <em>block ciphers</em>. As the name implies, stream ciphers do bitwise operations on the message and the key in order to get the ciphertext. The bitwise operations can be symmetric, like ⊗. One example of a stream cipher is RC4 which can be used in SSL.</p>
+<p>Block ciphers have a 1-to-1 mapping of certain blocks of \(k\) bits to other blocks, typically 64 bits. This is a good method, but the problem is that the number of mappings balloons massively: in general, it is \(2^k!\), which is absolutely massive! It is both exponential <em>and</em> factorial. To simulate such a table, you can use a pseudorandom function.</p>
+<h2 id="des">DES</h2>
+<p>The <strong>Data Encryption Standard</strong> is the US encryption standard. It uses a 56-bit symmetric key for 64-bit plaintext input, and it is a block cipher. It is fairly secure for small attacks, but it can be brute force decrypted in less than a day. Its advantage is that there is no analytic exploit in the standard.</p>
+<p>In order to make DES more secure, we can increase the number of keys to 3, making <strong>3DES</strong>. The message is encrypted, decrypted, then encrypted again when run through all three keys. Effectively, there are \(56 × 3 = 168\) bits to crack, which is much stronger than 56.</p>
+<h2 id="replay-attacks">Replay Attacks</h2>
+<p>This method of symmetric key is vulnerable to a certain kind of attack: the <strong>replay attack</strong>. Let's say I encrypt a message and mail it to my boss. My boss decrypts the message, and sends me back a confidential message, so we can pass information to each other. But my boss doesn't know my address, he only knows that he can trust me because the message is encrypted using our key.</p>
+<p>What if a malicious hacker somehow obtains my encrypted message? If she sends that message to my boss, then my boss will email the hacker back with the confidential information because he thinks that only I have the ability to encrypt messages in that way.</p>
+<p>The way to protect against this is by using a <strong>NONCE</strong> value, which is a <strong>N</strong>umber used only <strong>ONCE</strong>. Let's say I write a random number on my message every time I send a message to my boss. The hacker obtains my message and sends the same message later, with the same random number. My boss knows that the NONCE value cannot be the same and therefore does not trust the hacker with our confidential information.</p>
+<p>The NONCE doesn't have to be a random number. Many times, it can be a challenge query like asking for my mother's maiden name. Having multiple challenges that are cycled through adds an extra layer of protection.</p>
+<h2 id="rsa">RSA</h2>
+<p>Nowadays, almost all cryptography is done by having two keys: a <strong>public key</strong>, and a <strong>private key</strong>. The public key is used to <em>encrypt</em> messages, and private key is used to <em>decrypt</em> messages. The public key is, as might be obvious, publicly available. Someone who wants to send a secure message to me can use my public key to encrypt it. However, only I can use my own private key to decrypt it. Importantly, <em>you should not</em> be able to determine the private key by analyzing the public key. They should be wholly different in nature.</p>
+<p><strong>RSA</strong> is the most commonly used implementation of this kind of cryptography. To encrypt a message, take the message and raise it to the power of the public key, <code>mod</code> some \(n\). To decrypt said bit pattern, raise it to the power of the private key, again <code>mod</code> the same \(n\).</p>
+<p>Authentication can be done using the passing of challenge messages. A new secret key will be created which is encrypted and decrypted in order to encrypt the data.</p>
+<p>One problem with RSA is that it's really expensive and slow computation-wise, which is good for security but bad for convenience. In practice, most uses of RSA encryption only use the actual algorithm to encrypt some secret key, which is then used as a simpler cipher for the data between the two parties.</p>
+<h2 id="hash">Hash</h2>
+<p><strong>Hashing</strong> is the process of creating a unique-ish value from some data that can be used to verify that data as a signature. It should be fast, not easily irreversible, and not have collisions i.e. no two hashes should be the same.</p>
+<p>The two most common hash functions are <strong>MD5</strong> and <strong>SHA-1</strong>, which are 128 bits and 160 bits, respectively.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">22 April 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/internet-technology/">Internet Technology</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs352/">#cs352</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

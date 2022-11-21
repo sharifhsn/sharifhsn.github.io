@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Prolog</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Prolog</h1>
+    </header>
+    <div class="content">
+        <p><strong>Prolog</strong> is a special programming language that is not like many others. It exemplifies the paradigm of <strong>logic programming</strong>.</p>
+<span id="continue-reading"></span><h2 id="terms">Terms</h2>
+<p>Functional programming is based on the idea that all operations exist using functions that give the same output for a given input. Imperative programming is based on the idea that we can manipulate variables and order them around like soldiers. Logic programming takes propositional logic from discrete structures and turns it into a language.</p>
+<p>Every program is made up of <strong>terms</strong>, which are <strong>constants</strong>, <strong>variables</strong>, and <strong>compound terms</strong>. A constant is any word that is lowercase, whether it be a number, a string, or just a word. A variable is a word that begins with a capital letter.</p>
+<p>Compound terms are relations. Relations in the logical sense are a subset of the Cartesian product of two sets, where the result set consists of elements that are contained in both. The top level name is the <strong>functor</strong>, and the number of arguments is the <strong>arity</strong>. For example, a compound term might be <code>male(robb)</code> where <code>male</code> is the functor with an arity of 1. <strong>The order of arguments within the compound term matters!</strong></p>
+<p><strong>Facts</strong> are a knowledge base for a particular program. Each fact is a compound term showing a relation, followed by a period. <strong>Rules</strong> are a generality on facts where they are facts <em>given</em> assumptions. A fact is just a rule that is true without assumptions. <strong>The order of facts/rules is very important to the execution of code!</strong> Prolog reads from top to bottom, so the most important facts/rules should be placed near the beginning.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">father</span><span>(rickard, ned).
+</span><span style="color:#8fa1b3;">father</span><span>(rickard, brandon).
+</span><span style="color:#8fa1b3;">father</span><span>(rickard, lyanna).
+</span><span style="color:#8fa1b3;">father</span><span>(ned, robb).
+</span><span style="color:#8fa1b3;">father</span><span>(ned, sansa).
+</span><span style="color:#8fa1b3;">father</span><span>(ned, arya).
+</span></code></pre>
+<h2 id="queries">Queries</h2>
+<p>Once we have our knowledge base, we can <strong>query</strong> for information.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span>?- </span><span style="color:#8fa1b3;">father</span><span>(ned, sansa).
+</span></code></pre>
+<p>This query will return true because it is in our list of facts. However, what happens if we query something it doesn't know?</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span>?- </span><span style="color:#8fa1b3;">father</span><span>(ned, bran).
+</span></code></pre>
+<p>Prolog operates on the <strong>closed world assumption</strong>, which means that it only knows what it's been told. If it doesn't know something, it will assume falsity. So Prolog will say the Ned is <em>not</em> Bran's father, despite it having no idea whether that is the case.</p>
+<p>There are also <strong>existential queries</strong>. Instead of asking a boolean question, it asks if a fact exists.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span>?- </span><span style="color:#8fa1b3;">father</span><span>(ned, X).
+</span></code></pre>
+<p>This query asks for all the relations <code>father</code> where <code>ned</code> is the first argument. It will return</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span>X = robb </span><span style="color:#65737e;">;
+</span><span>X = sansa </span><span style="color:#65737e;">;
+</span><span>X = arya .
+</span></code></pre>
+<p>in the order that the facts are laid out. The semicolon is the logical OR in Prolog, so it's saying that either one of the results is true. It would return false if there are no facts that satisfies the query.</p>
+<h2 id="rules">Rules</h2>
+<p>Rules in general can be any logical statements from facts that are inferred inductively. The general form is</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span>H :- B1, B2, B3, ..., BN
+</span></code></pre>
+<p>means that the head <code>H</code> is true if <code>B1</code> ∧ <code>B2</code> ∧ <code>B3</code> ... etc.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">parent</span><span>(X, Y) :- </span><span style="color:#8fa1b3;">father</span><span>(X, Y).
+</span></code></pre>
+<p>means that the relation <code>parent</code> exists between <code>X</code> and <code>Y</code> as long as the relation <code>father</code> exists between <code>X</code> and <code>Y</code>. We can construct rules recursively as well:</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">ancestor</span><span>(X, Y) :- </span><span style="color:#8fa1b3;">parent</span><span>(X, Y)
+</span><span style="color:#8fa1b3;">ancestor</span><span>(X, Y) :- </span><span style="color:#8fa1b3;">parent</span><span>(X, Z), </span><span style="color:#8fa1b3;">ancestor</span><span>(Z, Y)
+</span></code></pre>
+<p>This defines ancestor in two ways. The first rule says that <code>X</code> is an ancestor of <code>Y</code> as long as <code>X</code> is a parent of <code>Y</code>. The second rule introduces an additional definition where <code>X</code> is an ancestor of <code>Y</code> as long as <code>X</code> is a parent of some <code>Z</code> which is an ancestor of <code>Y</code>.</p>
+<p>We can almost think of this like a list, where parent means adjacent and ancestor means inorder. Of course two elements are inorder if they are adjacent, that's the first rule. However, if we can imagine a long list, two elements are inorder if the adjacent element to <code>X</code> is inorder previous to <code>Y</code>! The logic applies in any general situation; this is the advantage of the logical paradigm.</p>
+<h2 id="unification">Unification</h2>
+<p>The core of how Prolog will compute answers is through <strong>unification</strong>, which is similar to pattern matching. It has three unification conditions:</p>
+<ul>
+<li>
+<p>identical constants will be unified</p>
+</li>
+<li>
+<p>variables will always unify</p>
+</li>
+<li>
+<p>compound terms will unify if functor and arity match as well as their arguments, recursively (using the top two rules)</p>
+</li>
+</ul>
+<h2 id="lists">Lists</h2>
+<p>Data structures seem pretty incongruent with our idea of logical programming so far. Lists are defined similarly to OCaml as recursive data structures.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span>[</span><span style="color:#d08770;">1</span><span>, </span><span style="color:#d08770;">2</span><span>, </span><span style="color:#d08770;">3</span><span>, </span><span style="color:#d08770;">4</span><span>] % list
+</span><span>[] % nil
+</span><span>[H | T] % head cons tail
+</span></code></pre>
+<p>To find the last element of a list, we can use this rule</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">last</span><span>([H], H).
+</span><span style="color:#8fa1b3;">last</span><span>([_ | T], V) :- </span><span style="color:#8fa1b3;">last</span><span>(T, V).
+</span></code></pre>
+<p>The first rule is the base case, where if there is only one element in a list, that element is the &quot;last element&quot;. Then, the second rule is recursively defined. If the first argument </p>
+<h2 id="arithmetic">Arithmetic</h2>
+<p>The arithmetic operators are built into Prolog, and are built as relations between terms. Arithmetic equality is <em>not</em> the same thing as unification. If you want to check for arithmetic equality, you must use <code>is</code>.</p>
+<p>The <code>is</code> operator evaluates the right hand expression and unifies the expression with the left. There can be variables present, but the variables need to be defined as some ground value. You can't create an algebraic equation using <code>is</code>.</p>
+<p>Basic arithmetic operators are also built in, but only operate on numerals. If you try to apply, for instance, <code>+</code>, to lowercase word constants, there will be an error.</p>
+<h2 id="backtracking">Backtracking</h2>
+<p>Prolog computes the length of a list very similar to OCaml. An example OCaml length function might be:</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">len </span><span style="color:#bf616a;">l </span><span>=
+</span><span>    </span><span style="color:#b48ead;">match</span><span> l </span><span style="color:#b48ead;">with
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#d08770;">[] </span><span>-&gt; </span><span style="color:#d08770;">0
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#bf616a;">h </span><span>:: </span><span style="color:#bf616a;">t </span><span>-&gt; len t + </span><span style="color:#d08770;">1
+</span></code></pre>
+<p>The Prolog rules are similar:</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">len</span><span>([], </span><span style="color:#d08770;">0</span><span>).
+</span><span style="color:#8fa1b3;">len</span><span>([H | T], N) :- </span><span style="color:#8fa1b3;">len</span><span>(T, M), N is M + </span><span style="color:#d08770;">1</span><span>.
+</span></code></pre>
+<p>The relation <code>len</code> with arity 2 defined on the empty list maps to 0, obviously. The relation <code>len</code> with arity 2 and the first argument being a list with head and tail is the actual recursive part we are interested in.</p>
+<p>You might raise an eyebrow at the use of <code>is</code> in the second rule; after all, didn't I just say that the right hand side must have ground terms? We don't know what <code>M</code> is!</p>
+<p>Actually, we do know. You can think of the order of clauses as the imperative definition of variables. The variable <code>M</code> is declared and initialized with the first <code>len</code> clause, and it can then be used in the second clause. If we put the second clause first, Prolog would raise an error.</p>
+<p>You might notice a pattern here. The function is almost identical to the OCaml function, except for one difference. In the functional paradigm, every function evaluates to an expression which is returned within the function, and those are the values that are used for every operation. In the logical paradigm, there is no implicit return. <code>len(T, M)</code> is the same thing as <code>M = len(T)</code>!</p>
+<p>The length is computed using <strong>backtracking</strong>. It will try every possible rule for <code>len</code> and then evaluate every single one. You can think of a depth first search of the tree of rules.</p>
+<p>Every point at which there are multiple branches is called a <strong>choice point</strong>. In the <code>len</code> example, it can choose to either check the fact for <code>[]</code> or the recursive rule.</p>
+<p>Backtracking can cause unexpected results. Say we try to query</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span>?- </span><span style="color:#8fa1b3;">len</span><span>(A, </span><span style="color:#d08770;">2</span><span>)
+</span></code></pre>
+<p>We're querying for a list of size 2 which <em>doesn't exist</em>. What would happen?</p>
+<p>Well, Prolog will try to find a matching branch to an existing rule. It will fail the first rule most of the time, so it will match the second rule. Because <code>M = N - 1</code>, when trying to find <code>M</code> it will subtract from the second argument and backtrack. It will eventually match to return the result <code>A = [h1, h2];</code> when it matches 0 as the length and backtracks to adding arbitrary variables to the list of T.</p>
+<p>But then something unexpected happens. After printing that last result, Prolog would spin on and on, never returning again. That's because although we have matched the first rule and returned a list, Prolog will try every rule to see if it matches. And in fact, the second rule does match <code>[T2, 0]</code> because a variable will match any value. Prolog will endlessly backtrack because a choice will always be available that can match the new recursion. This is much different from OCaml which will only execute the first match arm that matches. You need to be careful in Prolog in order to prevent this kind of result.</p>
+<h2 id="tail-recursion">Tail Recursion</h2>
+<p>Our <code>len</code> function is not tail recursive, since it adds on to the recursive call. In order to optimize our code, including an accumulator will aid because of tail recursion which we have discussed before.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">len2</span><span>([], Acc, Acc).
+</span><span style="color:#8fa1b3;">len2</span><span>([H | T], Acc, N) :- M is Acc + </span><span style="color:#d08770;">1</span><span>, </span><span style="color:#8fa1b3;">len2</span><span>(T, M, N).
+</span></code></pre>
+<p>What we've done here is shift the <code>is</code> clause before the recursive call, which means we don't need to hold on to that choice when recursively calling <code>len2</code>, since it's guaranteed to already be checked.</p>
+<p>You might ask, why do we even need to have that <code>is</code> clause? We might as well directly call <code>len2(T, Acc + 1, N)</code>. However, there's an issue here. The <code>len2</code> relation only <em>unifies</em> terms, which is a powerful operation, but it <em>does not evaluate them</em>. For a list <code>[1, 5, 7, 3]</code> it would show <code>N = 0 + 1 + 1 + 1 + 1</code>, not <code>N = 4</code> which would be correct. In order to make this correct, we need to evaluate the addition before making the recursive call into the second clause because that clause does not perform any evaluation.</p>
+<p>This means that when we call <code>len2</code> we need to do <code>len2([], 0, X)</code>. This is a little annoying; we always know that our accumulator will begin at 0, why do we need to include it? There is a way to elide this definition:</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">len2</span><span>([)
+</span></code></pre>
+<h2 id="append">Append</h2>
+<p>Another instructive example is the simple list append.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">append </span><span style="color:#bf616a;">p q</span><span>:
+</span><span>    </span><span style="color:#bf616a;">match p with
+</span><span>    | </span><span style="color:#d08770;">[]</span><span> -&gt; </span><span style="color:#bf616a;">q
+</span><span>    | [</span><span style="color:#bf616a;">h</span><span> :: </span><span style="color:#bf616a;">t</span><span>] -&gt; </span><span style="color:#bf616a;">h</span><span> :: (</span><span style="color:#bf616a;">append t q</span><span>)
+</span></code></pre>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">append</span><span>([], Q, Q).
+</span><span style="color:#8fa1b3;">append</span><span>([H | P], Q, [H | R]) :- </span><span style="color:#8fa1b3;">append</span><span>(P, Q, R).
+</span></code></pre>
+<h2 id="prefix-suffix">Prefix/Suffix</h2>
+<p>For a given list, we can place a separator in the list. Every element prior to the separator is the <strong>prefix</strong> and every element after is the <strong>suffix</strong>. The separator can be anywhere, including before or after every element.</p>
+<p>We can get all possible prefixes/suffixes for a list for all separators:</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span>?- </span><span style="color:#8fa1b3;">prefix</span><span>(X, [</span><span style="color:#d08770;">1</span><span>, </span><span style="color:#d08770;">2</span><span>, </span><span style="color:#d08770;">3</span><span>]).
+</span></code></pre>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">X</span><span> = </span><span style="color:#b48ead;">[]</span><span>;
+</span><span style="color:#bf616a;">X</span><span> = </span><span style="color:#b48ead;">[</span><span>1</span><span style="color:#b48ead;">]</span><span>;
+</span><span style="color:#bf616a;">X</span><span> = </span><span style="color:#b48ead;">[</span><span>1, 2</span><span style="color:#b48ead;">]</span><span>;
+</span><span style="color:#bf616a;">X</span><span> = </span><span style="color:#b48ead;">[</span><span>1, 2, 3</span><span style="color:#b48ead;">]</span><span>.
+</span></code></pre>
+<p>Let's think about how to build this out logically. We need to find all lists which are possible prefixes of this list. That means we don't want to capture, for example, <code>[2, 3]</code>, because that is not a possible prefix. We have to start from the left and include from there.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">prefix</span><span>([], []).
+</span></code></pre>
+<p>The empty list should map onto the empty list, naturally</p>
+<h2 id="generate-and-test">Generate and Test</h2>
+<p>We need a general approach to solve problems from a Prolog standpoint. The paradigm is very different from imperative or functional, so we can't just look at it the way that that OCaml or Java does.</p>
+<p>Let's make <code>take</code>, which will remove exactly one element <code>x</code> from a list.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">take</span><span>([H | T], H, T).
+</span><span style="color:#8fa1b3;">take</span><span>([H | T], R, [H | S]) :- </span><span style="color:#8fa1b3;">take</span><span>(T, R, S).
+</span></code></pre>
+<p>The first rule is the most obvious. If the element is at the head of the list, we can just return the tail of the list. This is our base case.</p>
+<p>The second rule maps onto the case in the middle of the list. To imagine this, let's use an example</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span>?- </span><span style="color:#8fa1b3;">take</span><span>([</span><span style="color:#d08770;">1</span><span>, </span><span style="color:#d08770;">2</span><span>, </span><span style="color:#d08770;">3</span><span>], </span><span style="color:#d08770;">2</span><span>, T).
+</span></code></pre>
+<p>We try to unify this to the first rule, but it fails because 2 is not at the head of the first list. The second rule will unify because the first element is a list with multiple values, the second is a variable that will unify anything, and the third element is a variable that will unify anything. Upon match, it will query <code>take([2, 3], 2, S)</code>. This query will unify with the first rule, which will replace <code>S</code> with the value <code>[ 3 ]</code>. Once that <code>S</code> is unified, the rule will backtrack to the initial query which asked for <code>[H | S]</code>. Well, <code>H</code> in that initial case was <code>1</code> so our final return <code>T</code> will be <code>[1, 3]</code>.</p>
+<p>By extending <code>take</code>, we can implement other functions like permutations.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">perm</span><span>([], []).
+</span><span style="color:#8fa1b3;">perm</span><span>(L, [H | T]) :- </span><span style="color:#8fa1b3;">take</span><span>(L, H, R), </span><span style="color:#8fa1b3;">perm</span><span>(R, T).
+</span></code></pre>
+<p>Let's permute <code>[1, 2, 3]</code> once again.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span>?- perm([</span><span style="color:#d08770;">1</span><span>, </span><span style="color:#d08770;">2</span><span>, </span><span style="color:#d08770;">3</span><span>], X).
+</span></code></pre>
+<p>It will not unify with the first rule, but it will with the second, obviously. The second clause will permute the list with the head taken away. Now, you might notice that <code>H</code> is not an explicit value here as when we used it earlier. Prolog seeing this will try to unify it with <em>every</em> value in the list, so <code>take</code> will be queried three times, with each value in the list being used in <code>H</code>. The resulting <code>R</code> from each of those queries is permuted again. The <code>H</code> used in <code>take</code> will be the head that is cons the backtracked form.</p>
+<p><code>[1, 2, 3]</code> will become <code>take([1, 2, 3], H, R)</code>. Prolog will run through every choice, starting with <code>take([ 1,[1, 2, 3] R)</code> which will unify <code>R</code> with <code>[2, 3]</code>. Now, the <code>perm</code> clause will be <code>perm([2, 3], T)</code>. Let's assume that this gives all valid permutations of <code>[2, 3]</code> i.e. <code>[2, 3]</code> and <code>[3, 2]</code>. Well, the resulting match on the original <code>X</code> would be <code>H | [2, 3]</code> and <code>H | [3, 2]</code> or for this particular unification, <code>[1, 2, 3]</code> and <code>[1, 3, 2]</code>. This conclusively shows the inductive step, and the base case is trivially the empty list.</p>
+<p>As you might be able to tell from these examples, there is a general strategy to solving problems in Prolog.</p>
+<ol>
+<li>
+<p><strong>Generate a solution.</strong></p>
+</li>
+<li>
+<p><strong>Test if it is valid.</strong></p>
+</li>
+<li>
+<p><strong>If not valid, backtrack and try another solution.</strong></p>
+</li>
+</ol>
+<h2 id="quicksort">Quicksort</h2>
+<p>One way to sort a list in Prolog is to use the generate and test method. You can generate all permutations of a list, and test whether each list is sorted. This is obviously incredibly inefficient with a Big O of \(O(n!)\).</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">partition</span><span>([], Y, [], []).
+</span><span style="color:#8fa1b3;">partition</span><span>([X|Xs], Y, {X|Ls], Rs) :- X =&lt; Y, </span><span style="color:#8fa1b3;">partition</span><span>(Xs, Y, Ls, Rs).
+</span><span style="color:#8fa1b3;">partition</span><span>([X|Xs], Y, Ls, [X|Rs]) :- X &gt; Y, </span><span style="color:#8fa1b3;">partition</span><span>(Xs, Y, Ls, Rs).
+</span><span>
+</span><span style="color:#8fa1b3;">quicksort</span><span>([H | T], SL) :-
+</span><span>    </span><span style="color:#bf616a;">partition</span><span>(T, H, Ls, Rs), </span><span style="color:#8fa1b3;">quicksort</span><span>(Ls, SLs), quicksort (Rs, SRs), </span><span style="color:#8fa1b3;">append</span><span>(SLs, [H|SRs], SL).
+</span><span style="color:#8fa1b3;">quicksort</span><span>([], []).
+</span></code></pre>
+<p>This quicksort method is a very declarative manifestation of how to do quicksort in plain English. Partition the list along the pivot, quicksort the left and right, then combine them.</p>
+<h2 id="8-queens">8-Queens</h2>
+<p>One classic problem in math is to find all of the arrangements of queens on a chessboard where none of the queens threaten each other. We will find it for 8 queens on an 8×8 chessboard.</p>
+<p>Let's cut down on our sample space, because there are <em>a lot</em> of permutations. If a queen is next to another, it obviously threatens it. In fact, because queens can never share the same row or column, that massively cuts our sample space. We can describe our solution as an array of eight values from one through eight, where the index of the value is the row of the queen and the value itself being its column. This way of describing the sample space not only cuts our sample space but makes our computation simpler. However, we have not checked the diagonals. That is what we need Prolog for.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">checkBoard</span><span>([H | T]) :- L is H - </span><span style="color:#d08770;">1</span><span>, R is H + </span><span style="color:#d08770;">1</span><span>, </span><span style="color:#8fa1b3;">checkRow</span><span>(T, L, R), </span><span style="color:#8fa1b3;">checkBoard</span><span>(T).
+</span><span style="color:#8fa1b3;">checkRow</span><span>([H | T], L, R) :- H =\= L, H =\= R, LN is L - </span><span style="color:#d08770;">1</span><span>, RN is R + </span><span style="color:#d08770;">1</span><span>, </span><span style="color:#8fa1b3;">checkRow</span><span>(T, LN, RN)
+</span><span style="color:#8fa1b3;">checkBoard</span><span>([]).
+</span><span style="color:#8fa1b3;">checkRow</span><span>([], _, _).
+</span></code></pre>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">24 March 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs314/">#cs314</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Making a Website with Zola, Github Pages, and Github Actions</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Making a Website with Zola, Github Pages, and Github Actions</h1>
+    </header>
+    <div class="content">
+        <p>Making a website in the modern era is not easy to do for free. I did it using Zola, Github Pages, and Github Actions.</p>
+<span id="continue-reading"></span>
+<p>I've always wanted to have a personal website where I can upload what I do on my local computer to access remotely and have the world see. But it always seemed like too much of a hassle to set up and I didn't have the capital to invest in a website that I didn't need. However, when I started going back to university in-person this year, I found it much easier to take notes by typing them instead of using OneNote as I was accustomed, as the amount of code I had to write was drastically increased. Needing a way to access them remotely with a nice view, I thought a blog would be a good way to do that in addition to all the other things I had always wanted a website for. So, I embarked on a journey to create a website.</p>
+<h2 id="github-pages">Github Pages</h2>
+<p>A website is no use unless we have somewhere to put it. <a href="https://pages.github.com/">Github Pages</a> is a service offered by Github since 2008 that allows you to host your own website from a Github repository. You get one free website per Github account, which is called [username].github.io. All we have to do to enable it is create a repository named [username].github.io and enable Github Pages in the settings!</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;"># should be above 2.28 to enable default branch name change
+</span><span style="color:#bf616a;">git --version
+</span><span>
+</span><span style="color:#bf616a;">mkdir </span><span style="color:#b48ead;">[</span><span>username</span><span style="color:#b48ead;">]</span><span>.github.io
+</span><span style="color:#96b5b4;">cd </span><span style="color:#b48ead;">[</span><span>username</span><span style="color:#b48ead;">]</span><span>.github.io
+</span><span>
+</span><span style="color:#65737e;"># personal git config
+</span><span style="color:#bf616a;">git</span><span> config</span><span style="color:#bf616a;"> --global</span><span> user.name &quot;</span><span style="color:#a3be8c;">NAME</span><span>&quot;
+</span><span style="color:#bf616a;">git</span><span> config</span><span style="color:#bf616a;"> --global</span><span> user.email &quot;</span><span style="color:#a3be8c;">EMAIL</span><span>&quot;
+</span><span style="color:#bf616a;">git</span><span> config</span><span style="color:#bf616a;"> --global</span><span> init.defaultBranch &quot;</span><span style="color:#a3be8c;">main</span><span>&quot;
+</span><span style="color:#bf616a;">git</span><span> init
+</span><span>
+</span><span style="color:#bf616a;">gh</span><span> repo create </span><span style="color:#b48ead;">[</span><span>username</span><span style="color:#b48ead;">]</span><span>.github.io</span><span style="color:#bf616a;"> --public --source</span><span>=.</span><span style="color:#bf616a;"> --remote-upstream
+</span></code></pre>
+<p>If you're using <a href="https://code.visualstudio.com/">Visual Studio Code</a> as your editor, there's a nicer way to do this than through the command line. After installing <a href="https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github">the Github extension</a>, go to the Source Control button on the sidebar. There should be a button labeled &quot;Publish to Github&quot; which allows you to interactively initialize a Git repository in the current folder and publish it to Github.</p>
+<h2 id="github-actions">Github Actions</h2>
+<p>We might have created our Github page, but we need a way to get all of the code from our repository to the website. This is called <strong>deployment</strong>. Luckily, we have a way to automatically deploy our website through <strong>Github Actions</strong>. <a href="https://github.com/features/actions">Github Actions</a> is another service offered by Github since 2019 that gives you free CI in public repositories. Although the free tier is <a href="https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes">fairly limited</a> at 500 MB and 2000 minutes per month, it should be more than enough for a static blog that is not deployed very often.</p>
+<p>There is an action automatically created for our Github page called <code>pages-build-deployment</code> which, as the name implies, builds and deploys the page you've created on push. The way that I organized my code, which is probably the simplest option, is that I hosted my code at the <code>main</code> branch and had a <code>gh-pages</code> branch that hosted the actual website which was built from the <code>main</code> branch. If you want to do the same, go to <code>Settings</code> -&gt; <code>Pages</code> and make sure that the build target is the <code>gh-pages</code> branch at the root.</p>
+<p>For now, this won't do anything because we don't have a <code>gh-pages</code> branch or anything in our <code>main</code> branch. So how do we <em>actually</em> make our website?</p>
+<h2 id="zola">Zola</h2>
+<p><a href="https://www.getzola.org/">Zola</a> is a static site generator written in <a href="https://www.rust-lang.org/">Rust</a>, and is one of the fastest out there. I decided to choose it for my website. If you'd prefer a different generator, this is where this guide diverges for you. There are plenty of tutorials for Hugo websites or others, but I have found a lack of Zola guides so I decided to create this.</p>
+<p>To start, <a href="https://www.getzola.org/documentation/getting-started/installation/">install Zola on your system</a>. The documentation on the website is pretty stellar so I would recommend reading that to get a quick understanding on how to use Zola. I will explain the parts that I personally found difficult or unclear.</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">zola</span><span> init
+</span><span style="color:#bf616a;">zola</span><span> build </span><span style="color:#65737e;"># unnecessary as serve will also automatically build it
+</span><span style="color:#bf616a;">zola</span><span> serve
+</span></code></pre>
+<p>Now you can see your new website at <code>127.0.0.1:1111</code>!</p>
+<h2 id="zola-deployment">Zola Deployment</h2>
+<p>Although we can build your website very simply on our local machine, it would be preferable to automatically build the website when we publish content so we don't have to mess around with all of that. The <a href="https://www.getzola.org/documentation/deployment/github-pages/">Zola-approved way</a> to do this is by using <a href="https://github.com/shalzz/zola-deploy-action">zola-deploy-action</a>. All of you have to do is click the <code>New Workflow</code> button on the <code>Actions</code> page from your Github repository and follow the link to <code>set up a workflow yourself</code>, then copy-paste this into it:</p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#65737e;"># On every push this script is executed
+</span><span style="color:#d08770;">on</span><span>: </span><span style="color:#a3be8c;">push
+</span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">Build and deploy GH Pages
+</span><span style="color:#bf616a;">jobs</span><span>:
+</span><span>  </span><span style="color:#bf616a;">build</span><span>:
+</span><span>    </span><span style="color:#bf616a;">runs-on</span><span>: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span>    </span><span style="color:#bf616a;">if</span><span>: </span><span style="color:#a3be8c;">github.ref == &#39;refs/heads/main&#39;
+</span><span>    </span><span style="color:#bf616a;">steps</span><span>:
+</span><span>      - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">checkout
+</span><span>        </span><span style="color:#bf616a;">uses</span><span>: </span><span style="color:#a3be8c;">actions/checkout@v2
+</span><span>      - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">build_and_deploy
+</span><span>        </span><span style="color:#bf616a;">uses</span><span>: </span><span style="color:#a3be8c;">shalzz/zola-deploy-action@v0.14.1
+</span><span>        </span><span style="color:#bf616a;">env</span><span>:
+</span><span>          </span><span style="color:#65737e;"># Target branch
+</span><span>          </span><span style="color:#bf616a;">PAGES_BRANCH</span><span>: </span><span style="color:#a3be8c;">gh-pages
+</span><span>          </span><span style="color:#65737e;"># Provide personal access token
+</span><span>          </span><span style="color:#bf616a;">TOKEN</span><span>: </span><span style="color:#a3be8c;">${{ secrets.TOKEN }}
+</span></code></pre>
+<p>However, I wanted more configuration and control over my action. Github Actions operates using Jekyll by default, so unless you add a <code>.nojekyll</code> file to the build branch it will run unnecessary steps to build a Jekyll theme. In order to reduce complexity, I decided to make a similar action that adds that command. If you're comfortable with the workflow as provided, then skip the next section.</p>
+<h2 id="creating-a-github-action">Creating a Github Action</h2>
+<p>An action of the type we want here consists of three files: <code>action.yaml</code>, <code>Dockerfile</code>, and <code>entrypoint.sh</code>. Let's break these down.</p>
+<ul>
+<li><code>action.yaml</code>: the configuration file that tells Github Actions what to do</li>
+<li><code>Dockerfile</code>: the configuration file for the Docker container that Github Actions will set up</li>
+<li><code>entrypoint.sh</code>: the shell script that will execute the commands we want</li>
+</ul>
+<p><code>action.yaml</code> is simple. It should follow this general format:</p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#65737e;"># action.yaml
+</span><span style="color:#bf616a;">name</span><span>: &#39;</span><span style="color:#a3be8c;">ACTION_NAME</span><span>&#39;
+</span><span style="color:#bf616a;">description</span><span>: &#39;</span><span style="color:#a3be8c;">DESC</span><span>&#39;
+</span><span style="color:#bf616a;">author</span><span>: &#39;</span><span style="color:#a3be8c;">NAME</span><span>&#39;
+</span><span style="color:#bf616a;">runs</span><span>:
+</span><span>  </span><span style="color:#bf616a;">using</span><span>: &#39;</span><span style="color:#a3be8c;">docker</span><span>&#39;
+</span><span>  </span><span style="color:#bf616a;">image</span><span>: &#39;</span><span style="color:#a3be8c;">Dockerfile</span><span>&#39;
+</span></code></pre>
+<p>The Dockerfile is more complex and has many more options. I kept mine simple to what is needed, you may have your own preference for Docker images.</p>
+<pre data-lang="Dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-Dockerfile "><code class="language-Dockerfile" data-lang="Dockerfile"><span style="color:#65737e;"># any Docker image is fine, I prefer debian
+</span><span style="color:#b48ead;">from</span><span> debian:stable-slim
+</span><span style="color:#b48ead;">MAINTAINER </span><span>NAME &lt;EMAIL&gt;
+</span><span>
+</span><span style="color:#65737e;"># for github actions
+</span><span style="color:#b48ead;">LABEL </span><span>&quot;</span><span style="color:#a3be8c;">com.github.actions.name</span><span>&quot;=&quot;</span><span style="color:#a3be8c;">ACTION_NAME</span><span>&quot;
+</span><span style="color:#b48ead;">LABEL </span><span>&quot;</span><span style="color:#a3be8c;">com.github.actions.description</span><span>&quot;=&quot;</span><span style="color:#a3be8c;">DESC</span><span>&quot;
+</span><span>
+</span><span style="color:#65737e;"># locale, I am in the U.S. so I use en_US
+</span><span style="color:#b48ead;">ENV </span><span>LC_ALL C.UTF-8
+</span><span style="color:#b48ead;">ENV </span><span>LANG en_US.UTF-8
+</span><span style="color:#b48ead;">ENV </span><span>LANGUAGE en_US.UTF-8
+</span><span>
+</span><span style="color:#65737e;"># standard apt-get + wget and git for getting and building
+</span><span style="color:#b48ead;">RUN </span><span>apt-get update &amp;&amp; apt-get install -y wget git
+</span><span>
+</span><span style="color:#65737e;"># get zola on the docker image
+</span><span style="color:#b48ead;">RUN </span><span>wget -q -O - \
+</span><span>&quot;</span><span style="color:#a3be8c;">https://github.com/getzola/zola/releases/download/v0.15.3/zola-v0.15.3-x86_64-unknown-linux-gnu.tar.gz</span><span>&quot; \
+</span><span>| tar xzf - -C /usr/local/bin
+</span><span>
+</span><span style="color:#b48ead;">COPY</span><span> entrypoint.sh /entrypoint.sh
+</span><span>
+</span><span style="color:#65737e;"># give the entrypoint executable permissions
+</span><span style="color:#b48ead;">RUN </span><span>chmod +x entrypoint.sh
+</span><span>ENTRYPOINT [&quot;</span><span style="color:#a3be8c;">/entrypoint.sh</span><span>&quot;]
+</span></code></pre>
+<p><code>entrypoint.sh</code> is where all the magic happens. Fundamentally, all that it does is call <code>zola build</code> on the <code>main</code> branch, which builds your website inside the <code>public</code> directory (you can configure this if you so wish). It then commits those website files to the <code>gh-pages</code> branch.</p>
+<p>We need one more thing before we can create <code>entrypoint.sh</code>; a token. We need to authorize our action to be able to push to <code>gh-pages</code>. You can create a token by going to <a href="https://github.com/settings/tokens">this page</a> and creating a new token with at least <code>repo</code> rights. You can add the token to your repository by going to <code>Settings</code> -&gt; <code>Secrets</code> -&gt; <code>Actions</code> and creating a new repository secret called <code>TOKEN</code> (or any other name you like).</p>
+<p>With that token, this is the basic necessities for <code>entrypoint.sh</code>:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;">#!/bin/bash
+</span><span style="color:#96b5b4;">set </span><span style="color:#bf616a;">-e
+</span><span style="color:#96b5b4;">set </span><span style="color:#bf616a;">-o</span><span> pipefail
+</span><span>
+</span><span style="color:#8fa1b3;">main</span><span>() {
+</span><span>    </span><span style="color:#bf616a;">git</span><span> config</span><span style="color:#bf616a;"> --global</span><span> url.&quot;</span><span style="color:#a3be8c;">https://</span><span>&quot;.insteadOf git://
+</span><span>    </span><span style="color:#bf616a;">git</span><span> config</span><span style="color:#bf616a;"> --global</span><span> url.&quot;$</span><span style="color:#bf616a;">GITHUB_SERVER_URL</span><span style="color:#a3be8c;">/</span><span>&quot;.insteadOf &quot;</span><span style="color:#a3be8c;">git@github.com</span><span>&quot;:
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># update git submodules (important if you have themes)
+</span><span>    </span><span style="color:#bf616a;">git</span><span> submodule update</span><span style="color:#bf616a;"> --init --recursive
+</span><span>
+</span><span>    </span><span style="color:#bf616a;">zola</span><span> build
+</span><span>
+</span><span>    </span><span style="color:#96b5b4;">cd</span><span> public
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># if you want to add any commands do it here e.g. `touch .nojekyll`
+</span><span>
+</span><span>    </span><span style="color:#bf616a;">git</span><span> init
+</span><span>    </span><span style="color:#bf616a;">git</span><span> config user.name &quot;</span><span style="color:#a3be8c;">GitHub Actions</span><span>&quot;
+</span><span>    </span><span style="color:#bf616a;">git</span><span> config user.email &quot;</span><span style="color:#a3be8c;">github-actions-bot@users.noreply.github.com</span><span>&quot;
+</span><span>    </span><span style="color:#bf616a;">git</span><span> add .
+</span><span>
+</span><span>    </span><span style="color:#bf616a;">git</span><span> commit</span><span style="color:#bf616a;"> -m </span><span>&quot;</span><span style="color:#a3be8c;">Deploy </span><span>$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">GITHUB_REPOSITORY</span><span style="color:#a3be8c;">} to </span><span>$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">GITHUB_REPOSITORY</span><span style="color:#a3be8c;">}:gh-pages</span><span>&quot;
+</span><span>    </span><span style="color:#bf616a;">git</span><span> push</span><span style="color:#bf616a;"> --force </span><span>&quot;</span><span style="color:#a3be8c;">https://</span><span>$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">GITHUB_ACTOR</span><span style="color:#a3be8c;">}:</span><span>$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">TOKEN</span><span style="color:#a3be8c;">}@github.com/</span><span>$</span><span style="color:#a3be8c;">{</span><span style="color:#bf616a;">GITHUB_REPOSITORY</span><span style="color:#a3be8c;">}.git</span><span>&quot; master:gh-pages
+</span><span>}
+</span><span>
+</span><span style="color:#bf616a;">main </span><span>&quot;$</span><span style="color:#bf616a;">@</span><span>&quot;
+</span></code></pre>
+<p>With all of these settings, this is how your workflow should look:</p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#65737e;"># .github/workflows/main.yml
+</span><span style="color:#d08770;">on</span><span>: </span><span style="color:#a3be8c;">push
+</span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">Build and deploy GH Pages
+</span><span style="color:#bf616a;">jobs</span><span>:
+</span><span>  </span><span style="color:#bf616a;">build</span><span>:
+</span><span>    </span><span style="color:#bf616a;">runs-on</span><span>: </span><span style="color:#a3be8c;">ubuntu-latest
+</span><span>    </span><span style="color:#bf616a;">if</span><span>: </span><span style="color:#a3be8c;">github.ref == &#39;refs/heads/main&#39;
+</span><span>    </span><span style="color:#bf616a;">steps</span><span>:
+</span><span>      - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">checkout
+</span><span>        </span><span style="color:#bf616a;">uses</span><span>: </span><span style="color:#a3be8c;">actions/checkout@v2
+</span><span>      - </span><span style="color:#bf616a;">name</span><span>: </span><span style="color:#a3be8c;">build-and-deploy
+</span><span>        </span><span style="color:#bf616a;">uses</span><span>: </span><span style="color:#a3be8c;">./ </span><span style="color:#65737e;"># wherever your action is in relation to the root of the repo
+</span><span>        </span><span style="color:#bf616a;">env</span><span>:
+</span><span>          </span><span style="color:#bf616a;">TOKEN</span><span>: </span><span style="color:#a3be8c;">${{secrets.TOKEN}}
+</span></code></pre>
+<h2 id="themes">Themes</h2>
+<p>Zola requires a <a href="https://tera.netlify.app/">Tera</a> template to render your site for the base site <code>index.html</code> as well as <code>page.html</code> for page-specific settings. You can also use <a href="https://sass-lang.com/">Sass</a> stylesheets if you enable it in your <code>config.toml</code>. <strong>Themes</strong> are a convenient way to have those built for you so you can get a website looking nice without excessive fiddling. I decided to use the <a href="https://github.com/getzola/after-dark">after-dark</a> theme which is based on the Hugo theme of the same name. Since I wanted to make my own modifications to it, <a href="https://github.com/sharifhsn/after-dark">I forked it</a> and added the changes I wanted. The easiest way to add a theme for Github pages is to use submodules:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">git</span><span> submodule add https://github.com/getzola/after-dark.git themes/after-dark
+</span></code></pre>
+<p>The deploy action will take care of updating the submodule as necessary. Just add the theme to your <code>config.toml</code> file and voila!</p>
+<p>Although I like the <code>after-dark</code> theme, I might change to a different theme or make my own in the future to accommodate my goals for this website. If that happens, I'll detail that process in another post.</p>
+<h2 id="katex">$\KaTeX$</h2>
+<p>Most of the lecture notes I write incorporate <a href="https://katex.org/">$\KaTeX$</a> in some way. I find it an expressive way to write formulas and math expressions when reviewing for tests. <code>after-dark</code> does not provide $\KaTeX$ support by default, which is part of the reason I forked it.</p>
+<p>My preferred option for $\KaTeX$ rendering would be server-side, as I don't plan on pushing very often (perhaps once per day) and Zola compilation is extremely quick. However, after doing some research into <a href="https://github.com/getzola/zola/pull/1073">previous attempts</a>, I decided it wasn't feasible for now. Perhaps in the future I'll take a stab at implementing it myself, but for now I'll settle for client-side.</p>
+<p><a href="https://katex.org/docs/browser.html">The $\KaTeX$ docs</a> give a pretty good description on how to incorporate it into your website. In Tera, all you have to do is enclose those stylesheets/scripts into CSS/JS blocks, respectively. My inspiration came from <a href="https://github.com/getzola/after-dark/pull/22">this pull request</a>. I modified the standard <code>auto-render.min.js</code> script to add standard $\KaTeX$ $ $ tags.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">26 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/meta/">Meta</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/zola/">#zola</a></li>
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/github-actions/">#github actions</a></li>
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/website/">#website</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

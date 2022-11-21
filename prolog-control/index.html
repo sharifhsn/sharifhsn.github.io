@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Control in Prolog</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Control in Prolog</h1>
+    </header>
+    <div class="content">
+        <p>Conditional statements are very powerful and are in used in almost every language. How does Prolog implement the same idea?</p>
+<span id="continue-reading"></span><h2 id="logic-control">Logic + Control</h2>
+<p>The basic idea behind a control statement is that there is <em>logic</em>, such as facts, rules, and queries, which are composed of clauses/<strong>goals</strong>, as well as <em>control</em>, which is how Prolog chooses the logic among several options. The control is implemented by the order of the facts/goals, which is <strong>extremely important</strong>. Prolog will <em>always</em> choose the first applicable rule in a program, and it will <em>always</em> choose the leftmost clause/goal in a query.</p>
+<p>Brevity is key. If there are two rules that do the same thing, or one rule that is implied by another rule, you should probably take it out unless executing something more than once is your explicit intention.</p>
+<h2 id="abstract-interpreter">Abstract Interpreter</h2>
+<p><strong>A substitution \(σ\) is a finite set of pairs of terms \(\{X_1/t_1, ..., X_n/t_n\}\) where each \(t_i\) is a term and each \(X_i\) is a variable such that \(X_i ≠ t_i\) and \(X_i ≠ X_j\) if \(i ≠ j\).</strong></p>
+<p>An empty substitution is denoted by the letter \(ε\).</p>
+<p>Some important rules:</p>
+<ul>
+<li>
+<p>A variable cannot substitute itself e.g. \(Z/Z\) is illegal.</p>
+</li>
+<li>
+<p>Only a variable can be substituted e.g. \(m/n\) is illegal because \(m\) is an atom.</p>
+</li>
+</ul>
+<p>The meaning of applying a term to a substitution is that every occurrence of \(X_i\) in the compound term is replaced with the corresponding substituent in \(σ\) simultaneously. This application is known as <strong>instantiation</strong>, and that new compound term \(Eσ\) is an <strong>instance</strong>.</p>
+<p>Bringing back the earlier rules about unification, you can see how unification is derived from substitution. Variables can unify with anything, so they are the term that is substituted in Prolog. There is an exception to this, which is known as the <strong>occurs check</strong>.</p>
+<p>We can use a substitution \(σ\) as a <strong>unifier</strong> for two terms if the application of \(σ\) to those terms makes them <em>syntactically equal</em>. This is distinct from <em>semantic</em> equality. When we talk about unifiers, we are only talking about the actual letters, not the meaning of the term. For \(S = f(X,Y)\) and \(T=f(g(Z),Z)\), if we have a \(σ = \{X/g(Z),Y/Z\}\) then \(S\) and \(T\) will be unified. Since the unification only cares about syntax, more than one unifier may exist for two terms. We could have just as well substituted the other way and it would still be a unifier.</p>
+<h2 id="unifier-computation">Unifier Computation</h2>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>unify(X, Y, θ) =
+</span><span>  X = Xθ
+</span><span>  Y = Yθ
+</span><span>  case X is a variable that does not occur in Y:
+</span><span>    return (θ{X/Y} ∪ {X/Y}) // this replaces X with Y in the unifier, and then adds a new substitution just in case X will appear later
+</span><span>  case Y is a variable that does not occur in X:
+</span><span>    return (θ{Y/X} ∪ {Y/X}) // this replaces Y with X in the unifier. this is a rare case when the variables substitute each other
+</span><span>  case X and Y are identical constants
+</span><span>    return Θ
+</span><span>  case X and Y are compound terms like f(X1, ..., Xn) and f(Y1, ..., Yn)
+</span><span>    return (fold_left (fun Θ (X,Y) -&gt; unify(X, Y, Θ)) θ [(X1, Y1), ..., (Xn, Yn)]
+</span><span>    // this applies the unification process to the compound terms
+</span><span>    // the function is just folding left with θ as acc and the set of compound terms as the list
+</span></code></pre>
+<p>This is the basic pseudocode for the unify function. It's recursive, and side-effect free. However, it's not complete for writing an interpreter. For that, we also need backtracking.</p>
+<h2 id="backtracking">Backtracking</h2>
+<p>The resolvent will maintain a list to satisfy our query. When we try to resolve a compound term, any goals within will be queued onto the resolvent to be resolved. This is <em>non-deterministic</em>, there is no order that will necessarily be followed other than that sub-goals within a single term will be inorder.</p>
+<h2 id="missionaries-and-cannibals">Missionaries and Cannibals</h2>
+<p>Let's imagine a problem where we have three missionaries and three cannibals that need to cross a river in one boat. If the cannibals outnumber the missionaries, they will get eaten. How can we get every person across the river?</p>
+<p>The concept of a <em>safe state</em> will be important here. A state is safe when no missionaries are eaten. By labelling certain states as unsafe, we can cut those paths out of our search algorithm. We should also define <em>transitions</em> between states, where a predicate moves a state from A to B. </p>
+<p>Our states are essentially a pair representing position.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">start</span><span>(</span><span style="color:#d08770;">3</span><span>-</span><span style="color:#d08770;">3</span><span>-</span><span style="color:#d08770;">0</span><span>-</span><span style="color:#d08770;">0</span><span>-l).
+</span><span style="color:#8fa1b3;">finish</span><span>(</span><span style="color:#d08770;">0</span><span>-</span><span style="color:#d08770;">0</span><span>-</span><span style="color:#d08770;">3</span><span>-</span><span style="color:#d08770;">3</span><span>-_).
+</span></code></pre>
+<p>The elements in order are missionaries on the original side, cannibals on the original side, missionaries on the target side, cannibals on the other side, and the location of the boat.</p>
+<p>The safety of the state is based on whether there are more cannibals than missionaries.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">safe</span><span>(</span><span style="color:#d08770;">0</span><span>-_-M2-C2-_) :- M2 &gt;= C2.
+</span><span style="color:#8fa1b3;">safe</span><span>(M1-C1-</span><span style="color:#d08770;">0</span><span>-_-_) :- M1 &gt;= C1.
+</span><span style="color:#8fa1b3;">safe</span><span>(M1-C1-M2-C2-_) :- M1 &gt;= C1, M2 &gt;= C2.
+</span></code></pre>
+<p>Every state here represents a point at which there are at least as many missionaries as cannibals on each side of the river.</p>
+<p>The change in state can be caused by a <code>carry/2</code> predicate which details how many missionaries and cannibals are being moved, respectively. In our case, the boat can only move up to 2 people so we need to represent every possible case of that.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">carry</span><span>(</span><span style="color:#d08770;">2</span><span>, </span><span style="color:#d08770;">0</span><span>).
+</span><span style="color:#8fa1b3;">carry</span><span>(</span><span style="color:#d08770;">1</span><span>, </span><span style="color:#d08770;">1</span><span>).
+</span><span style="color:#8fa1b3;">carry</span><span>(</span><span style="color:#d08770;">0</span><span>, </span><span style="color:#d08770;">2</span><span>).
+</span><span style="color:#8fa1b3;">carry</span><span>(</span><span style="color:#d08770;">1</span><span>, </span><span style="color:#d08770;">0</span><span>).
+</span><span style="color:#8fa1b3;">carry</span><span>(</span><span style="color:#d08770;">0</span><span>, </span><span style="color:#d08770;">1</span><span>).
+</span></code></pre>
+<p>However, we need a way to represent moving on both sides of the river, so we will have two transitions.</p>
+<pre data-lang="prolog" style="background-color:#2b303b;color:#c0c5ce;" class="language-prolog "><code class="language-prolog" data-lang="prolog"><span>step(M1-C1-M2-C2-l, M3-C3-M4-C4-r) :-
+</span><span>    carry(X, Y),
+</span><span>    M1 &gt;= X, M3 is M1 - X, M4 is M2 + X,
+</span><span>    C1 &gt;= Y, C3 is C1 - Y, C4 is C2 + Y.
+</span><span>
+</span><span>step(M1-C1-M2-C2-r, M3-C3-M4-C4-l) :-
+</span><span>    carry(X, Y),
+</span><span>    M2 &gt;= X, M4 is M2 - X, M3 is M1 + X,
+</span><span>    C2 &gt;= Y, C4 is C2 - Y, C3 is C1 + Y.
+</span></code></pre>
+<p>This <code>step</code> predicate checks every valid <code>carry</code>, then will execute that transition from the current state.</p>
+<pre data-lang="pro" style="background-color:#2b303b;color:#c0c5ce;" class="language-pro "><code class="language-pro" data-lang="pro"><span style="color:#8fa1b3;">travel</span><span>(A, A, _, []).
+</span><span style="color:#8fa1b3;">travel</span><span>(A, C, Visited, [B | Steps]) :-
+</span></code></pre>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date"> 5 April 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs352/">#cs352</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

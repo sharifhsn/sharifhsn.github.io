@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Memory Virtualization</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Memory Virtualization</h1>
+    </header>
+    <div class="content">
+        <p>Accessing physical memory can cause big issues if we do it directly. How can we virtualize the memory like the CPU so we can use it efficiently and safely?</p>
+<span id="continue-reading"></span>
+<p>Let's think of a super simple one process system. Our OS is located in the lowest part of memory, and everything after that is reserved for the user. Within an address space, we have the stack-heap structure discussed before. There's a big problem, that processes can access the memory that the OS is stored in and modify it. That's not good!</p>
+<p>If we want multiple processes as well, we want to give processes memory that is managed by the operating system so they do not interfere with each other. Every process should have a self-contained <em>address space</em>.</p>
+<p>We need dynamic allocation from memory as well so that our programs can become very powerful. The stack is not always sufficient for the programs we want to write. The dynamic heap is where all this memory management magic (say that five times fast) happens.</p>
+<p>Memory accesses are built into <code>movl</code> instructions in the ISA. There are special operations to dereference the location stored in a register and access memory. These are known as <em>load/store</em> operations.</p>
+<p>Memory accesses also happen from the code area by the instruction pointer, though that's typically not shown. If we want to count memory accesses, there is one fetch for every instruction, and another if the instruction is a load/store.</p>
+<pre data-lang="nasm" style="background-color:#2b303b;color:#c0c5ce;" class="language-nasm "><code class="language-nasm" data-lang="nasm"><span style="color:#d08770;">0x10</span><span style="color:#8fa1b3;">: movl </span><span style="color:#d08770;">0x8</span><span style="color:#8fa1b3;">(%</span><span style="color:#bf616a;">rbp</span><span style="color:#8fa1b3;">)</span><span>, </span><span style="color:#8fa1b3;">%</span><span style="color:#bf616a;">edi
+</span><span style="color:#d08770;">0x13</span><span style="color:#8fa1b3;">: addl </span><span style="color:#96b5b4;">$</span><span style="color:#d08770;">0x3</span><span>, </span><span style="color:#8fa1b3;">%</span><span style="color:#bf616a;">edi
+</span><span style="color:#d08770;">0x19</span><span style="color:#8fa1b3;">: movl %</span><span style="color:#bf616a;">edi</span><span>, </span><span style="color:#d08770;">0x8</span><span style="color:#8fa1b3;">(%</span><span style="color:#bf616a;">rbp</span><span style="color:#8fa1b3;">)
+</span></code></pre>
+<p>In this example, there are 5 total memory accesses. There is one for every instruction, and each <code>movl</code> is a load/store because one of the operands dereferences a memory pointer.</p>
+<p>Typically, we want to reduce this as much as possible because memory access is really slow, and we can't always rely on the cache.</p>
+<p>So, what are some strategies to virtualize memory?</p>
+<h2 id="time-sharing">Time Sharing</h2>
+<p>When we virtualized the CPU, we gave each process the illusion that it had its own CPU that were all running at the same time. The way this was done was through context switches that preserved CPU state in memory. We could do something similar by saving memory to disk when the process isn't running.</p>
+<p>However, there is an immediate problem with this: it would be incredibly slow. Disk I/O even with SSDs is several orders of magnitude slower than DRAM, which is itself orders of magnitude slower than cache/register access. Considering how much processes play around with memory, this would be totally infeasible.</p>
+<h2 id="static-relocation">Static Relocation</h2>
+<p>This is an interesting solution. The instructions stored as static data refer to specific memory locations that are hard coded in the application. However, what we could do is change those pointers and memory to memory that is currently available every time we load the process into memory.</p>
+<p>For example, imagine the previous example which has instructions at <code>0x10</code>, <code>0x13</code>, etc. We could imagine that those memory locations are no longer available, so the OS changes the static code portion to <code>0x1010</code>, <code>0x1013</code>, etc. This means that all <code>jmp</code> and load/store instructions would also have to be rewritten as well since they directly refer to memory locations.</p>
+<p>However, this translation is pretty expensive, although it is simple to implement. There are also security concerns, as always. There is no reason that the new memory couldn't be located somewhere that it can't go.</p>
+<h2 id="dynamic-relocation">Dynamic Relocation</h2>
+<p>We want the power of static relocation, but we need a way to manually protect each process from each other. This is such an important issue that it is usually provided as a hardware component: the <strong>Memory Management Unit</strong> (MMU). Whenever a process generates a virtual address in its address space, the MMU takes on the job for translating that address into a real address and giving it back to the process. This is a good example of modularization; we don't want to have the process to worry about memory, so we offload that job onto a specialized unit designed for that purpose. The MMU is managed only by the OS, so the user can never access it.</p>
+<p>There are two general operating modes, as discussed previously: kernel space, and user space. Privileged kernel operations have full power over all of memory and the MMU, and users have to ask the OS for memory through virtual translation.</p>
+<h2 id="address-translation">Address Translation</h2>
+<p>To start out with, we will make some assumptions about how address spaces are laid out. They are all contigous spaces in memory of the same size that are smaller than physical memory. As we will see later with segmentation, this assumption will not hold up, but it useful for now.</p>
+<p>In order to translate a <em>virtual address</em> to a <em>physical address</em> in memory, we need some kind of reference space in memory. This is given by the <strong>base</strong> and <strong>bounds</strong> registers, which give the physical memory locations of where the virtual address space starts and ends, respectively. These registers are not part of the regular ISA and are instead part of the previously mentioned MMU, and operating on them requires privilege. The MMU can also throw an exception upon illegal memory access which is handled by our OS.</p>
+<p>Our OS can manage memory in this simple way through the mechanism of a <em>free list</em>, which is a linked list which indicates free spaces, which is also used for <code>malloc</code>.</p>
+<p>As discussed before, the address space has a structure where the stack grows downward and the heap grows upward. However, if you look at a diagram of this for more than five seconds, you might notice a giant chasm between the stack and heap. Relying on our assumption of a contiguous space of memory, this is a lot of wasted memory. Some address spaces fix this problem through <strong>segmentation</strong>.</p>
+<h2 id="segmentation">Segmentation</h2>
+<p>As the name implies, a segmented address space is split into multiple segments with its own base/bounds pair to indicate its logical beginning and end. We can split every piece of the address space into its own segment, so stack goes in one segment, heap goes in another, etc. This way, although the virtual address space has this nice alignment, we are not wasting physical memory with our <em>sparse</em> address space.</p>
+<p>In order to translate a virtual address, we treat the address as an offset with a segment. For example, if we were trying to access a virtual address in the heap, this would be the formula:</p>
+<p>$$physicalAddress = physicalBase + (virtualAddress - virtualBase)$$</p>
+<p>Before we allow this translation to take place, however, we must check that the value does not exceed the physical bound. If this is the case, then we have caused the infamous <strong>segmentation fault</strong>.</p>
+<p>A faster way to do with this masks is through bitwise operations. The top two bits of the address refer to the segment, either the code, stack, or heap. The rest of the address is the offset within the segment. This way, we can perform the bounds check before accessing the physical address by checking if the expression in the parentheses exceeds the virtual bounds.</p>
+<p>However, one issue with this means that each segment gets the same maximum size, which is \(2^{offset}\). If we want a bigger heap, we're out of luck. We can solve this by tracking instructions instead of bits. For example, an instruction fetch for <code>%rip</code> will come from the code segment, so we don't need to put that in the address that it is in the code segment.</p>
+<p>Another issue is that the stack segment grows downwards instead of forwards, which means that its segment works differently. We need an extra bit for segments that indicates whether they grow forwards or backwards, which will be set to 0 for the stack and 1 for everything else.</p>
+<p>If that bit is false, then we subtract the offset from the base instead of adding it as above.</p>
+<h2 id="sharing">Sharing :)</h2>
+<p>Sometimes, processes share the same code. It seems wasteful to copy the same code segment every time we have a new process, so modern operating systems implement <strong>sharing</strong> for code segments. Sharing can be implemented for any segment, but it is most common for code since it's read-only. This is important for dynamically linked libraries since many processes will access the same library, like <code>libc</code>.</p>
+<p>Hardware adds extra <em>protection bits</em> to each segment indicating its <code>rwx</code> value similar to a file. If a segment is indicated to be <code>r--</code>, then the OS can secretly share the segment between multiple processes, assured that they will only read it. This concept of a read guard allowing for multiple shared references as opposed to a write guard which only allows for one mutable reference will become <em>very</em> important when we discuss concurrency.</p>
+<p>We have only been working on a few segments so far, but segmentation could theoretically be extended to as many segments as you want. In order to have <em>fine-grained</em> segments, a segment table is needed to quickly access thousands of segments.</p>
+<p>There are a few more things that the OS needs to do in order to support segmentation. One is that it must preserve all base-bounds pairs upon a context switch, since the location of the address space is now more complicated. Another is that the growing and shrinking of segments must be managed through <code>sbrk</code>-like system calls that shift the bounds of the heap/stack. The final and most important issues that allocating variable size address spaces runs into the same problems of <code>malloc</code> where external fragmentation is difficult to avoid. Like with <code>malloc</code>, there is no perfect solution, ranging from algorithmic free lists to compact memory which rearranges segments every time a new one is created.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date"> 7 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/operating-systems-design/">Operating Systems Design</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs416/">#cs416</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

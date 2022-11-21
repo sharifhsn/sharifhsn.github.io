@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>The Link Layer</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>The Link Layer</h1>
+    </header>
+    <div class="content">
+        <p>Through all the layers of the internet, the most essential is the <strong>link layer</strong>: converting bits to and from signals, detecting errors, flow control, and addressing.</p>
+<span id="continue-reading"></span><h2 id="encoding">Encoding</h2>
+<p>We have spoken mostly through the guise of bits per second being sent across the internet and have left it at that. But what does it mean to send a bit over air waves? This isn't like a traditional electrical circuit or transistor in your computer; the internet uses signals.</p>
+<p>The nuances of digital signal processing are beyond these notes, so we will simplify here. We can imagine signals like a pseudo-transistor where low signals are 0 and high signals are 1. However, this causes two issues. One is that time synchronization is impossible for waves that travel at the speed of light, and the other is that because signals are not emitting all the time, we need a way to differentiate between signals and simple noise.</p>
+<p>The time synchronization is mandated by a clock standard such as the Manchester encoding, which is slower than the speed of light but allows each link to know exactly when a signal is coming.</p>
+<h2 id="framing">Framing</h2>
+<p>A <strong>frame</strong> is a group of bits in sequence. Frames are useful for manipulating data at the link layer, but they can escalate small bit errors to big problems. If a frame is too big, then it will error out too often, so we will often have smaller frames.</p>
+<p>We also need a way to delineate the beginning and ending of frames. There are two ways, character stuffing and bit stuffing.</p>
+<p>With character stuffing, a special meta character will be used to delineate frames. <code>^</code> is used for the beginning of frame (BOF) and <code>$</code> is used for EOF. If you need a <code>$</code> in your text, then simply add an escape character, like another <code>$</code> right beforehand.</p>
+<p>With bit stuffing, a unique bit sequence <code>0x7E</code> or <code>0b01111110</code> will delineate frames. If that sequence appears in the data, it will insert a 0 within like <code>0b011111010</code>.</p>
+<h2 id="error-control">Error Control</h2>
+<p>Inevitably, bits will be corrupted on a physical link. This is a reality of circuit engineering. We have discussed several ways to handle errors on the application and protocol layer; what about on the link layer? We can either request retransmission as with TCP, or we can make corrections to the errors automatically, which may or may not be possible.</p>
+<p>Parity bits can ensure a fixed sequence so that the extra bit can protect against errors. For example, with even parity, there will always be an even number of 1s, so if a bit flip changes that, you know that there was an error. But multiple bit errors can escape this detection.</p>
+<p>Another method is when the sender will send a checksum computed from the message divided into chunks along with the message so that the receiver can use the checksum, just like with other layers.</p>
+<p>Polynomial codes utilize the high degree of uncertainty when computing <code>mod</code> of a polynomial. The remainder must be added to the message and it can be checked by the receiver. This is a more complex form of error detection mathematically.</p>
+<h2 id="addressing">Addressing</h2>
+<p>We have heretofore defined a host as an IP address. But how do we identifies hosts at the link layer? For links we use a <strong>MAC address</strong>, which is a unique 48 bit address to a device which will communicate through the internet. MAC addresses are far less sophisticated than IP addresses. They cannot be grouped or categorized like with NAT. The MAC address of the destination is included in the frame that is sent. They are also unique to types of links, so a device will have different MAC addresses for Wi-Fi, Bluetooth, etc.</p>
+<p>Hosts can then interact in multiple ways. One way is <em>access point</em>. Hosts must communicate with an access point which acts as an intermediary between hosts. Another is <em>ad hoc</em>. When you set up your Amazon Echo for the first time, you connect with it ad hoc via Bluetooth on your app and set it up from there to program it. </p>
+<h2 id="arp">ARP</h2>
+<p>When connecting via LAN, hosts are part of the same subnet. In order to translate the IP address to a MAC address, the hosts use a protocol called <strong>ARP (Address Resolution Protocol</strong>. This is a simple protocol which defines its own identification and a source/destination address, as well as a broadcast <code>FF</code> packet. We know the sender IP, MAC, and the destination IP, but we don't know the destination MAC address, so that field is blank. The ARP packet will traverse the entire link, and if a host recognizes its own IP address, then it will send an ARP reply back to the source with its MAC address.</p>
+<h2 id="lan-extension">LAN Extension</h2>
+<p>LANs seem pretty nice. Why don't we just use LANs everywhere? Bandwidth is limited, so you need to limit the amount of hosts that can connect on one network.</p>
+<p>A <em>learning bridge</em> is a type of access point that connects LAN segments. It maintains a table of hosts that are connected to the network. It intermediates between the hosts, receiving and sending packets as necessary if packets are sent between LANs. For each packet, the bridge stores the MAC and port of the packet and then floods all the LANs if it can't find a match.</p>
+<h2 id="multiple-access">Multiple Access</h2>
+<p>If two packets are sent at the same time, that is called <em>collision</em> or <em>interference</em>. We can only have one pair communicating at a time. We must have a multiple access protocol to make sure that only one access method is used at a time. You can think of being in a class; if everyone spoke at once, it would be mayhem! There must be an extra overhead of each person raising their hand in order to ensure correct communication takes place.</p>
+<h2 id="wireless">Wireless</h2>
+<p>When a host sends a wireless signal that bounces off of a satellite to a receiver, how do we know that interference has occurred? We could use a TCP packet timeout, but that takes a while. A neat trick that you can do is leverage the fact that satellites reflect all signals to everyone, including your own. A host can receive its own signal and check if it was interfered with.</p>
+<p>Originally, <strong>pure ALOHA</strong> was used, based on the needs of a university in Hawaii. This uses the broadcast method. If it receives garbage back, it will sleep for a random amount of time and retransmit. The reason it is random is because if both the hosts that sent garbage data send the packets again at the same time, it will cause <em>another</em> collision! For transmission time \(t\), the vulnerable period where packets will be destroyed is \(2t\).</p>
+<p><strong>Slotted ALOHA</strong> has better checks to stop collisions from occurring in the first place by setting slots where hosts will send packets, which means that they wouldn't collide in different slots.</p>
+<p>But the best throughput is done if we check the actual channel before transmitting the packet, so we don't have to guess or check after the fact if a collision happened. For this we need <strong>CSMA (Carrier Sense Multiple Access)</strong>. If the channel is sensed and there are packets travelling, the host will wait to send the packet then immediately send a packet when free. This is a persistent system. The problem with this is that this will cause a collision when multiple hosts are waiting for a channel. We can solve this the way we solved ALOHA. If each host sleeps a random amount of time, even a small amount of time, it will give the hosts time to sense the channel.</p>
+<h2 id="contention-access-methods">Contention Access Methods</h2>
+<p>In order to sense the channel, there are many methods.</p>
+<p><strong>1-Persistent CSMA</strong> will constantly bug the channel to check if the channel is idle. If it's busy, transmit and check again. This only really works when there is one host trying to connect.</p>
+<p><strong>Non-Persistent CSMA</strong> will transmit, then sleep for a random amount of time before trying again if the channel is busy. This means that that collisions won't happen. This is better than the previous method, but can be slow.</p>
+<p><strong>\(P\)-Persistent CSMA</strong> has the same idea, but instead of being random it will transmit again with probability \(P\). This fine-tunes the previous method for our specific needs and improves utilization.</p>
+<p>Ethernet uses the <strong>Ethernet Backoff Algorithm</strong>, which utilizes binary exponential backoff. If a collision happens, then it will pick a time slot to transmit again out of \(2^k\) slots, where \(k\) is the number of collisions that have occurred. The length of each time slot is equivalent to. For example, let's say two hosts collide on an Ethernet connection. Both hosts will both, on their own, divide the next few seconds into two slots and randomly pick between them. If they each end up in different slots, they'll transmit fine. If they end up in the same slot again, repeat the process but with four slots. As you can see, the chance of collision will dramatically decrease with more slots. After a maximum of sixteen slots, if there are still collisions, then your host will give up and say that the link is down.</p>
+<h2 id="ethernet">Ethernet</h2>
+<p>Ethernet is a wired multiple access protocol defined by IEEE 802.3. As previously stated, it uses 1-persistent CSMA with the backoff algorithm.</p>
+<p>Ethernet frames have a preamble full of special information, as well as the source/destination MAC addresses already mentioned. The header will also say the type of protocol being used, whether it is IPv4, IPv6, ARP, RARP, etc. Finally, at the end, a checksum will be stored so that we can check if corruption has occurred.</p>
+<table><thead><tr><th>Preamble</th><th>Source MAC</th><th>Dest. MAC</th><th>Type</th><th>Data</th><th>Checksum</th></tr></thead><tbody>
+</tbody></table>
+<h2 id="multiple-access-channel-partitioning">Multiple Access Channel Partitioning</h2>
+<p>We have previously assumed that all hosts are fighting for the use of one channel and will have to retry connections if collisions occur. One way to solve this is to have predetermined allocation of channel access. This way, there is no chance of collision because each user will wait its turn on its own. However, this can introduce wastage if users are assigned to a channel partition but end up being idle. The division is governed by different techniques.</p>
+<p><strong>TDMA (Time Division Multiple Access)</strong> will divide the spectrum across time. Like how OS schedulers will give processes exclusive access to the CPU for a certain amount of time, so too will users be granted exclusive access to the channel for a certain amount of time.</p>
+<p><strong>FDMA (Frequency Division Multiple Access)</strong> will divide the spectrum across frequencies. The most common example of this is for radio. Radio channels are exclusive to certain frequencies.</p>
+<p><strong>CDMA (Code Division Multiple Access)</strong> will send signals in a coded format. Imagine a large group of people that are speaking all at the same time. If everyone is speaking in English, the message will quickly get garbled. However, if every conversation has its own language, then the message will be clear. Even if I hear a conversation next to me in Chinese, I will tune it out because I don't know Chinese and be able to speak and hear in English. There must be some amount of power control so that one person does not speak too loud, but otherwise the communication will work.</p>
+<h2 id="lan">LAN</h2>
+<p>Computers can be connected through a sort of wireless LAN. If connecting a computer that does not have a screen or an otherwise easily accessible user interface, it is often convenient to connect with it using ad-hoc mode to a device with a screen so it can be configured, like Amazon Echo.</p>
+<p>Each local set of computers that can connect in these ways is known as a <strong>BSS (Basic Service Set)</strong>. This is known commonly as a <strong>LAN</strong>. The sender will wait for the sense channel to be idle than transmit the entire frame, else do a random timeout multiplying by 2 as with Ethernet, and the access point will return an ACK.</p>
+<p>Access control in this sense is mediated by the time waited to check if the channel is busy or not. However, this can still cause collisions if a router does not hear from another, which is the <strong>hidden terminal problem</strong>. An <strong>exposed terminal problem</strong> may occur when a terminal is not properly signaled to not send because it is busy.</p>
+<p>In order to mediate these issues, senders send a small packet called <strong>RTS (request to send)</strong> and a receiver will send a small packet called <strong>CTS (clear to send)</strong>. If senders hear an RTS from somewhere else, they'll wait until the receiver is clear to send to. If there isn't a CTS, they can transmit because the receiver is open in that time. In this context, the HTP and ETP are caused when neither RTS nor CTS are heard, or when RTS is heard but not CTS.</p>
+<p>To avoid these issues, we can reserve channels in the same way that channels are reserved in CSMA. The small reservation packets are unlikely to collide compared to the large frame packets.</p>
+<h2 id="bluetooth">Bluetooth</h2>
+<p><strong>Bluetooth</strong> is a short-range kind of Wi-Fi technology that operates in the ISM band of 2.4GHz to 2.8 GHz. It was initially created for use by wireless mice and keyboards. The data rate goes up to 721 Kbps, which is fine because it's not intended for data transfer, just communicating with nearby wireless devices.</p>
+<p>In order to code this message, <strong>frequency hopping will be used</strong>. A frequency sequence will be sent via CDMA about which frequencies will be used to transmit data in sequence. Then, the sender will send the sequence in parts at each frequency in order. The receiver which knows the frequency sequence will be able to tune into the right frequencies at the right time and receive the correct bitstream. Anyone else listening to the bitstream that doesn't know the frequency sequence won't understand it.</p>
+<p>Personal area networks under Bluetooth are either <strong>Piconet</strong> or <strong>Scatternet</strong>. Piconet has master/slave nodes, where the master is the one that allocates the Bluetooth channels among the slaves. Scatternet allows devices to be either master or slave in different networks so that a device can act differently in Bluetooth in different settings.</p>
+<p>Connection is established by beginning with an inquiry broadcast by the Bluetooth device. A potential slave will respond and the master will send back a page for the hopping sequence. The other device will establish itself as a slave through a slave response and the master device will do likewise, at which time the connection is established through ACK-DAC.</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">28 March 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/internet-technology/">Internet Technology</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs352/">#cs352</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

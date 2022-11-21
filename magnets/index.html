@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Magnets</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Magnets</h1>
+    </header>
+    <div class="content">
+        <p>The question of how magnets work has <a href="https://www.youtube.com/shorts/8bhYMnHb5JY">long puzzled many</a>. We will endeavor to answer all of those questions today.</p>
+<span id="continue-reading"></span><h2 id="magnetic-fields">Magnetic Fields</h2>
+<p>Magnets work similarly to electric charges where like poles repel, and unlike poles attract. However, magnets do not ever exist in isolation. Every magnet has a north and south pole, while you can have an isolated positive or negative charge.</p>
+<p>Every magnet has a magnetic field around it, similar to the electric field around electric charges. The direction of the magnetic field is shown by the north pole. Every magnetic field points from south to north; this is why compasses point north. They are based off of the magnetic field of the polarity of the Earth's own magnetic field.</p>
+<p>You can apply many of the concepts of electric fields to magnetic fields, such as field lines and the way they curve and indicate field direction.</p>
+<h2 id="magnetic-force">Magnetic Force</h2>
+<p>Charges experience electric force in a field, and they experience <strong>magnetic force</strong> in a magnetic field. However, a few conditions must be met:</p>
+<ol>
+<li>
+<p>The charge must be moving.</p>
+</li>
+<li>
+<p>The velocity of the charge must have a component perpendicular to the direction of the magnetic field.</p>
+</li>
+</ol>
+<p>To visualize the second rule, imagine the magnetic force like a buffeting wind around the charge. The wind only has any force if it has something to push on. If you hold a piece of paper parallel to the direction to the wind, it'll barely move because there's nothing to push.</p>
+<blockquote>
+<p>This is such an important point it's in its own section. <strong>Right Hand Rule No. 1 (RHR1)</strong> will tell us the direction of a magnetic force based on the magnetic field and velocity of charge. Your right thumb points in the direction of the charge, and the fingers point in the direction of the magnetic field. The palm faces in the direction of the magnetic force.</p>
+<p>This is only applies to <em>positive charges</em>. Negative charges will have the direction of the force as opposite.</p>
+</blockquote>
+<p>The magnitude \(B\) of a magnetic field is defined in teslas \(T\) by</p>
+<p>$$B = \frac{F}{|q_0|(v \sin{θ})}$$</p>
+<p>where \(F\) is the magnitude of the magnetic force on test charge \(q_0\) with velocity \(v\).</p>
+<h2 id="motion">Motion</h2>
+<p>We have been comparing electric fields and magnetic fields a lot, but in regards to motion through them they are quite different. Electric fields attract towards its directions, while magnetic fields direct in the other perpendicular direction. If left to its devices, a moving charge would perpetually move in a circle remaining perpendicular to the magnetic field.</p>
+<p>This means that the work done by a magnetic field is also different. In fact, the magnetic force <em>cannot</em> do work, it can only change the direction of the particle, not its speed nor its energy.</p>
+<p>The force required to keep a charge moving in a circle is:</p>
+<p>$$F_c = \frac{mv^2}{r} or\ r = \frac{mv}{|q|B}$$</p>
+<h2 id="currents-in-a-magnetic-field">Currents in a Magnetic Field</h2>
+<p>We've discussed charges moving through a magnetic field; what about a current? A current is just a collection of moving charges, after all. If we have a wire with a current running through it placed between two magnets, then we can consider the direction of the current as the charge direction in RHR1 to calculate the direction of the magnetic force.</p>
+<p>We can use a bit of a trick to get the calculation of magnetic force for a current. We can rearrange the earlier equation for a magnetic field to get the equation for force. Current is the same thing as charge over time, so \(\frac{Δq}{Δt}\). Length of the current is the same thing as velocity multiplied by time \((\frac{m}{s} \cdot s)\). If we multiply these, the \(Δt\) will cancel out and we will be left with the same expression as \(|q_0|v\)! Our new equation for force is:</p>
+<p>$$F = ILB \sin{θ}$$</p>
+<p>The angle \(θ\) here maximizes current when perpendicular and is zero when parallel, just as with a single charge.</p>
+<h2 id="torque">Torque</h2>
+<p>As a refresher, <strong>torque</strong> describes the rate of change of the angular momentum of an object. Current-carrying wires have magnetic force applied to them which causes them to move. If the wire are in a loop, then the magnetic force is applied as torque which causes the loop to rotate. Its resting state is when the normal of the loop is aligned with the magnetic field. You can think of it like a compass needle, which will turn until it reaches its resting state of pointing towards the north pole.</p>
+<p>To calculate the torque, we get the force of each side of the loop turning, which is half the width and so half the force. Summed together we get:</p>
+<p>$$τ = NIAB \sin{θ}$$</p>
+<p>\(N\) here is the number of loops in the wire and \(A\) is the area that the loops make. When the loop is parallel with the magnetic field it experiences the greatest torque, and when it is perpendicular it experiences none.</p>
+<p>The collective expression \(NIA\) is known as the <strong>magnetic moment</strong> of the coil in \(A \cdot m^2\).</p>
+<p>Motors operate using this principle of a coil turning in a magnetic field.</p>
+<h2 id="magnetic-fields-in-a-current">Magnetic Fields in a Current</h2>
+<p>Current-carrying wires create their own kinds of magnetic fields.</p>
+<blockquote>
+<p>The second Right-Hand Rule (RHR2) is easier to remember, as it's just a thumbs-up. The thumb points towards the direction of the current, and the fingers curl in the direction of the magnetic field generated.</p>
+</blockquote>
+<p>The magnetic field magnitude is given by the following equation:</p>
+<p>$$B = \frac{μ_0I}{2πr}$$</p>
+<p>with \(μ_0\) representing the <em>permeability of free space</em> with the value \(μ_0 = 4π × 10^{-7} T \cdot m/A\).  This equation is for an infinitely long, straight wire, which is not necessarily the case.</p>
+<p>Because of this property, currents can affect each other magnetically. Currents in the same direction are attrated to each other.</p>
+<p>Currents in a loop have a slightly different magnetic field equation to the straight wire:</p>
+<p>$$B = N\frac{μ_0I}{2R}$$</p>
+<p>in the center of the loop, where the field is strongest.</p>
+<p>A useful visual for the magnetic field of a current loop is a bar magnet placed in the middle of the loop. If we use RHR2 here, the north pole is on the palm and the south pole is on the back of the hand.</p>
+<h2 id="ampere-s-law">Ampère's Law</h2>
+<p><strong>For any current geometry that produces a magnetic field that does not change in time,</strong></p>
+<p>$$ΣB_{||}Δl = μ_0I$$</p>
+<p><strong>where \(Δl\) is a small segment of length along a closed path of arbitrary shape around the current, \(B_{||}\) is the component of the magnetic field parallel to \(Δl\), \(I\) i sthe net current passing through the surface bounded by the path, and the \(μ_0\) is the permeability of free space. The symbol \(Σ\) indicates the sum of all \(B_{||}Δl\) terms must be taken around the closed path.</strong></p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">11 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/physics/">Physics</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/phys204/">#phys204</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

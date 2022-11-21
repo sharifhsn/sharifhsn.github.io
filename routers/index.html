@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Routers</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Routers</h1>
+    </header>
+    <div class="content">
+        <p>Everyone nowadays gets the Internet through the <strong>router</strong> in their home. But what <em>is</em> a router?</p>
+<span id="continue-reading"></span><h2 id="speed">Speed</h2>
+<p>It's likely that you have an internet speed in the tens of Mbps. This unit is <strong>megabits per second</strong>, or one million bits per second. Some routers in important locations have speeds in the Gbps, which is 1 <em>billion</em> bits per second. This is incredibly quick. How do routers accomplish this?</p>
+<h2 id="structure">Structure</h2>
+<p>The router is composed of a <strong>control plane</strong> and a <strong>data path</strong>. The control plane contains all the necessary external tooling to determine the paths. It contains routing protocols that need to be implemented, as well as a routing table. This table is used to look up all the possible paths to the destination and pick the shortest one.</p>
+<p>This information is all stored on the data path, where each packet is actually processed. The routing table shortest path is put into the <strong>forwarding table</strong> which typically has a very small amount of SRAM in order to quickly mediate routing. You can think of it almost like a register that is close the process as opposed to the main memory where the calculations are made.</p>
+<blockquote>
+<p>Remember this distinction! The <em>routing table</em> contains all possible routes from this router, kind of like Google Maps. It needs to be a big table, so it is usually stored in slow, inexpensive DRAM. The <em>forwarding table</em> only contains the best possible route, so it is a small table stored in fast, expensive SRAM.</p>
+</blockquote>
+<p>Routers must also have input and output buffers. The input buffer is needed because the router may take in packets faster than it can process them, so it needs a place to put them before it can figure them out. The output buffer is needed because of the opposite problem; if the router processes the packets faster than the output link can output them, the packets need a place to be.</p>
+<h2 id="forwarding-engine">Forwarding Engine</h2>
+<p>Let's examine the forwarding table in a little more detail. The forwarding table is a simple table that looks like this:</p>
+<table><thead><tr><th>Dest-network</th><th>Port</th></tr></thead><tbody>
+<tr><td>65.0.0.0/8</td><td>3</td></tr>
+<tr><td>128.9.0.0/16</td><td>1</td></tr>
+<tr><td>149.12.0.0/19</td><td>7</td></tr>
+</tbody></table>
+<p>It is a simple path from networks, remembering which port to send packets.</p>
+<p>You might have noticed that our destination networks are in prefix form. The one on port 7 has the longest prefix because it is matching the first 24 bits. We must match the longest prefix form first when looking for the network. These prefixes are the most specific and therefore must be matched before the smaller, more general prefixes. Prefixes can overlap, so we must pick the more specific one. It is typically not explicitly linear, a hash table-like structure is used to make lookups faster.</p>
+<p>In fact, <strong>hierarchical addressing</strong> is important for allowing us to aggregate routes. Different organizations within the same ISP network will have some bits after the network bits devoted to differentiating between organizations. Let's imagine that Rutgers Newark and NJIT are on the same ISP network, but are different organizations, obviously. The first 19 bits of that prefix might be devoted to the ISP network, then the next 4 bits will be used for organizations within that network.</p>
+<h2 id="switching-fabrics">Switching Fabrics</h2>
+<p>Let's consider each port as form of input and output. We will need a way to switch between devices. There are multiple ways to implement <strong>switching fabrics</strong>.</p>
+<p>One way is through <strong>memory</strong>. This is the cheapest way of going about it. The I/O device will take the network and write it into memory. We can use DMA (Direct Memory Access) to do this more quickly. The header is processed, and the router checks the routing table for the best route. The packet must be copied from the port into memory, then processed, then loaded back into the output port. This is very slow. Most of the bottleneck is in the memory bus when copying memory. These routers are typically less than 10 Mbps.</p>
+<p>Another way is through <strong>bus</strong>. The packet is transferred between input and output through a I/O bus, with a memory buffer to hold the packet on each end. There's no CPU movement here, it's all I/O instructions. But we still need some kind of command for the destination port number. The CPU will periodically calculate and <em>cache</em> the forwarding table on the input device (also known as <strong>line card</strong>). If there is a cache miss, then I/O will ask the CPU to update the cache from main memory, which is slow but doesn't happen often. However, since there's only one bus, there is only one communication possible between one port and another at a time. This speed is in the high Mbps.</p>
+<p>The third way, which is the most high-end way, is the <strong>crossbar</strong>. It works like a bus, except that there exists a bus between every single port, which means that for \(n\) ports, we can have \(\frac{n}{2}\) simultanenous transfers. This is in the best-case scenario where each input goes to a different output. However, if two ports are trying to connect to the same port, then one of them will be bottlenecked because it's still one bus. However, this complicated switching fabric is extremely expensive, which scales with the number of ports. The price can be worth it for a company like Google; their speeds can be in the Tbps!</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">10 March 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/internet-technology/">Internet Technology</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs352/">#cs352</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

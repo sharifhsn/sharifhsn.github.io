@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>More Internet Protocols</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>More Internet Protocols</h1>
+    </header>
+    <div class="content">
+        <p>Besides the primary Internet protocols, there are some others to learn about, like <strong>DHCP</strong>, <strong>NAT</strong>, <strong>IPv6</strong>, etc.</p>
+<span id="continue-reading"></span><h2 id="dhcp">DHCP</h2>
+<p>What happens if a device doesn't have a permanent IP address? You take your phone around multiple mobile networks, there isn't a consistent IP address between them. How do you access the internet without an IP address?</p>
+<p><strong>Dynamic Host Configuration Protocol</strong> is a client-server protocol that is used in these scenarios. As the name implies, it allows for dynamic IP address allocation that are leased for a certain amount of time. Configuring things like the subnet mask, gateway configuration, etc. to set up an IP is complicated and not feasible for the average user. Imagine if you had to do all that setup everytime your phone moved to a new location!</p>
+<p>DHCP has two main components: the protocol for delivering the bootstrapping information from the server to clients, and the algorithm for dynamically assigning addresses to new clients. How do you start a connection from nothing?</p>
+<p>In order to allocate a new address, there are three modes. Automatic allocation gives permanent address, dynamic allocation leases addresses, and manual allocation is managed by a system administrator.</p>
+<p>DHCP sends packets over a socket at port 67. Its IPv4 header indicates that it is protocol 17. The UDP packet is sent with no initial IP address because there is none. It is sent with the broadcast server IP address <code>255.255.255.255</code>. The protocol must also interface with the link layer at the client's MAC address; remember, we're starting at zero. There is also space for the server hostname, boot filename, and several kinds of options.</p>
+<p>The options indicate what the purpose of the UDP packet is. For example, option 1 is <code>DHCPDISCOVER</code>, which is the message that lets the server know that a client is looking for an IP address. The communication sequence is directly encoded into the options in the packet. Some others:</p>
+<ul>
+<li>
+<p>DHCP Offer: server response with parameter proposal</p>
+</li>
+<li>
+<p>DHCP Request: like discover, but focused to a specific server</p>
+</li>
+<li>
+<p>DHCP ACK: server gives IP address to client</p>
+</li>
+<li>
+<p>DHCP NAK: server declines to give IP address to client</p>
+</li>
+<li>
+<p>DHCP Decline: client declines the given IP address</p>
+</li>
+<li>
+<p>DHCP Release: client gives up its IP address</p>
+</li>
+</ul>
+<p>DHCP typically applies within a subnet. Relay agents on routers, like with BOOTP, allow servers to handle requests from other subnets.</p>
+<h2 id="nat">NAT</h2>
+<p>There are two kinds of IP addresses: <em>public</em> and <em>private</em>. Private addresses are reserved for <code>10.0.0.0</code> to <code>10.255.255.255</code>. If you send a request to private address, your router will not send it out to the Internet. Private addresses are also free; you can hand out as many as you want without it costing anything.</p>
+<p>However, requests sent from a private IP address cannot access the Internet. In order to access the Internet, we use a <strong>Network Address Translation</strong> box. This NAT box is assigned a single public IP address and it is the public-facing IP for all of the machines with private addresses on it.</p>
+<p>This is likely how your home router works. Each device in your home only has a private address and every time it sends a request to the Internet, that request is sent to the NAT box in your router and translated to one single public IP for all of the machines in your house.</p>
+<p>The NAT box will take in packets that are sent from private IP addresses and record the packet address in a table, then replace the IP address with its own and its port with some random port. When packets are sent back to that address, the NAT box consults its table and sends the packets back to the correct private IP address based on the port it was sent on.</p>
+<p>Although there are technically \( 2 ^ {24} \) addresses, in practice you can only have less than \( 2 ^ {16} \) addresses because each of those needs to have an associated port, and that's a 16-bit number (minus some reserved ports).</p>
+<p>But why would you do this? Remember that IPv4 is a 32-bit number for addresses, which only allow for ~ 4 billion unique devices. Clearly, there will be, and perhaps already are, more devices that use the Internet than that. IPv6 was created in part to solve that problem, but as many devices only accept IPv4, this works in the meantime. It also provides security to users since ports aren't accessible from the public, they are instead randomly assigned. Even if someone's IP address is tracked, the malicious agent still doesn't necessarily know what device the request is from.</p>
+<h2 id="ipv6">IPv6</h2>
+<p>IPv6 is an updated protocol from IPv4 that is optimized for the needs of the modern day. It is significantly simplified compared to IPv4 as much of the machinery in an IPv4 header relates to problems that generally no longer exist. However, the header size is also 40 bytes, twice as large as the IPv4 header. This is because the new source and destination IP address that must be stored in the header are now 16 bytes, not 4, the vast majority of the header size is dominated by address size.</p>
+<p>IPv6 does not protect against some problems that still exists, such as bit flips. If that happens, the packet is simply dropped because a different layer will do a checksum.</p>
+<table><thead><tr><th>Version</th><th>Traffic Class</th><th>Traffic Class</th><th>Flow Label</th><th>Flow Label</th><th>Flow Label</th><th>Flow Label</th><th>Flow Label</th></tr></thead><tbody>
+<tr><td>Payload Length</td><td>Payload Length</td><td>Payload Length</td><td>Payload Length</td><td>Next Header</td><td>Next Header</td><td>Hop Limit</td><td>Hop Limit</td></tr>
+</tbody></table>
+<p>followed by the source address and destination address, along 4-bit boundaries</p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date"> 3 March 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/internet-technology/">Internet Technology</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs352/">#cs352</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

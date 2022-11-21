@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Tail Recursion in OCaml</title>
+    <meta name="description" content="Sharif Haason&#x27;s personal website for various notes and ideas">
+
+    <link rel="stylesheet" href="https://sharifhsn.github.io/main.css">
+
+    <link rel="me" href="https://fandom.ink/@sharifhsn">
+
+    
+
+    
+        <link rel="stylesheet" href="/css/katex.min.css">
+    
+
+    
+        <script defer src="/js/katex.min.js"></script>
+        <script defer src="/js/mathtex-script-type.min.js"></script>
+        <script defer src="/js/auto-render.min.js"
+        onload="renderMathInElement(document.body);"></script>
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;sharifhsn.github.io&#x2F;">Sharif&#x27;s Page</a>
+            </h1>
+            <nav>
+                
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Tail Recursion in OCaml</h1>
+    </header>
+    <div class="content">
+        <p>Recursion in many languages can cause significant overhead. It might seem that the excess amount of recursion in OCaml would decrease its performance. But it actually doesn't, and that's thanks to <strong>tail recursion</strong>.</p>
+<span id="continue-reading"></span><h2 id="implementing-reverse">Implementing Reverse</h2>
+<p>In a functional language with a linked list, it's not a trivial task to reverse a list. There are multiple ways to do it, and they have different performance implications.</p>
+<p>The most basic implementation would just be to concatenate backwards.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">rev </span><span style="color:#bf616a;">l </span><span>=
+</span><span>    </span><span style="color:#b48ead;">match</span><span> l </span><span style="color:#b48ead;">with
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#d08770;">[] </span><span>-&gt; </span><span style="color:#d08770;">[]
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#bf616a;">x </span><span>:: </span><span style="color:#bf616a;">xs </span><span>-&gt; (rev xs) @ [x]
+</span></code></pre>
+<p>Unfortunately, there's a problem with this. Every time we call <code>rev</code> recursively, we must initialize a new stack frame for every recursive call, leaving the value <code>x</code> in <code>[x]</code> in the calling stack.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span>rev [</span><span style="color:#d08770;">1</span><span>; </span><span style="color:#d08770;">2</span><span>; </span><span style="color:#d08770;">3</span><span>]
+</span><span> → (rev [</span><span style="color:#d08770;">2</span><span>; </span><span style="color:#d08770;">3</span><span>]) @ [</span><span style="color:#d08770;">1</span><span>]
+</span><span> → ((rev [</span><span style="color:#d08770;">3</span><span>]) @ [</span><span style="color:#d08770;">2</span><span>]) @ [</span><span style="color:#d08770;">1</span><span>]
+</span><span> → (((rev </span><span style="color:#d08770;">[]</span><span>) @ [</span><span style="color:#d08770;">3</span><span>]) @ [</span><span style="color:#d08770;">2</span><span>]) @ [</span><span style="color:#d08770;">1</span><span>]
+</span><span> → ((</span><span style="color:#d08770;">[] </span><span>@ [</span><span style="color:#d08770;">3</span><span>]) @ [</span><span style="color:#d08770;">2</span><span>]) @ [</span><span style="color:#d08770;">1</span><span>]
+</span><span> → ([</span><span style="color:#d08770;">3</span><span>] @ [</span><span style="color:#d08770;">2</span><span>]) @ [</span><span style="color:#d08770;">1</span><span>]
+</span><span> → [</span><span style="color:#d08770;">3</span><span>; </span><span style="color:#d08770;">2</span><span>] @ [</span><span style="color:#d08770;">1</span><span>]
+</span><span> → [</span><span style="color:#d08770;">3</span><span>; </span><span style="color:#d08770;">2</span><span>; </span><span style="color:#d08770;">1</span><span>]
+</span></code></pre>
+<p>As you can see, there are a total of three stack frames for a list with three elements. This is pretty bad. However, we can rewrite this function to use tail recursion.</p>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">rev_helper </span><span style="color:#bf616a;">l acc </span><span>=
+</span><span>    </span><span style="color:#b48ead;">match</span><span> l </span><span style="color:#b48ead;">with
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#d08770;">[] </span><span>-&gt; acc
+</span><span>    </span><span style="color:#b48ead;">| </span><span style="color:#bf616a;">x </span><span>:: </span><span style="color:#bf616a;">xs </span><span>-&gt; rev_helper xs (x :: acc)
+</span><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">rev </span><span style="color:#bf616a;">l </span><span>= rev_helper l </span><span style="color:#d08770;">[]
+</span></code></pre>
+<p>There doesn't need to be any stack frame here because there are no local variables. The only thing that's being returned is the function call to <code>rev_helper</code>, so the stack can simply change to the <code>rev_helper</code> call without saving the previous stack frame. This tail recursion is incredibly powerful.</p>
+<p>I'll repeat it to be clear. Tail recursion works when the return value of a recursive function is <em>only</em> the recursive function call. The reason that the previous <code>rev</code> function didn't work is because the return value was <code>(rev xs) @ [x]</code>, so <code>x</code> must be saved in a stack frame in order to remember it.</p>
+<p>However, you might have noticed that we had to include a new variable called <code>acc</code>. This accumulator variable is a common pattern for when we want to have tail recursion since the <code>acc</code> is located inside the function call as an argument.</p>
+<p>The power of tail recursion can not be understated here. In a typical function, having excessive stack frames can easily cause a stack overflow for a large data set. With tail recursion, we can have both the lack of side effects associated with recursion and the performance associated with iteration.</p>
+<h2 id="general-tail-recursion-pattern">General Tail Recursion Pattern</h2>
+<pre data-lang="ocaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-ocaml "><code class="language-ocaml" data-lang="ocaml"><span style="color:#b48ead;">let </span><span style="color:#8fa1b3;">f </span><span style="color:#bf616a;">x </span><span>=
+</span><span>    </span><span style="color:#b48ead;">let rec </span><span style="color:#8fa1b3;">aux </span><span style="color:#bf616a;">arg acc </span><span>=
+</span><span>        </span><span style="color:#b48ead;">if </span><span style="color:#65737e;">(* base case *) </span><span style="color:#b48ead;">then</span><span> acc
+</span><span>        </span><span style="color:#b48ead;">else
+</span><span>            </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">arg&#39; </span><span>= </span><span style="color:#65737e;">(* next argument *)
+</span><span>            </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">acc&#39; </span><span>= </span><span style="color:#65737e;">(* updated accumulator *)
+</span><span>            aux arg&#39; acc&#39; </span><span style="color:#b48ead;">in
+</span><span>    aux x </span><span style="color:#65737e;">(* initial value of accumulator e.g. 0, []*)
+</span></code></pre>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">15 February 2022</div>
+        
+        <div class="article-taxonomies">
+            
+                <ul class="article-categories">
+                    
+                    <li><a href="https://sharifhsn.github.io/categories/principles-of-programming-languages/">Principles of Programming Languages</a></li>
+                    
+                </ul>
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://sharifhsn.github.io/tags/cs314/">#cs314</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                © Sharif&#x27;s Page 2022<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
